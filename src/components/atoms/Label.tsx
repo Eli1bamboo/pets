@@ -1,0 +1,27 @@
+import React from 'react';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs));
+}
+
+interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> { }
+
+export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
+    ({ className, children, ...props }, ref) => {
+        return (
+            <label
+                ref={ref}
+                className={cn(
+                    'block text-sm font-medium leading-6 text-brand-900',
+                    className
+                )}
+                {...props}
+            >
+                {children}
+            </label>
+        );
+    }
+);
+Label.displayName = 'Label';
