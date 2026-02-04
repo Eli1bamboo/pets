@@ -17,18 +17,18 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     ({ className, error, leftIcon: LeftIcon, rightIcon: RightIcon, ...props }, ref) => {
         return (
-            <div className="relative rounded-md shadow-sm">
+            <div className="relative rounded-2xl shadow-sm">
                 {LeftIcon && (
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                        <LeftIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                        <LeftIcon className="h-5 w-5 text-brand-600" aria-hidden="true" />
                     </div>
                 )}
                 <input
                     ref={ref}
                     className={cn(
-                        'block w-full rounded-md border-0 py-1.5 text-brand-900 ring-1 ring-inset ring-brand-300 placeholder:text-brand-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6 transition-colors',
-                        LeftIcon && 'pl-10',
-                        RightIcon && 'pr-10',
+                        'block w-full rounded-2xl border-0 py-3 text-brand-900 ring-2 ring-inset ring-brand-900/5 placeholder:text-brand-400 focus:ring-2 focus:ring-inset focus:ring-primary-orange sm:text-sm sm:leading-6 transition-all duration-200 bg-white/50 hover:bg-white',
+                        LeftIcon && 'pl-11',
+                        RightIcon && 'pr-11',
                         error && 'ring-red-300 focus:ring-red-500',
                         className
                     )}
