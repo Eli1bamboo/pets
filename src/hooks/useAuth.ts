@@ -16,29 +16,33 @@ export function useAuth({ redirectToLogin = false }: UseAuthOptions = {}) {
     const router = useRouter()
 
     useEffect(() => {
-        const checkUser = async () => {
-            const { data: { user }, error } = await supabase.auth.getUser()
-
-            if (error || !user) {
-                setUser(null)
-                setProfile(null)
-                if (redirectToLogin) {
-                    router.push("/login")
-                }
-            } else {
-                setUser(user)
-                // Fetch profile
-                const { data: profile } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', user.id)
-                    .single()
-                setProfile(profile)
-            }
+        const fetchProfile = async (userId: string) => {
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', userId)
+                .single()
+            setProfile(profile)
             setLoading(false)
         }
 
-        checkUser()
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+            if (session?.user) {
+                setUser(session.user)
+                fetchProfile(session.user.id)
+            } else {
+                setUser(null)
+                setProfile(null)
+                setLoading(false)
+                if (redirectToLogin && (event === 'SIGNED_OUT' || event === 'INITIAL_SESSION')) {
+                    router.push("/login")
+                }
+            }
+        })
+
+        return () => {
+            subscription.unsubscribe()
+        }
     }, [supabase, router, redirectToLogin])
 
     const signOut = async () => {

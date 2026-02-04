@@ -26,18 +26,20 @@ We maintain an organized workflow to ensure stability:
 - **`main`**: Production branch. Linked to the `Peluqueria-Prod` project in Supabase.
 - **`develop`**: Development branch. Linked to the `Peluqueria-Dev` project in Supabase.
 
-### 🔄 Multi-Environment Workflow (CLI)
+### 🔄 Multi-Environment Workflow
 
-We use a split environment strategy to avoid messing with production data. Use the following commands to manage both environments:
+We use separate Supabase projects for **Production** and **Development**. To switch between them locally:
 
-1. **Environment Switching**:
-   We've simplified project linking with a custom script:
+1. **Populate Environment Files**:
+   Create these two files in the root directory (gitignored):
+   - `.env.prod`: Contiene `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` de PRODUCCIÓN.
+   - `.env.dev`: Contiene las mismas variables de DESARROLLO.
+
+2. **Switch Environment**:
+   Run the following command to link the Supabase CLI **and** update your `.env.local` automatically:
    ```bash
-   # Switch to Development (Peluquería-Dev)
-   npm run dbenv dev
-   
-   # Switch to Production (Peluquería-Prod)
-   npm run dbenv prod
+   npm run dbenv dev  # Cambiar a Desarrollo
+   npm run dbenv prod # Cambiar a Producción
    ```
 
 2. **Sync Schemas (Migrations)**:
