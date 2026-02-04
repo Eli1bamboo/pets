@@ -2,7 +2,7 @@
 
 # Configuration
 PROD_ID="onbnlgcmbvabidwcnqsh"
-DEV_ID="REEMPLAZAR_CON_TU_NUEVO_ID_DE_DEV"
+DEV_ID="dbuschibakqzequzfynl"
 
 ENV=$1
 
@@ -10,7 +10,7 @@ if [ "$ENV" == "prod" ]; then
     echo "🚀 Switching to PRODUCTION ($PROD_ID)..."
     npx supabase link --project-ref $PROD_ID
 elif [ "$ENV" == "dev" ]; then
-    if [ "$DEV_ID" == "REEMPLAZAR_CON_TU_NUEVO_ID_DE_DEV" ]; then
+    if [ "$DEV_ID" == "dbuschibakqzequzfynl" ]; then
         echo "❌ Error: Please update DEV_ID in scripts/dbenv.sh with your new project reference ID."
         exit 1
     fi
