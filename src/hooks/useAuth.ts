@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from 'next/navigation'
 import { User } from '@supabase/supabase-js'
+import { Profile } from '@/types'
 
 interface UseAuthOptions {
     redirectToLogin?: boolean;
@@ -9,7 +10,7 @@ interface UseAuthOptions {
 
 export function useAuth({ redirectToLogin = false }: UseAuthOptions = {}) {
     const [user, setUser] = useState<User | null>(null)
-    const [profile, setProfile] = useState<any>(null)
+    const [profile, setProfile] = useState<Profile | null>(null)
     const [loading, setLoading] = useState(true)
     const supabase = createClient()
     const router = useRouter()
