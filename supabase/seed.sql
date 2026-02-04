@@ -2,21 +2,23 @@
 -- These satisfy the foreign key requirements for profiles
 -- Note: On a real Supabase cloud project, you should invite these emails or sign up manually.
 
--- 2. Initial Data for Profiles
+-- ⚠️ IMPORTANTE: En proyectos de Supabase CLOUD (no Docker), 
+-- no puedes insertar en 'profiles' sin que el usuario exista primero en 'auth.users'.
+-- Crea un usuario manualmente en el panel de Supabase y usa su ID aquí.
+
+/*
+-- 2. Initial Data for Profiles (REQUIERE USUARIOS REALES EN AUTH.USERS)
 INSERT INTO public.profiles (id, full_name, role)
 VALUES 
-  ('00000000-0000-0000-0000-000000000000', 'Admin Test User', 'admin'),
-  ('11111111-1111-1111-1111-111111111111', 'Regular Client John', 'customer'),
-  ('22222222-2222-2222-2222-222222222222', 'Regular Client Maria', 'customer')
+  ('TU_ID_REAL_AQUÍ', 'Admin Test User', 'admin')
 ON CONFLICT (id) DO NOTHING;
 
--- 3. Initial Data for Appointments
+-- 3. Initial Data for Appointments (REQUIERE EL ID ANTERIOR)
 INSERT INTO public.appointments (user_id, pet_name, service, date, status)
 VALUES 
-  ('11111111-1111-1111-1111-111111111111', 'Buddy', 'Premium Cut', NOW() + INTERVAL '1 day', 'pending'),
-  ('11111111-1111-1111-1111-111111111111', 'Max', 'Bath & Spa', NOW() - INTERVAL '2 hours', 'washing'),
-  ('22222222-2222-2222-2222-222222222222', 'Luna', 'Full Grooming', NOW() + INTERVAL '3 days', 'pending')
+  ('TU_ID_REAL_AQUÍ', 'Buddy', 'Premium Cut', NOW() + INTERVAL '1 day', 'pending')
 ON CONFLICT DO NOTHING;
+*/
 
 -- 4. Verify Business Hours (already handled by migrations, but ensuring defaults)
 INSERT INTO public.business_hours (day_of_week, open_time, close_time, is_active)
