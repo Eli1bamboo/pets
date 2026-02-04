@@ -23,8 +23,30 @@ This is a modern and premium application for pet grooming management, designed t
 
 We maintain an organized workflow to ensure stability:
 
-- **`main`**: Production branch. Contains only stable and tested code ready for release.
-- **`develop`**: Primary development branch. This is where new features and fixes are integrated before moving to production.
+- **`main`**: Production branch. Linked to the `Peluqueria-Prod` project in Supabase.
+- **`develop`**: Development branch. Linked to the `Peluqueria-Dev` project in Supabase.
+
+### 🔄 Multi-Environment Workflow (CLI)
+
+Since we are avoiding Docker, use the following commands to manage both environments:
+
+1. **Link to an environment**:
+   ```bash
+   # For Development
+   npx supabase link --project-ref <dev-project-id>
+   
+   # For Production
+   npx supabase link --project-ref <prod-project-id>
+   ```
+
+2. **Sync Schemas (Migrations)**:
+   After linking, push your local migrations to the cloud:
+   ```bash
+   npx supabase db push
+   ```
+
+3. **Populate Test Data (Seeds)**:
+   As `db reset` requires Docker, apply the `supabase/seed.sql` content manually in the **SQL Editor** of your Supabase Dashboard to populate your development database.
 
 ## 🏁 Getting Started
 
