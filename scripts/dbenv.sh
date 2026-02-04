@@ -10,10 +10,6 @@ if [ "$ENV" == "prod" ]; then
     echo "🚀 Switching to PRODUCTION ($PROD_ID)..."
     npx supabase link --project-ref $PROD_ID
 elif [ "$ENV" == "dev" ]; then
-    if [ "$DEV_ID" == "dbuschibakqzequzfynl" ]; then
-        echo "❌ Error: Please update DEV_ID in scripts/dbenv.sh with your new project reference ID."
-        exit 1
-    fi
     echo "🛠️ Switching to DEVELOPMENT ($DEV_ID)..."
     npx supabase link --project-ref $DEV_ID
 else
