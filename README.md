@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🐾 Peluquería Canina | Premium Pet Care
 
-## Getting Started
+Este es una aplicación moderna y premium para la gestión de una peluquería canina, diseñada para ofrecer la mejor experiencia tanto a los dueños de mascotas como a los administradores.
 
-First, run the development server:
+## 🚀 Tecnologías Principales
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Frontend**: [Next.js 16](https://nextjs.org/) (App Router)
+- **Estilos**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Animaciones**: [Framer Motion](https://www.framer.com/motion/)
+- **Base de Datos & Auth**: [Supabase](https://supabase.com/)
+- **Iconos**: [Lucide React](https://lucide.dev/)
+- **Lenguaje**: [TypeScript](https://www.typescriptlang.org/)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Características
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Diseño Premium**: Interfaz moderna con una estética amigable, bordes redondeados y una paleta de colores pastel cuidadosamente seleccionada.
+- **Reserva de Turnos**: Flujo de reserva intuitivo paso a paso para seleccionar servicios, fechas y horarios.
+- **Seguimiento en Vivo**: Rastreador de estado en tiempo real para que los dueños vean el progreso de su mascota (Baño, Secado, Listo, etc.).
+- **Panel Administrativo**: Gestión completa de turnos, horarios y configuración del negocio.
+- **Seguridad**: Implementación de políticas RLS (Row Level Security) en Supabase y autenticación robusta.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Flujo de Trabajo (Git)
 
-## Learn More
+Mantenemos un flujo de trabajo organizado para asegurar la estabilidad:
 
-To learn more about Next.js, take a look at the following resources:
+- **`main`**: Rama de producción. Solo contiene código estable y probado.
+- **`develop`**: Rama principal de desarrollo. Aquí es donde se integran las nuevas funcionalidades y correcciones antes de pasar a producción.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🏁 Comenzando
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Clonar el repositorio**:
+   ```bash
+   git clone <url-del-repositorio>
+   ```
 
-## Deploy on Vercel
+2. **Instalar dependencias**:
+   ```bash
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Configurar variables de entorno**:
+   Crea un archivo `.env.local` con tus credenciales de Supabase:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=tu_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_key
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. **Ejecutar el servidor de desarrollo**:
+   ```bash
+   npm run dev
+   ```
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia MIT.
