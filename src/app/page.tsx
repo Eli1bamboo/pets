@@ -7,16 +7,16 @@ import { Bath, Scissors, Wind } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="bg-white">
+    <div className="bg-background-cream">
       <Hero />
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-24 sm:py-32" id="services">
-        <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-base font-semibold leading-7 text-brand-600">Nuestros Servicios</h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">
+        <div className="mx-auto max-max-2xl lg:text-center">
+          <h2 className="text-base font-bold uppercase tracking-wider text-primary-orange">Nuestros Servicios</h2>
+          <p className="mt-4 text-4xl font-extrabold tracking-tight text-brand-900 sm:text-5xl">
             Cuidado integral para tu mejor amigo
           </p>
-          <p className="mt-6 text-lg leading-8 text-brand-700">
+          <p className="mt-6 text-xl leading-8 text-brand-700">
             Utilizamos productos hipoalergénicos y técnicas libres de estrés para asegurar que tu mascota disfrute de la experiencia.
           </p>
         </div>

@@ -3,6 +3,9 @@
 import { useState } from "react";
 import StatusTracker from "@/components/organisms/StatusTracker";
 import { Search } from "lucide-react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/atoms/Button";
+import { Input } from "@/components/atoms/Input";
 
 export default function TrackingPage() {
     const [inputId, setInputId] = useState("");
@@ -16,47 +19,53 @@ export default function TrackingPage() {
     };
 
     return (
-        <div className="min-h-screen bg-brand-50 px-6 py-24 sm:py-32 lg:px-8">
+        <div className="min-h-screen bg-background-cream px-6 py-24 sm:py-32 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
-                <h2 className="text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl leading-tight">
-                    Seguimiento en Vivo
+                <span className="text-primary-orange font-bold uppercase tracking-wider text-sm">Seguimiento en Vivo</span>
+                <h2 className="mt-4 text-4xl font-extrabold tracking-tight text-brand-900 sm:text-5xl leading-[1.1]">
+                    Rastrea el progreso de tu mascota
                 </h2>
-                <p className="mt-2 text-lg leading-8 text-brand-700">
-                    Ingresa el número de tu turno para ver el estado de tu mascota en tiempo real.
+                <p className="mt-6 text-xl leading-8 text-brand-700">
+                    Ingresa el número de tu turno para ver en qué etapa del spa se encuentra tu mejor amigo en tiempo real.
                 </p>
             </div>
 
-            <div className="mx-auto mt-10 max-w-xl">
-                <form onSubmit={handleSearch} className="flex gap-x-4">
-                    <label htmlFor="appointment-id" className="sr-only">
-                        Número de Turno
-                    </label>
-                    <input
-                        id="appointment-id"
-                        name="id"
-                        type="number"
-                        required
-                        className="min-w-0 flex-auto rounded-md border-0 bg-white/5 px-3.5 py-2 text-brand-900 shadow-sm ring-1 ring-inset ring-brand-300 placeholder:text-brand-400 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6"
-                        placeholder="Ej: 15"
-                        value={inputId}
-                        onChange={(e) => setInputId(e.target.value)}
-                    />
-                    <button
+            <div className="mx-auto mt-12 max-w-xl">
+                <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-4">
+                    <div className="flex-auto">
+                        <Input
+                            id="appointment-id"
+                            name="id"
+                            type="number"
+                            required
+                            placeholder="Número de Turno (ej: 15)"
+                            value={inputId}
+                            onChange={(e) => setInputId(e.target.value)}
+                            leftIcon={Search}
+                        />
+                    </div>
+                    <Button
                         type="submit"
-                        className="flex-none rounded-md bg-brand-900 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 flex items-center gap-2"
+                        className="sm:w-32 h-14"
                     >
-                        <Search size={16} />
                         Buscar
-                    </button>
+                    </Button>
                 </form>
 
                 {appointmentId && (
-                    <div className="mt-16 bg-white p-8 rounded-3xl shadow-xl ring-1 ring-brand-900/10">
-                        <h3 className="text-lg font-semibold text-brand-900 mb-6 text-center">
-                            Estado del Turno #{appointmentId}
-                        </h3>
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-16 bg-white p-10 rounded-[2.5rem] shadow-2xl ring-1 ring-brand-900/5"
+                    >
+                        <div className="flex items-center justify-between mb-8 border-b border-brand-900/5 pb-6">
+                            <h3 className="text-2xl font-extrabold text-brand-900">
+                                Turno <span className="text-primary-orange">#{appointmentId}</span>
+                            </h3>
+                            <span className="bg-soft-peach/20 text-primary-orange px-4 py-1 rounded-full text-sm font-bold">En Proceso</span>
+                        </div>
                         <StatusTracker appointmentId={appointmentId} />
-                    </div>
+                    </motion.div>
                 )}
             </div>
         </div>
