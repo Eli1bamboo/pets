@@ -1,51 +1,77 @@
 import Link from "next/link";
+import Image from "next/image";
 import { CalendarCheck, Search } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Hero() {
     return (
-        <div className="relative isolate overflow-hidden bg-brand-50">
-            <div className="mx-auto max-w-7xl px-6 pb-24 pt-10 sm:pb-32 lg:flex lg:px-8 lg:py-40">
-                <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:flex-shrink-0 lg:pt-8">
-                    <div className="mt-24 sm:mt-32 lg:mt-16">
-                        <a href="#" className="inline-flex space-x-6">
-                            <span className="rounded-full bg-brand-900/10 px-3 py-1 text-sm font-semibold leading-6 text-brand-900 ring-1 ring-inset ring-brand-900/10">
-                                Novedad
-                            </span>
-                            <span className="inline-flex items-center space-x-2 text-sm font-medium leading-6 text-brand-700">
-                                <span>Ahora con seguimiento en vivo</span>
-                            </span>
-                        </a>
-                    </div>
-                    <h1 className="mt-10 text-4xl font-bold tracking-tight text-brand-900 sm:text-6xl">
-                        Estética Canina de <span className="text-brand-600">Primer Nivel</span>
-                    </h1>
-                    <p className="mt-6 text-lg leading-8 text-brand-700">
-                        Tu mascota merece lo mejor. Ofrecemos servicios de spa, baño y corte con productos premium y un trato lleno de amor. Reserva tu turno y sigue el proceso desde tu celular.
-                    </p>
-                    <div className="mt-10 flex items-center gap-x-6">
+        <div className="relative isolate overflow-hidden bg-background-cream pt-14">
+            <div className="mx-auto max-w-7xl px-6 py-12 sm:py-20 lg:flex lg:items-center lg:gap-x-10 lg:px-8">
+                <div className="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="mb-8"
+                    >
+                        <span className="rounded-full bg-primary-orange/20 px-4 py-1.5 text-sm font-semibold leading-6 text-primary-orange ring-1 ring-inset ring-primary-orange/20">
+                            Estética de Primer Nivel
+                        </span>
+                    </motion.div>
+                    <motion.h1
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
+                        className="text-5xl font-bold tracking-tight text-brand-900 sm:text-7xl leading-[1.1]"
+                    >
+                        Cuidado <span className="text-primary-orange">Premium</span> para tu mejor amigo
+                    </motion.h1>
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        className="mt-6 text-xl leading-8 text-brand-700 max-w-lg"
+                    >
+                        Tu mascota merece lo mejor. Ofrecemos servicios de spa, baño y corte con productos premium y un trato lleno de amor.
+                    </motion.p>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
+                        className="mt-10 flex flex-wrap items-center gap-6"
+                    >
                         <Link
                             href="/booking"
-                            className="rounded-full bg-brand-900 px-8 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-900 transition-all flex items-center gap-2"
+                            className="rounded-full bg-primary-orange px-10 py-4 text-lg font-bold text-white shadow-lg hover:bg-soft-peach hover:scale-105 transition-all flex items-center gap-2"
                         >
-                            <CalendarCheck size={18} />
+                            <CalendarCheck size={22} />
                             Reservar Turno
                         </Link>
-                        <Link href="/tracking" className="text-sm font-semibold leading-6 text-brand-900 flex items-center gap-2 hover:underline">
-                            <Search size={18} />
-                            Seguimiento de Turno <span aria-hidden="true">→</span>
+                        <Link href="/tracking" className="text-lg font-semibold leading-6 text-brand-900 flex items-center gap-2 hover:text-primary-orange transition-colors">
+                            <Search size={22} />
+                            Rastrear Pedido
                         </Link>
-                    </div>
+                    </motion.div>
                 </div>
-                <div className="mx-auto mt-16 flex max-w-2xl sm:mt-24 lg:ml-10 lg:mt-0 lg:mr-0 lg:max-w-none lg:flex-none xl:ml-32">
-                    <div className="max-w-3xl flex-none sm:max-w-5xl lg:max-w-none">
-                        <div className="-m-2 rounded-xl bg-brand-900/5 p-2 ring-1 ring-inset ring-brand-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-                            {/* Placeholder for high quality image */}
-                            <div className="w-[40rem] rounded-md bg-brand-200 shadow-2xl ring-1 ring-brand-900/10 h-[30rem] flex items-center justify-center text-brand-500">
-                                <span className="text-lg font-medium">📷 Imagen Premium de Mascota Feliz</span>
-                            </div>
-                        </div>
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8, type: "spring", bounce: 0.3 }}
+                    className="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow relative"
+                >
+                    <div className="relative w-full aspect-square max-w-[500px] mx-auto overflow-hidden rounded-3xl bg-soft-peach/30 shadow-2xl ring-1 ring-brand-900/5">
+                        <Image
+                            src="/hero-dog.png"
+                            alt="Mascota feliz"
+                            fill
+                            className="object-cover object-bottom"
+                            priority
+                        />
                     </div>
-                </div>
+                    {/* Decorative element */}
+                    <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-secondary-teal/20 rounded-full blur-3xl -z-10" />
+                    <div className="absolute -top-6 -left-6 w-32 h-32 bg-primary-orange/20 rounded-full blur-3xl -z-10" />
+                </motion.div>
             </div>
         </div>
     );
