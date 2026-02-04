@@ -19,7 +19,28 @@ This is a modern and premium application for pet grooming management, designed t
 - **Admin Dashboard**: Full management system for appointments, business hours, and shop settings.
 - **Security**: Robust authentication and Row Level Security (RLS) implementation on Supabase.
 
-## 🛠️ Workflow (Git)
+## �️ Project Structure & Routes
+
+The application is strictly divided into two independent experiences using Next.js Route Groups.
+
+### 🏠 Client Experience (Customer)
+*Exclusively for pet owners.*
+- `/`: **Home** Page (Hero, Services, and value prop).
+- `/login`: **Access Portal** (Login & Registration for clients).
+- `/booking`: **Appointment Booking** (Step-by-step flow).
+- `/tracking`: **Live Tracker** (Progress monitor for pets).
+- `/history`: **Appointment History** (Personal client record).
+- `/profile`: **User Profile** (Personal data management).
+
+### 👔 Internal Management (Admin)
+*Restricted professional portal for business operations.*
+- `/admin/login`: **Professional Login** (Specific access for business staff).
+- `/admin`: **KPI Dashboard** (Business metrics, month summaries, revenue).
+- `/admin/appointments`: **Live Management** (Real-time appointment status control).
+- `/admin/history`: **Global History** (Full record of all business services).
+- `/admin/settings`: **Shop Settings** (Configuration of hours and services).
+
+## �🛠️ Workflow (Git)
 
 We maintain an organized workflow to ensure stability:
 

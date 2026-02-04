@@ -34,16 +34,6 @@ export default function Header() {
                     <Link href="/tracking" className="text-sm font-bold text-brand-700 hover:text-primary-orange transition-colors">
                         Seguimiento
                     </Link>
-                    {isAdmin && (
-                        <>
-                            <Link href="/admin/history" className="text-sm font-bold text-brand-700 hover:text-primary-orange transition-colors">
-                                Historial Global
-                            </Link>
-                            <Link href="/admin" className="text-sm font-extrabold text-brand-900 hover:text-primary-orange transition-colors flex items-center gap-1.5">
-                                Gestión
-                            </Link>
-                        </>
-                    )}
                 </nav>
 
                 <div className="hidden md:flex items-center gap-6">
@@ -105,15 +95,6 @@ export default function Header() {
                         >
                             Seguimiento
                         </Link>
-                        {isAdmin && (
-                            <Link
-                                href="/admin"
-                                className="block rounded-xl px-4 py-3 text-base font-black text-primary-orange hover:bg-primary-orange/10 transition-all"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                Admin (Gestión)
-                            </Link>
-                        )}
                         <Link
                             href="/booking"
                             className="block rounded-xl px-4 py-3 text-base font-bold text-brand-900 hover:bg-primary-orange/10 hover:text-primary-orange transition-all"

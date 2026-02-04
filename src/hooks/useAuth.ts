@@ -6,9 +6,10 @@ import { Profile } from '@/types'
 
 interface UseAuthOptions {
     redirectToLogin?: boolean;
+    loginPath?: string;
 }
 
-export function useAuth({ redirectToLogin = false }: UseAuthOptions = {}) {
+export function useAuth({ redirectToLogin = false, loginPath = "/login" }: UseAuthOptions = {}) {
     const [user, setUser] = useState<User | null>(null)
     const [profile, setProfile] = useState<Profile | null>(null)
     const [loading, setLoading] = useState(true)
@@ -35,7 +36,7 @@ export function useAuth({ redirectToLogin = false }: UseAuthOptions = {}) {
                 setProfile(null)
                 setLoading(false)
                 if (redirectToLogin && (event === 'SIGNED_OUT' || event === 'INITIAL_SESSION')) {
-                    router.push("/login")
+                    router.push(loginPath)
                 }
             }
         })
@@ -45,9 +46,9 @@ export function useAuth({ redirectToLogin = false }: UseAuthOptions = {}) {
         }
     }, [supabase, router, redirectToLogin])
 
-    const signOut = async () => {
+    const signOut = async (redirectPath: string = "/") => {
         await supabase.auth.signOut()
-        router.push("/")
+        router.push(redirectPath)
         router.refresh()
     }
 
