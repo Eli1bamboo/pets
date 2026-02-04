@@ -3,31 +3,33 @@ import { Instagram, Facebook, MapPin, Phone } from "lucide-react";
 
 export default function Footer() {
     return (
-        <footer className="bg-brand-950 text-brand-300">
-            <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+        <footer className="bg-brand-900 py-20 px-6 sm:px-8 lg:px-12 border-t border-brand-900/10">
+            <div className="mx-auto max-w-7xl">
+                <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
                     <div className="md:col-span-2">
-                        <span className="text-2xl font-bold text-white tracking-tight">Peluquería Canina</span>
-                        <p className="mt-4 text-sm leading-6 max-w-xs">
-                            Cuidamos a tu mascota como si fuera nuestra. Servicios de spa, corte y baño con los mejores productos orgánicos.
+                        <span className="text-3xl font-black text-white tracking-tight">
+                            Peluquería <span className="text-primary-orange">Canina</span>
+                        </span>
+                        <p className="mt-6 text-base leading-7 max-w-sm text-white/70">
+                            Cuidamos a tu mascota como si fuera nuestra. Servicios de spa, corte y baño con los mejores productos orgánicos y un equipo que ama lo que hace.
                         </p>
                     </div>
 
                     <div>
-                        <h3 className="text-sm font-semibold leading-6 text-white">Enlaces Rápidos</h3>
+                        <h3 className="text-sm font-black uppercase tracking-widest text-white">Explorar</h3>
                         <ul role="list" className="mt-6 space-y-4">
                             <li>
-                                <Link href="/services" className="text-sm leading-6 hover:text-white transition-colors">
-                                    Servicios
+                                <Link href="/" className="text-sm font-bold leading-6 text-white/80 hover:text-primary-orange transition-colors">
+                                    Inicio
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/booking" className="text-sm leading-6 hover:text-white transition-colors">
+                                <Link href="/booking" className="text-sm font-bold leading-6 text-white/80 hover:text-primary-orange transition-colors">
                                     Reservar Turno
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/tracking" className="text-sm leading-6 hover:text-white transition-colors">
+                                <Link href="/tracking" className="text-sm font-bold leading-6 text-white/80 hover:text-primary-orange transition-colors">
                                     Seguimiento en Vivo
                                 </Link>
                             </li>
@@ -35,29 +37,35 @@ export default function Footer() {
                     </div>
 
                     <div>
-                        <h3 className="text-sm font-semibold leading-6 text-white">Contacto</h3>
+                        <h3 className="text-sm font-black uppercase tracking-widest text-white">Contacto</h3>
                         <ul role="list" className="mt-6 space-y-4">
-                            <li className="flex items-center gap-2 text-sm leading-6">
-                                <MapPin size={18} />
+                            <li className="flex items-center gap-3 text-sm font-bold leading-6 text-white/80">
+                                <div className="bg-primary-orange/20 p-2 rounded-lg text-primary-orange">
+                                    <MapPin size={18} />
+                                </div>
                                 <span>Av. Libertador 1234, CABA</span>
                             </li>
-                            <li className="flex items-center gap-2 text-sm leading-6">
-                                <Phone size={18} />
+                            <li className="flex items-center gap-3 text-sm font-bold leading-6 text-white/80">
+                                <div className="bg-primary-orange/20 p-2 rounded-lg text-primary-orange">
+                                    <Phone size={18} />
+                                </div>
                                 <span>+54 11 1234-5678</span>
                             </li>
-                            <li className="flex gap-4 mt-2">
-                                <a href="#" className="hover:text-white transition-colors">
+                            <li className="flex gap-4 mt-6">
+                                <a href="#" className="bg-white/10 p-3 rounded-2xl text-white hover:bg-primary-orange hover:text-white transition-all hover:-translate-y-1">
                                     <Instagram size={24} />
                                 </a>
-                                <a href="#" className="hover:text-white transition-colors">
+                                <a href="#" className="bg-white/10 p-3 rounded-2xl text-white hover:bg-primary-orange hover:text-white transition-all hover:-translate-y-1">
                                     <Facebook size={24} />
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </div>
-                <div className="mt-12 border-t border-brand-800 pt-8 text-center text-xs leading-5">
-                    <p>&copy; {new Date().getFullYear()} Peluquería Canina. Todos los derechos reservados.</p>
+                <div className="mt-16 border-t border-white/10 pt-10 text-center">
+                    <p className="text-sm font-medium text-white/40">
+                        &copy; {new Date().getFullYear()} Peluquería Canina. Hecho con ❤️ para tus mascotas.
+                    </p>
                 </div>
             </div>
         </footer>

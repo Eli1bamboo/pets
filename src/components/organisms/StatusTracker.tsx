@@ -28,13 +28,13 @@ export default function StatusTracker({ appointmentId }: StatusTrackerProps) {
     return (
         <div className="py-8">
             <div className="relative">
-                <div className="absolute left-0 top-1/2 -mt-px h-0.5 w-full bg-brand-200" aria-hidden="true" />
+                <div className="absolute left-0 top-1/2 -mt-px h-1 w-full bg-brand-900/5 rounded-full" aria-hidden="true" />
                 {/* Progress Bar Animation */}
                 <motion.div
-                    className="absolute left-0 top-1/2 -mt-px h-0.5 bg-brand-600"
+                    className="absolute left-0 top-1/2 -mt-px h-1 bg-primary-orange rounded-full shadow-[0_0_10px_rgba(255,179,71,0.5)]"
                     initial={{ width: 0 }}
                     animate={{ width: `${(currentStepIndex / (STEPS.length - 1)) * 100}%` }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.8, ease: "easeInOut" }}
                 />
 
                 <ul role="list" className="relative flex justify-between w-full">
@@ -44,27 +44,36 @@ export default function StatusTracker({ appointmentId }: StatusTrackerProps) {
                         const Icon = step.icon;
 
                         return (
-                            <li key={step.label} className="text-center bg-white px-2 z-10">
+                            <li key={step.label} className="text-center bg-transparent z-10 px-1">
                                 <div className="group relative flex flex-col items-center">
                                     <span className="flex items-center" aria-hidden="true">
                                         <motion.span
                                             initial={false}
                                             animate={{
-                                                backgroundColor: isCompleted || isCurrent ? "#7c2d12" : "#ffffff", // brand-900
-                                                borderColor: isCompleted || isCurrent ? "#7c2d12" : "#fdba74", // brand-300
-                                                scale: isCurrent ? 1.2 : 1
+                                                backgroundColor: isCompleted || isCurrent ? "#FFB347" : "#FFFFFF", // primary-orange
+                                                borderColor: isCompleted || isCurrent ? "#FFB347" : "#EDF2F7",
+                                                scale: isCurrent ? 1.25 : 1,
+                                                boxShadow: isCurrent ? "0 0 20px rgba(255,179,71,0.4)" : "none"
                                             }}
-                                            transition={{ duration: 0.3 }}
-                                            className={`relative flex h-10 w-10 items-center justify-center rounded-full border-2`}
+                                            transition={{ duration: 0.5 }}
+                                            className={`relative flex h-12 w-12 items-center justify-center rounded-full border-2 transition-transform`}
                                         >
                                             <Icon
-                                                className={`h-5 w-5 ${isCompleted || isCurrent ? "text-white" : "text-brand-400"}`}
+                                                className={`h-6 w-6 ${isCompleted || isCurrent ? "text-white" : "text-brand-600/40"}`}
                                                 aria-hidden="true"
                                             />
+                                            {isCurrent && (
+                                                <motion.div
+                                                    layoutId="pulse"
+                                                    className="absolute inset-0 rounded-full bg-primary-orange/30 -z-10"
+                                                    animate={{ scale: [1, 1.4, 1], opacity: [0.5, 0, 0.5] }}
+                                                    transition={{ repeat: Infinity, duration: 2 }}
+                                                />
+                                            )}
                                         </motion.span>
                                     </span>
                                     <span
-                                        className={`mt-2 text-sm font-medium ${isCurrent ? "text-brand-900 font-bold" : "text-brand-500"
+                                        className={`mt-4 text-xs font-bold uppercase tracking-wider ${isCurrent ? "text-primary-orange" : "text-brand-600"
                                             }`}
                                     >
                                         {step.label}
@@ -78,12 +87,17 @@ export default function StatusTracker({ appointmentId }: StatusTrackerProps) {
 
             {status === 'ready' && (
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="mt-8 rounded-lg bg-green-50 p-4 text-center border border-green-200"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-12 rounded-3xl bg-secondary-teal/10 p-6 text-center border-2 border-secondary-teal/20 shadow-lg"
                 >
-                    <p className="text-green-800 font-bold text-lg">✨ ¡Tu mascota está lista! ✨</p>
-                    <p className="text-green-700">Puedes pasar a retirarla cuando quieras.</p>
+                    <div className="flex justify-center mb-3">
+                        <div className="bg-secondary-teal rounded-full p-2">
+                            <Sparkles className="text-white h-6 w-6" />
+                        </div>
+                    </div>
+                    <p className="text-secondary-teal font-extrabold text-xl">¡Tu mascota está lista!</p>
+                    <p className="text-brand-600 mt-1 font-medium">Puedes pasar a retirarla cuando quieras. Te está esperando con muchas ganas.</p>
                 </motion.div>
             )}
         </div>

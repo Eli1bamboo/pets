@@ -10,47 +10,47 @@ export default function Header() {
     const { user, isAdmin, loading } = useAuth();
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-brand-200 bg-brand-50/80 backdrop-blur-md">
-            <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-                <Link href="/" className="flex items-center gap-2">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-900 text-brand-50">
-                        <Scissors size={20} />
+        <header className="sticky top-0 z-50 w-full border-b border-brand-900/5 bg-background-cream/80 backdrop-blur-xl">
+            <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 sm:px-8 lg:px-10">
+                <Link href="/" className="flex items-center gap-3 group">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary-orange text-white shadow-lg transition-transform group-hover:rotate-12 group-hover:scale-110 duration-300">
+                        <Scissors size={24} />
                     </div>
-                    <span className="text-xl font-bold tracking-tight text-brand-900">
-                        Peluquería Canina
+                    <span className="text-2xl font-black tracking-tight text-brand-900">
+                        Peluquería <span className="text-primary-orange">Canina</span>
                     </span>
                 </Link>
 
                 {/* Desktop Navigation */}
-                <nav className="hidden md:flex gap-8">
-                    <Link href="/" className="text-sm font-medium text-brand-700 hover:text-brand-900 transition-colors">
+                <nav className="hidden md:flex gap-10">
+                    <Link href="/" className="text-sm font-bold text-brand-700 hover:text-primary-orange transition-colors">
                         Inicio
                     </Link>
-                    <Link href="/tracking" className="text-sm font-medium text-brand-700 hover:text-brand-900 transition-colors">
+                    <Link href="/tracking" className="text-sm font-bold text-brand-700 hover:text-primary-orange transition-colors">
                         Seguimiento
                     </Link>
                     {isAdmin && (
-                        <Link href="/admin" className="text-sm font-medium text-brand-900 font-bold hover:text-brand-700 transition-colors flex items-center gap-1">
+                        <Link href="/admin" className="text-sm font-extrabold text-brand-900 hover:text-primary-orange transition-colors flex items-center gap-1.5">
                             Admin
                         </Link>
                     )}
                 </nav>
 
-                <div className="hidden md:flex items-center gap-4">
+                <div className="hidden md:flex items-center gap-6">
                     {loading ? (
-                        <div className="h-4 w-20 bg-brand-100 animate-pulse rounded"></div>
+                        <div className="h-5 w-24 bg-brand-900/5 animate-pulse rounded-full"></div>
                     ) : user ? (
-                        <Link href="/profile" className="text-sm font-medium text-brand-900 hover:underline">
+                        <Link href="/profile" className="text-sm font-bold text-brand-900 hover:text-primary-orange transition-colors underline-offset-4 hover:underline">
                             Mi Perfil
                         </Link>
                     ) : (
-                        <Link href="/login" className="text-sm font-medium text-brand-900 hover:underline">
+                        <Link href="/login" className="text-sm font-bold text-brand-900 hover:text-primary-orange transition-colors underline-offset-4 hover:underline">
                             Ingresar
                         </Link>
                     )}
                     <Link
                         href="/booking"
-                        className="rounded-full bg-brand-900 px-5 py-2.5 text-sm font-semibold text-brand-50 shadow-sm hover:bg-brand-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-900 transition-all"
+                        className="rounded-full bg-brand-900 px-7 py-3 text-sm font-black text-white shadow-xl hover:bg-primary-orange transition-all hover:scale-105 active:scale-95"
                     >
                         Reservar Turno
                     </Link>
@@ -70,25 +70,18 @@ export default function Header() {
 
             {/* Mobile Navigation */}
             {isOpen && (
-                <div className="md:hidden border-b border-brand-200 bg-brand-50">
-                    <div className="space-y-1 px-4 pb-3 pt-2">
+                <div className="md:hidden border-b border-brand-900/5 bg-background-cream">
+                    <div className="space-y-1 px-4 pb-6 pt-2">
                         <Link
                             href="/"
-                            className="block rounded-md px-3 py-2 text-base font-medium text-brand-900 hover:bg-brand-100"
+                            className="block rounded-xl px-4 py-3 text-base font-bold text-brand-900 hover:bg-primary-orange/10 hover:text-primary-orange transition-all"
                             onClick={() => setIsOpen(false)}
                         >
                             Inicio
                         </Link>
                         <Link
-                            href="/services"
-                            className="block rounded-md px-3 py-2 text-base font-medium text-brand-700 hover:bg-brand-100 hover:text-brand-900"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            Servicios
-                        </Link>
-                        <Link
                             href="/tracking"
-                            className="block rounded-md px-3 py-2 text-base font-medium text-brand-700 hover:bg-brand-100 hover:text-brand-900"
+                            className="block rounded-xl px-4 py-3 text-base font-bold text-brand-900 hover:bg-primary-orange/10 hover:text-primary-orange transition-all"
                             onClick={() => setIsOpen(false)}
                         >
                             Seguimiento
@@ -96,7 +89,7 @@ export default function Header() {
                         {isAdmin && (
                             <Link
                                 href="/admin"
-                                className="block rounded-md px-3 py-2 text-base font-bold text-brand-900 hover:bg-brand-100"
+                                className="block rounded-xl px-4 py-3 text-base font-black text-primary-orange hover:bg-primary-orange/10 transition-all"
                                 onClick={() => setIsOpen(false)}
                             >
                                 Admin (Gestión)
@@ -104,7 +97,7 @@ export default function Header() {
                         )}
                         <Link
                             href="/booking"
-                            className="block rounded-md px-3 py-2 text-base font-medium text-brand-900 hover:bg-brand-100"
+                            className="block rounded-xl px-4 py-3 text-base font-bold text-brand-900 hover:bg-primary-orange/10 hover:text-primary-orange transition-all"
                             onClick={() => setIsOpen(false)}
                         >
                             Reservar Turno
@@ -112,7 +105,7 @@ export default function Header() {
                         {user ? (
                             <Link
                                 href="/profile"
-                                className="block rounded-md px-3 py-2 text-base font-medium text-brand-700 hover:bg-brand-100 hover:text-brand-900"
+                                className="block rounded-xl px-4 py-3 text-base font-bold text-brand-900 hover:bg-primary-orange/10 hover:text-primary-orange transition-all"
                                 onClick={() => setIsOpen(false)}
                             >
                                 Mi Perfil
@@ -120,7 +113,7 @@ export default function Header() {
                         ) : (
                             <Link
                                 href="/login"
-                                className="block rounded-md px-3 py-2 text-base font-medium text-brand-700 hover:bg-brand-100 hover:text-brand-900"
+                                className="block rounded-xl px-4 py-3 text-base font-bold text-brand-900 hover:bg-primary-orange/10 hover:text-primary-orange transition-all"
                                 onClick={() => setIsOpen(false)}
                             >
                                 Ingresar
