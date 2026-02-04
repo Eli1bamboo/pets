@@ -28,25 +28,29 @@ We maintain an organized workflow to ensure stability:
 
 ### 🔄 Multi-Environment Workflow (CLI)
 
-Since we are avoiding Docker, use the following commands to manage both environments:
+We use a split environment strategy to avoid messing with production data. Use the following commands to manage both environments:
 
-1. **Link to an environment**:
+1. **Environment Switching**:
+   We've simplified project linking with a custom script:
    ```bash
-   # For Development
-   npx supabase link --project-ref <dev-project-id>
+   # Switch to Development (Peluquería-Dev)
+   npm run dbenv dev
    
-   # For Production
-   npx supabase link --project-ref <prod-project-id>
+   # Switch to Production (Peluquería-Prod)
+   npm run dbenv prod
    ```
 
 2. **Sync Schemas (Migrations)**:
-   After linking, push your local migrations to the cloud:
+   After switching to the desired environment, push your local migrations to the cloud project:
    ```bash
    npx supabase db push
    ```
 
 3. **Populate Test Data (Seeds)**:
-   As `db reset` requires Docker, apply the `supabase/seed.sql` content manually in the **SQL Editor** of your Supabase Dashboard to populate your development database.
+   Since we are not using Docker, `npx supabase db reset --seed` is not available. To load test data (appointments, services, test profiles):
+   - Open `supabase/seed.sql` and copy its content.
+   - Go to the **SQL Editor** in your Supabase Dashboard and run the script.
+   *Note: Real auth users must be created manually in the dashboard or via the app sign-up flow.*
 
 ## 🏁 Getting Started
 
