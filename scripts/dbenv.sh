@@ -1,29 +1,38 @@
 #!/bin/bash
 
 # Configuration
-PROD_ID="onbnlgcmbvabidwcnqsh"
-DEV_ID="dbuschibakqzequzfynl"
-
 ENV=$1
 
 if [ "$ENV" == "prod" ]; then
-    echo "🚀 Switching to PRODUCTION ($PROD_ID)..."
-    npx supabase link --project-ref $PROD_ID
-    if [ -f ".env.prod" ]; then
-        cp .env.prod .env.local
-        echo "✅ .env.local updated with PRODUCTION keys."
-    else
-        echo "⚠️ .env.prod not found. Skipping .env.local update."
+    if [ ! -f ".env.prod" ]; then
+        echo "❌ .env.prod not found."
+        exit 1
     fi
+    # Source the file to get variables
+    source .env.prod
+    
+    # Extract project ref from URL if not explicitly provided as SUPABASE_PROJECT_ID
+    # URL format: https://[PROJECT_ID].supabase.co
+    PROJECT_ID=$(echo $NEXT_PUBLIC_SUPABASE_URL | sed -E 's/https:\/\/([^.]+)\.supabase\.co/\1/')
+
+    echo "🚀 Switching to PRODUCTION ($PROJECT_ID)..."
+    npx supabase link --project-ref $PROJECT_ID
+    cp .env.prod .env.local
+    echo "✅ .env.local updated with PRODUCTION keys."
+
 elif [ "$ENV" == "dev" ]; then
-    echo "🛠️ Switching to DEVELOPMENT ($DEV_ID)..."
-    npx supabase link --project-ref $DEV_ID
-    if [ -f ".env.dev" ]; then
-        cp .env.dev .env.local
-        echo "✅ .env.local updated with DEVELOPMENT keys."
-    else
-        echo "⚠️ .env.dev not found. Skipping .env.local update."
+    if [ ! -f ".env.dev" ]; then
+        echo "❌ .env.dev not found."
+        exit 1
     fi
+    source .env.dev
+    
+    PROJECT_ID=$(echo $NEXT_PUBLIC_SUPABASE_URL | sed -E 's/https:\/\/([^.]+)\.supabase\.co/\1/')
+
+    echo "🛠️ Switching to DEVELOPMENT ($PROJECT_ID)..."
+    npx supabase link --project-ref $PROJECT_ID
+    cp .env.dev .env.local
+    echo "✅ .env.local updated with DEVELOPMENT keys."
 else
     echo "❓ Usage: npm run dbenv [prod|dev]"
     exit 1

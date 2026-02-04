@@ -28,18 +28,26 @@ We maintain an organized workflow to ensure stability:
 
 ### 🔄 Multi-Environment Workflow
 
-We use separate Supabase projects for **Production** and **Development**. To switch between them locally:
+We use separate Supabase projects for **Production** and **Development**. **NEVER commit sensitive keys or IDs to the repository.**
 
-1. **Populate Environment Files**:
-   Create these two files in the root directory (gitignored):
-   - `.env.prod`: Contiene `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` de PRODUCCIÓN.
-   - `.env.dev`: Contiene las mismas variables de DESARROLLO.
+1. **Local Setup**:
+   Create these two files (gitignored) locally with your credentials:
+   - `.env.prod`: Production project.
+   - `.env.dev`: Development project.
 
-2. **Switch Environment**:
-   Run the following command to link the Supabase CLI **and** update your `.env.local` automatically:
+   **Template for both files:**
+   ```env
+   # Your Supabase Project URL (The script extracts the ID from here automatically)
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
+   # Your Supabase Anon Public Key
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   ```
+
+2. **Switching Environments**:
+   Run the following command to link the Supabase CLI **and** update your `.env.local` automatically based on the source files:
    ```bash
-   npm run dbenv dev  # Cambiar a Desarrollo
-   npm run dbenv prod # Cambiar a Producción
+   npm run dbenv dev  # Switch to Development
+   npm run dbenv prod # Switch to Production
    ```
 
 2. **Sync Schemas (Migrations)**:
