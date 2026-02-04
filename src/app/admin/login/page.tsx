@@ -1,20 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { LayoutDashboard, Lock, User } from "lucide-react";
 import { FormField } from "@/components/molecules/FormField";
 import { Button } from "@/components/atoms/Button";
 import { motion } from "framer-motion";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function AdminLoginPage() {
+    const { isAdmin, loading: authLoading } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
     const supabase = createClient();
+
+    useEffect(() => {
+        if (!authLoading && isAdmin) {
+            router.push("/admin");
+        }
+    }, [isAdmin, authLoading, router]);
+
+    if (authLoading) return null;
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
