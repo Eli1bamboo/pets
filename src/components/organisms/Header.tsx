@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Scissors, User as UserIcon } from "lucide-react";
+import { Menu, X, Scissors, User as UserIcon, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
-    const { user, isAdmin, loading } = useAuth();
+    const { user, isAdmin, loading, signOut } = useAuth();
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-brand-900/5 bg-background-cream/80 backdrop-blur-xl">
@@ -26,13 +26,23 @@ export default function Header() {
                     <Link href="/" className="text-sm font-bold text-brand-700 hover:text-primary-orange transition-colors">
                         Inicio
                     </Link>
+                    {user && !isAdmin && (
+                        <Link href="/history" className="text-sm font-bold text-brand-700 hover:text-primary-orange transition-colors">
+                            Mi Historial
+                        </Link>
+                    )}
                     <Link href="/tracking" className="text-sm font-bold text-brand-700 hover:text-primary-orange transition-colors">
                         Seguimiento
                     </Link>
                     {isAdmin && (
-                        <Link href="/admin" className="text-sm font-extrabold text-brand-900 hover:text-primary-orange transition-colors flex items-center gap-1.5">
-                            Admin
-                        </Link>
+                        <>
+                            <Link href="/admin/history" className="text-sm font-bold text-brand-700 hover:text-primary-orange transition-colors">
+                                Historial Global
+                            </Link>
+                            <Link href="/admin" className="text-sm font-extrabold text-brand-900 hover:text-primary-orange transition-colors flex items-center gap-1.5">
+                                Gestión
+                            </Link>
+                        </>
                     )}
                 </nav>
 
@@ -40,9 +50,18 @@ export default function Header() {
                     {loading ? (
                         <div className="h-5 w-24 bg-brand-900/5 animate-pulse rounded-full"></div>
                     ) : user ? (
-                        <Link href="/profile" className="text-sm font-bold text-brand-900 hover:text-primary-orange transition-colors underline-offset-4 hover:underline">
-                            Mi Perfil
-                        </Link>
+                        <div className="flex items-center gap-4">
+                            <Link href="/profile" className="text-sm font-bold text-brand-900 hover:text-primary-orange transition-colors">
+                                Mi Perfil
+                            </Link>
+                            <button
+                                onClick={() => signOut()}
+                                className="text-brand-600 hover:text-red-500 transition-colors p-1"
+                                title="Cerrar sesión"
+                            >
+                                <LogOut size={18} />
+                            </button>
+                        </div>
                     ) : (
                         <Link href="/login" className="text-sm font-bold text-brand-900 hover:text-primary-orange transition-colors underline-offset-4 hover:underline">
                             Ingresar
@@ -103,13 +122,32 @@ export default function Header() {
                             Reservar Turno
                         </Link>
                         {user ? (
-                            <Link
-                                href="/profile"
-                                className="block rounded-xl px-4 py-3 text-base font-bold text-brand-900 hover:bg-primary-orange/10 hover:text-primary-orange transition-all"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                Mi Perfil
-                            </Link>
+                            <>
+                                <Link
+                                    href="/history"
+                                    className="block rounded-xl px-4 py-3 text-base font-bold text-brand-900 hover:bg-primary-orange/10 hover:text-primary-orange transition-all"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    Mi Historial
+                                </Link>
+                                <Link
+                                    href="/profile"
+                                    className="block rounded-xl px-4 py-3 text-base font-bold text-brand-900 hover:bg-primary-orange/10 hover:text-primary-orange transition-all"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    Mi Perfil
+                                </Link>
+                                <button
+                                    onClick={() => {
+                                        signOut();
+                                        setIsOpen(false);
+                                    }}
+                                    className="w-full text-left flex items-center gap-2 rounded-xl px-4 py-3 text-base font-bold text-red-600 hover:bg-red-50 transition-all"
+                                >
+                                    <LogOut size={18} />
+                                    Cerrar sesión
+                                </button>
+                            </>
                         ) : (
                             <Link
                                 href="/login"

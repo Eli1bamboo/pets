@@ -41,5 +41,11 @@ export function useAuth({ redirectToLogin = false }: UseAuthOptions = {}) {
         checkUser()
     }, [supabase, router, redirectToLogin])
 
-    return { user, profile, isAdmin: profile?.role === 'admin', loading }
+    const signOut = async () => {
+        await supabase.auth.signOut()
+        router.push("/")
+        router.refresh()
+    }
+
+    return { user, profile, isAdmin: profile?.role === 'admin', loading, signOut }
 }
