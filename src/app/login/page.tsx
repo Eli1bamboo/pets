@@ -56,25 +56,16 @@ export default function LoginPage() {
 
     return (
         <div className="relative flex min-h-screen items-center justify-center bg-background-cream px-6 py-12 lg:px-8 overflow-hidden">
-            {/* Background Decorations (Hero-style) */}
-            <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-primary-orange/10 blur-3xl" />
-            <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-secondary-teal/10 blur-3xl" />
+            {/* Background Decorations */}
+            <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-primary-orange/10 blur-3xl opacity-60" />
+            <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-secondary-teal/10 blur-3xl opacity-60" />
 
             <div className="relative w-full max-w-5xl">
                 <div className="grid grid-cols-1 lg:grid-cols-2 bg-white rounded-[2.5rem] shadow-2xl shadow-brand-900/10 overflow-hidden ring-1 ring-brand-900/5">
 
                     {/* Visual Section - Desktop */}
-                    <div className="hidden lg:block relative bg-soft-peach/10 p-12 overflow-hidden">
-                        <div className="absolute top-12 left-12 flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary-orange text-white">
-                                <Scissors size={20} />
-                            </div>
-                            <span className="text-xl font-black tracking-tight text-brand-900">
-                                Peluquería <span className="text-primary-orange">Canina</span>
-                            </span>
-                        </div>
-
-                        <div className="mt-24 relative aspect-square rounded-3xl overflow-hidden shadow-xl ring-1 ring-brand-900/5">
+                    <div className="hidden lg:flex flex-col bg-soft-peach/5 p-16">
+                        <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl ring-4 ring-white">
                             <Image
                                 src="/login-bg.png"
                                 alt="Mascota mimada"
@@ -86,42 +77,34 @@ export default function LoginPage() {
 
                         <div className="mt-12">
                             <h3 className="text-3xl font-black text-brand-900 leading-tight">
-                                Mima a tu <span className="text-primary-orange">mejor amigo</span>
+                                Gestiona el cuidado de <span className="text-primary-orange">tu mascota</span>
                             </h3>
-                            <p className="mt-4 text-brand-700 font-medium">
-                                Más de 500 mascotas confían en nosotros para verse y sentirse increíbles.
+                            <p className="mt-6 text-brand-600 font-medium text-lg leading-relaxed">
+                                Accede a tu panel personal para revisar el historial de sesiones, realizar nuevas reservas en segundos y seguir el progreso de tu mejor amigo en tiempo real.
                             </p>
-                        </div>
-
-                        {/* Floating elements */}
-                        <div className="absolute bottom-10 right-10 flex h-20 w-20 items-center justify-center rounded-full bg-white/80 backdrop-blur shadow-lg animate-bounce">
-                            <span className="text-4xl">🐾</span>
                         </div>
                     </div>
 
                     {/* Auth Section */}
-                    <div className="flex flex-col justify-center p-8 sm:p-12 lg:p-16">
-                        <div className="lg:hidden mb-10 flex flex-col items-center">
-                            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-orange text-white mb-4">
-                                <Scissors size={28} />
+                    <div className="flex flex-col justify-center p-8 sm:p-12 lg:p-20">
+                        <div className="lg:hidden mb-12 flex flex-col items-center">
+                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-orange text-white mb-6 shadow-lg shadow-primary-orange/20">
+                                <Scissors size={32} />
                             </div>
-                            <h1 className="text-3xl font-black text-brand-900">Peluquería Canina</h1>
+                            <h1 className="text-3xl font-black text-brand-900 tracking-tight">Peluquería Canina</h1>
                         </div>
 
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5 }}
+                            transition={{ duration: 0.6, ease: "easeOut" }}
                         >
-                            <div className="mb-10">
-                                <span className="inline-block rounded-full bg-primary-orange/20 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-primary-orange ring-1 ring-inset ring-primary-orange/20 mb-6">
-                                    {isSignUp ? "Nuevo Registro" : "Acceso Clientes"}
-                                </span>
-                                <h2 className="text-4xl font-extrabold tracking-tight text-brand-900 leading-tight">
-                                    {isSignUp ? "Crea una cuenta" : "¡Qué bueno verte!"}
+                            <div className="mb-12">
+                                <h2 className="text-4xl font-black tracking-tight text-brand-900 leading-tight mb-4">
+                                    {isSignUp ? "Crea una cuenta" : "¡Hola de nuevo!"}
                                 </h2>
-                                <p className="mt-3 text-brand-600 font-medium text-lg">
-                                    {isSignUp ? "Comienza hoy el cuidado de tu mascota." : "Ingresa para gestionar tus turnos."}
+                                <p className="text-brand-600 font-medium text-lg">
+                                    {isSignUp ? "Únete a nuestra comunidad de dueños felices." : "Ingresa tus datos para continuar."}
                                 </p>
                             </div>
 
@@ -157,20 +140,20 @@ export default function LoginPage() {
                                     </motion.div>
                                 )}
 
-                                <div className="pt-2">
-                                    <Button type="submit" isLoading={loading} className="py-4 text-lg">
-                                        {isSignUp ? "Registrar Cuenta" : "Entrar al Panel"}
+                                <div className="pt-4">
+                                    <Button type="submit" isLoading={loading} className="py-5 text-xl font-black rounded-2xl shadow-xl shadow-primary-orange/10 transition-transform active:scale-[0.98]">
+                                        {isSignUp ? "Cerrar Registro" : "Ingresar"}
                                     </Button>
                                 </div>
                             </form>
 
-                            <div className="mt-10 border-t border-brand-900/5 pt-8 text-center text-sm font-bold text-brand-500">
-                                {isSignUp ? "¿Ya eres parte de la familia? " : "¿Nuevo por aquí? "}
+                            <div className="mt-12 border-t border-brand-900/5 pt-10 text-center text-sm font-bold text-brand-500">
+                                {isSignUp ? "¿Ya tienes una cuenta? " : "¿No tienes cuenta aún? "}
                                 <button
                                     onClick={() => setIsSignUp(!isSignUp)}
-                                    className="text-primary-orange hover:text-brand-900 transition-colors font-black"
+                                    className="text-primary-orange hover:text-brand-900 transition-colors font-black ml-1"
                                 >
-                                    {isSignUp ? "Inicia sesión" : "Crea tu cuenta gratis"}
+                                    {isSignUp ? "Inicia sesión" : "Regístrate gratis"}
                                 </button>
                             </div>
                         </motion.div>
