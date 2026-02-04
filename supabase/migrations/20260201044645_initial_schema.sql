@@ -55,33 +55,38 @@ RETURNS BOOLEAN AS $$
   );
 $$ LANGUAGE sql SECURITY DEFINER;
 
--- 7. Profiles Policies
+DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
 CREATE POLICY "Users can view own profile" ON public.profiles
     FOR SELECT USING (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Admins can view all profiles" ON public.profiles;
 CREATE POLICY "Admins can view all profiles" ON public.profiles
     FOR SELECT USING (public.is_admin());
 
+DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
 CREATE POLICY "Users can update own profile" ON public.profiles
     FOR UPDATE USING (auth.uid() = id);
 
--- 8. Appointments Policies
+DROP POLICY IF EXISTS "Users can view own appointments" ON public.appointments;
 CREATE POLICY "Users can view own appointments" ON public.appointments
     FOR SELECT USING (
         auth.uid() = user_id OR public.is_admin()
     );
 
+DROP POLICY IF EXISTS "Users can insert own appointments" ON public.appointments;
 CREATE POLICY "Users can insert own appointments" ON public.appointments
     FOR INSERT WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can update own appointments" ON public.appointments;
 CREATE POLICY "Users can update own appointments" ON public.appointments
     FOR UPDATE USING (
         auth.uid() = user_id OR public.is_admin()
     );
 
--- 9. Business Hours Policies
+DROP POLICY IF EXISTS "Allow public read access" ON public.business_hours;
 CREATE POLICY "Allow public read access" ON public.business_hours
     FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "Admins can update business hours" ON public.business_hours;
 CREATE POLICY "Admins can update business hours" ON public.business_hours
     FOR ALL USING (public.is_admin());
