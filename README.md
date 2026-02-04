@@ -1,55 +1,55 @@
 # 🐾 Peluquería Canina | Premium Pet Care
 
-Este es una aplicación moderna y premium para la gestión de una peluquería canina, diseñada para ofrecer la mejor experiencia tanto a los dueños de mascotas como a los administradores.
+This is a modern and premium application for pet grooming management, designed to offer the best experience for both pet owners and administrators.
 
-## 🚀 Tecnologías Principales
+## 🚀 Key Technologies
 
 - **Frontend**: [Next.js 16](https://nextjs.org/) (App Router)
-- **Estilos**: [Tailwind CSS v4](https://tailwindcss.com/)
-- **Animaciones**: [Framer Motion](https://www.framer.com/motion/)
-- **Base de Datos & Auth**: [Supabase](https://supabase.com/)
-- **Iconos**: [Lucide React](https://lucide.dev/)
-- **Lenguaje**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Database & Auth**: [Supabase](https://supabase.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
 
-## ✨ Características
+## ✨ Features
 
-- **Diseño Premium**: Interfaz moderna con una estética amigable, bordes redondeados y una paleta de colores pastel cuidadosamente seleccionada.
-- **Reserva de Turnos**: Flujo de reserva intuitivo paso a paso para seleccionar servicios, fechas y horarios.
-- **Seguimiento en Vivo**: Rastreador de estado en tiempo real para que los dueños vean el progreso de su mascota (Baño, Secado, Listo, etc.).
-- **Panel Administrativo**: Gestión completa de turnos, horarios y configuración del negocio.
-- **Seguridad**: Implementación de políticas RLS (Row Level Security) en Supabase y autenticación robusta.
+- **Premium Design**: Modern interface with a friendly aesthetic, high-quality imagery, and rounded corners throughout.
+- **Appointment Booking**: Intuitive step-by-step booking flow to select services, dates, and times.
+- **Live Tracking**: Real-time status tracker for pet owners to see their pet's progress (Washing, Drying, Ready, etc.).
+- **Admin Dashboard**: Full management system for appointments, business hours, and shop settings.
+- **Security**: Robust authentication and Row Level Security (RLS) implementation on Supabase.
 
-## 🛠️ Flujo de Trabajo (Git)
+## 🛠️ Workflow (Git)
 
-Mantenemos un flujo de trabajo organizado para asegurar la estabilidad:
+We maintain an organized workflow to ensure stability:
 
-- **`main`**: Rama de producción. Solo contiene código estable y probado.
-- **`develop`**: Rama principal de desarrollo. Aquí es donde se integran las nuevas funcionalidades y correcciones antes de pasar a producción.
+- **`main`**: Production branch. Contains only stable and tested code ready for release.
+- **`develop`**: Primary development branch. This is where new features and fixes are integrated before moving to production.
 
-## 🏁 Comenzando
+## 🏁 Getting Started
 
-1. **Clonar el repositorio**:
+1. **Clone the repository**:
    ```bash
-   git clone <url-del-repositorio>
+   git clone <repository-url>
    ```
 
-2. **Instalar dependencias**:
+2. **Install dependencies**:
    ```bash
    npm install
    ```
 
-3. **Configurar variables de entorno**:
-   Crea un archivo `.env.local` con tus credenciales de Supabase:
+3. **Configure environment variables**:
+   Create a `.env.local` file with your Supabase credentials:
    ```env
-   NEXT_PUBLIC_SUPABASE_URL=tu_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_key
+   NEXT_PUBLIC_SUPABASE_URL=your_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
    ```
 
-4. **Ejecutar el servidor de desarrollo**:
+4. **Run the development server**:
    ```bash
    npm run dev
    ```
 
-## 📄 Licencia
+## 📄 License
 
-Este proyecto está bajo la licencia MIT.
+This project is licensed under the MIT License.
