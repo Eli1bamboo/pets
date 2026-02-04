@@ -52,6 +52,19 @@ We use a split environment strategy to avoid messing with production data. Use t
    - Go to the **SQL Editor** in your Supabase Dashboard and run the script.
    *Note: Real auth users must be created manually in the dashboard or via the app sign-up flow.*
 
+### 🔑 Creating Admin Users
+
+Since roles are managed in the `public.profiles` table, follow these steps to create an administrator:
+
+1. **Create the user**: Go to **Authentication > Users** in your Supabase Dashboard and create a new user.
+2. **Copy the UID**: Copy the `User UID` (UUID) of the newly created user.
+3. **Elevate to Admin**: Go to the **SQL Editor** and run the following query:
+   ```sql
+   INSERT INTO public.profiles (id, full_name, role)
+   VALUES ('PASTE_USER_UID_HERE', 'Admin Name', 'admin')
+   ON CONFLICT (id) DO UPDATE SET role = 'admin';
+   ```
+
 ## 🏁 Getting Started
 
 1. **Clone the repository**:
