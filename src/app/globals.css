@@ -1,34 +1,36 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-50: #fdf8f6;
-  --color-brand-100: #f2e8e5;
-  --color-brand-200: #eaddd7;
-  --color-brand-300: #e0cec7;
-  --color-brand-400: #d2bab0;
-  --color-brand-500: #a09a96;
-  --color-brand-600: #8a8480;
-  --color-brand-700: #746d69;
-  --color-brand-800: #504a46;
-  --color-brand-900: #3a3b3c;
-  --color-brand-950: #1a1a1a;
-  
-  --corset-background: #ffffff;
-  --corset-foreground: #1a1a1a;
+  --color-primary-orange: #FFB347;
+  --color-secondary-teal: #2EC4B6;
+  --color-background-cream: #FDFFFC;
+  --color-soft-peach: #FFBF69;
+  --color-brand-900: #1a1a1a;
+  --color-brand-700: #4a4a4a;
+  --color-brand-600: #6a6a6a;
+
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-3xl: 2.5rem;
+  --radius-full: 9999px;
 }
 
 /* Custom Base Styles */
 body {
-  background-color: var(--color-brand-50);
-  color: var(--color-brand-950);
+  background-color: var(--color-background-cream);
+  color: var(--color-brand-900);
   font-family: var(--font-sans), system-ui, sans-serif;
   @apply antialiased;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-sans);
   font-weight: 700;
   letter-spacing: -0.025em;
   color: var(--color-brand-900);
 }
-
