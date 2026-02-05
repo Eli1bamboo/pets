@@ -12,6 +12,7 @@ interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
     id: string;
     leftIcon?: LucideIcon;
     rightIcon?: LucideIcon;
+    onRightIconClick?: () => void;
 }
 
 export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(

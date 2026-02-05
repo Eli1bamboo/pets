@@ -12,10 +12,11 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     error?: boolean;
     leftIcon?: LucideIcon;
     rightIcon?: LucideIcon;
+    onRightIconClick?: () => void;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ className, error, leftIcon: LeftIcon, rightIcon: RightIcon, ...props }, ref) => {
+    ({ className, error, leftIcon: LeftIcon, rightIcon: RightIcon, onRightIconClick, ...props }, ref) => {
         return (
             <div className="relative rounded-2xl shadow-sm">
                 {LeftIcon && (
@@ -35,8 +36,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                     {...props}
                 />
                 {RightIcon && (
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                        <RightIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                    <div
+                        className={cn(
+                            "absolute inset-y-0 right-0 flex items-center pr-4",
+                            onRightIconClick ? "cursor-pointer pointer-events-auto" : "pointer-events-none"
+                        )}
+                        onClick={onRightIconClick}
+                    >
+                        <RightIcon className={cn("h-5 w-5 text-gray-400 transition-colors", onRightIconClick && "hover:text-brand-600")} aria-hidden="true" />
                     </div>
                 )}
             </div>

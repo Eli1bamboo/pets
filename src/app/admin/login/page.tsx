@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LayoutDashboard, Lock, User } from "lucide-react";
+import { LayoutDashboard, Lock, User, Eye, EyeOff } from "lucide-react";
 import { FormField } from "@/components/molecules/FormField";
 import { Button } from "@/components/atoms/Button";
 import { motion } from "framer-motion";
@@ -17,6 +17,7 @@ export default function AdminLoginPage() {
     const { adminLogin, loading, error } = useLogin();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -69,12 +70,14 @@ export default function AdminLoginPage() {
                     <FormField
                         id="password"
                         label="Contraseña"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         required
                         placeholder="••••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         leftIcon={Lock}
+                        rightIcon={showPassword ? EyeOff : Eye}
+                        onRightIconClick={() => setShowPassword(!showPassword)}
                     />
 
                     {error && (
