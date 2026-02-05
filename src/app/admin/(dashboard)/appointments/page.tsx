@@ -12,12 +12,14 @@ import { usePagination } from "@/hooks/usePagination";
 import Modal, { ModalProps } from "@/components/molecules/Modal";
 import { Calendar, Settings } from "lucide-react";
 import { getWeekRange, formatWeekRange } from "@/utils/dateUtils";
+import { useSidebar } from "@/hooks/useSidebar";
 
 const ITEMS_PER_PAGE = 8;
 
 export default function AdminPage() {
     // Current Week Range (Monday to Sunday)
     const { start: startDate, end: endDate } = getWeekRange();
+    const { openSettings } = useSidebar();
 
     const { appointments, loading: fetching, updateStatus } = useAppointments({
         isAdmin: true,
@@ -99,18 +101,19 @@ export default function AdminPage() {
                         </p>
                     </div>
                     <div className="mt-4 sm:flex-none flex items-center gap-4">
-                        <div className="flex items-center gap-2 px-4 py-2 bg-brand-50 rounded-2xl border border-brand-100 text-brand-700">
+                        <div className="flex items-center gap-2 px-4 py-2 bg-brand-50 rounded-2xl border border-brand-100 text-brand-700 whitespace-nowrap">
                             <Calendar size={18} className="text-brand-500" />
                             <span className="text-sm font-semibold capitalize">
                                 {formatWeekRange(startDate, endDate)}
                             </span>
                         </div>
-                        <Link href="/admin/settings">
-                            <Button className="flex items-center gap-2">
-                                <Settings size={18} />
-                                Configuración
-                            </Button>
-                        </Link>
+                        <Button
+                            onClick={openSettings}
+                            className="flex items-center gap-2"
+                        >
+                            <Settings size={18} />
+                            Configuración
+                        </Button>
                     </div>
                 </div>
 
