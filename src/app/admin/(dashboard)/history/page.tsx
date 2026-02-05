@@ -2,17 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { createClient } from "@/utils/supabase/client";
-import { Appointment } from "@/types";
-import { Search, Filter, ArrowUpDown, ExternalLink } from "lucide-react";
+import { useAdminHistory } from "@/hooks/useAdminHistory";
+import { Search, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { AdminLoader } from "@/components/molecules/AdminLoader";
+
+// ... inside component ...
 
 export default function AdminHistoryPage() {
-    const { user, isAdmin, loading: authLoading } = useAuth({ redirectToLogin: true });
-    const [appointments, setAppointments] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const supabase = createClient();
+    const { isAdmin, loading: authLoading } = useAuth({ redirectToLogin: true });
+    const { appointments, loading } = useAdminHistory(isAdmin);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         if (!authLoading && !isAdmin) {
@@ -20,26 +21,10 @@ export default function AdminHistoryPage() {
         }
     }, [isAdmin, authLoading]);
 
-    useEffect(() => {
-        if (isAdmin) {
-            const fetchAllAppointments = async () => {
-                // Fetch appointments with profile info
-                const { data, error } = await supabase
-                    .from("appointments")
-                    .select(`
-                        *,
-                        profiles (
-                            full_name
-                        )
-                    `)
-                    .order("date", { ascending: false });
-
-                if (data) setAppointments(data);
-                setLoading(false);
-            };
-            fetchAllAppointments();
-        }
-    }, [isAdmin, supabase]);
+    const filteredAppointments = appointments.filter(app =>
+        app.pet_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (app.profiles?.full_name && app.profiles.full_name.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
 
     const getStatusStyles = (status: string) => {
         switch (status) {
@@ -53,11 +38,7 @@ export default function AdminHistoryPage() {
     };
 
     if (authLoading || loading) {
-        return (
-            <div className="flex min-h-[60vh] items-center justify-center">
-                <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary-orange border-t-transparent"></div>
-            </div>
-        );
+        return <AdminLoader message="Cargando historial..." />;
     }
 
     return (
@@ -74,6 +55,8 @@ export default function AdminHistoryPage() {
                         <input
                             type="text"
                             placeholder="Buscar perro o dueño..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
                             className="rounded-2xl border-brand-200 bg-white pl-10 pr-4 py-2.5 text-sm focus:border-primary-orange focus:ring-primary-orange w-full md:w-64"
                         />
                     </div>
@@ -94,7 +77,7 @@ export default function AdminHistoryPage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-brand-900/5">
-                            {appointments.map((app) => (
+                            {filteredAppointments.map((app) => (
                                 <tr key={app.id} className="hover:bg-brand-50/30 transition-colors">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="text-sm font-bold text-brand-900">
@@ -134,9 +117,9 @@ export default function AdminHistoryPage() {
                         </tbody>
                     </table>
                 </div>
-                {appointments.length === 0 && (
+                {filteredAppointments.length === 0 && (
                     <div className="py-20 text-center text-brand-500">
-                        No se encontraron turnos en el historial.
+                        {searchTerm ? "No se encontraron resultados para tu búsqueda." : "No se encontraron turnos en el historial."}
                     </div>
                 )}
             </div>

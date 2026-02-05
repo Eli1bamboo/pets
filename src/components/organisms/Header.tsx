@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Scissors, User as UserIcon, LogOut } from "lucide-react";
+import { Menu, X, Scissors, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function Header() {
@@ -45,7 +45,7 @@ export default function Header() {
                                 Mi Perfil
                             </Link>
                             <button
-                                onClick={() => signOut()}
+                                onClick={() => signOut("/")}
                                 className="text-brand-600 hover:text-red-500 transition-colors p-1"
                                 title="Cerrar sesión"
                             >
@@ -120,7 +120,7 @@ export default function Header() {
                                 </Link>
                                 <button
                                     onClick={() => {
-                                        signOut();
+                                        signOut("/");
                                         setIsOpen(false);
                                     }}
                                     className="w-full text-left flex items-center gap-2 rounded-xl px-4 py-3 text-base font-bold text-red-600 hover:bg-red-50 transition-all"

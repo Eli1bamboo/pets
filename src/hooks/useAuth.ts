@@ -49,7 +49,6 @@ export function useAuth({ redirectToLogin = false, loginPath = "/login" }: UseAu
     const signOut = async (redirectPath: string = "/") => {
         await supabase.auth.signOut()
         router.push(redirectPath)
-        router.refresh()
     }
 
     return { user, profile, isAdmin: profile?.role === 'admin', loading, signOut }

@@ -1,6 +1,5 @@
 "use client";
 
-import { Appointment } from "@/types";
 import { useAppointments } from "@/hooks/useAppointments";
 import { useCancelAppointment } from "@/hooks/useCancelAppointment";
 import { Calendar, Clock, Scissors, XCircle } from "lucide-react";

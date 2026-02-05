@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Hero from "@/components/organisms/Hero";
 import ServiceCard from "@/components/organisms/ServiceCard";
 import { Bath, Scissors, Wind } from "lucide-react";

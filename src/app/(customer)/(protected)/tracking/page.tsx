@@ -9,7 +9,7 @@ import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
 
 export default function TrackingPage() {
-    const { loading } = useAuth({ redirectToLogin: true });
+    useAuth({ redirectToLogin: true });
     const [inputId, setInputId] = useState("");
     const [appointmentId, setAppointmentId] = useState<string | null>(null);
 

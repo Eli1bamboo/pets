@@ -1,155 +1,125 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createClient } from "@/utils/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useDashboardStats } from "@/hooks/useDashboardStats";
 import {
     Scissors,
     CalendarCheck,
     TrendingUp,
     Clock,
-    Loader2,
     ArrowUpRight,
     Users
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { AdminLoader } from "@/components/molecules/AdminLoader";
 
 export default function AdminDashboard() {
-    const { user } = useAuth();
-    const [stats, setStats] = useState({
-        completedMonth: 0,
-        pendingTotal: 0,
-        totalRevenue: 0,
-        nextAppointment: null as any
-    });
-    const [loading, setLoading] = useState(true);
-    const supabase = createClient();
+    const { stats, loading } = useDashboardStats();
 
-    useEffect(() => {
-        if (user) {
-            fetchStats();
-        }
-    }, [user]);
-
-    const fetchStats = async () => {
-        const startOfMonth = new Date();
-        startOfMonth.setDate(1);
-        startOfMonth.setHours(0, 0, 0, 0);
-
-        const { count: completedCount } = await supabase
-            .from("appointments")
-            .select("*", { count: 'exact', head: true })
-            .eq("status", "completed")
-            .gte("date", startOfMonth.toISOString());
-
-        const { count: pendingCount } = await supabase
-            .from("appointments")
-            .select("*", { count: 'exact', head: true })
-            .in("status", ["pending", "washing", "drying", "ready"]);
-
-        const { data: nextApt } = await supabase
-            .from("appointments")
-            .select("*")
-            .in("status", ["pending", "washing"])
-            .gte("date", new Date().toISOString())
-            .order("date", { ascending: true })
-            .limit(1)
-            .single();
-
-        setStats({
-            completedMonth: completedCount || 0,
-            pendingTotal: pendingCount || 0,
-            totalRevenue: (completedCount || 0) * 4500,
-            nextAppointment: nextApt
-        });
-        setLoading(false);
-    };
-
-    if (loading) return (
-        <div className="flex flex-col justify-center items-center h-[60vh] gap-4">
-            <Loader2 className="animate-spin text-brand-900" size={48} />
-            <p className="text-brand-600 font-bold animate-pulse">Cargando métricas de negocio...</p>
-        </div>
-    );
+    if (loading) return <AdminLoader message="Cargando métricas de negocio..." />;
 
     const kpis = [
         { label: "Cortes del Mes", value: stats.completedMonth, icon: Scissors, color: "bg-primary-orange", subtext: "Completados" },
-        { label: "Turnos Agendados", value: stats.pendingTotal, icon: CalendarCheck, color: "bg-secondary-teal", subtext: "En espera" },
-        { label: "Ingresos (Est.)", value: `$${stats.totalRevenue.toLocaleString()}`, icon: TrendingUp, color: "bg-brand-900", subtext: "Base: $4.500" },
-        { label: "Clientes Nuevos", value: "12", icon: Users, color: "bg-soft-peach", subtext: "Últimos 30 días" }
+        { label: "Turnos Pendientes", value: stats.pendingTotal, icon: Clock, color: "bg-blue-500", subtext: "En espera" },
+        { label: "Ingresos Estimados", value: `$${stats.totalRevenue.toLocaleString()}`, icon: TrendingUp, color: "bg-green-500", subtext: "Este mes" },
+        { label: "Próximo Cliente", value: stats.nextAppointment?.pet_name || "Nadie", icon: Users, color: "bg-purple-500", subtext: stats.nextAppointment ? stats.nextAppointment.service : "-" }
     ];
 
     return (
         <div className="p-8 lg:p-12">
             <div className="mb-10 text-center lg:text-left">
-                <h1 className="text-4xl lg:text-5xl font-black text-brand-900 tracking-tight">Dashboard</h1>
-                <p className="text-brand-600 mt-3 font-medium text-lg">Resumen del rendimiento del negocio.</p>
+                <h1 className="text-4xl font-black text-brand-900 mb-2 tracking-tight">
+                    Panel de Control
+                </h1>
+                <p className="text-brand-600 text-lg">Resumen de actividad y métricas clave.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                {kpis.map((kpi, idx) => (
+                {kpis.map((kpi, index) => (
                     <motion.div
-                        key={kpi.label}
+                        key={index}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: idx * 0.1 }}
-                        className="bg-white p-8 rounded-[2.5rem] shadow-xl shadow-brand-900/5 ring-1 ring-brand-900/5 flex flex-col justify-between"
+                        transition={{ delay: index * 0.1 }}
+                        className="bg-white p-8 rounded-[2.5rem] shadow-xl shadow-brand-900/5 ring-1 ring-brand-900/5 flex flex-col justify-between h-48 hover:scale-[1.02] transition-transform duration-300"
                     >
-                        <div className={`p-4 rounded-2xl ${kpi.color} text-white shadow-xl w-fit`}>
-                            <kpi.icon size={28} />
+                        <div className="flex justify-between items-start">
+                            <div className={`${kpi.color} h-14 w-14 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-brand-900/10`}>
+                                <kpi.icon size={28} strokeWidth={2.5} />
+                            </div>
+                            <span className="bg-brand-50 text-brand-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+                                {kpi.subtext}
+                            </span>
                         </div>
-                        <div className="mt-10">
-                            <p className="text-xs font-black text-brand-400 uppercase tracking-widest">{kpi.label}</p>
-                            <h3 className="text-4xl font-black text-brand-900 mt-2">{kpi.value}</h3>
-                            <p className="text-sm text-brand-500 font-bold mt-2">{kpi.subtext}</p>
+                        <div>
+                            <p className="text-brand-400 text-sm font-bold uppercase tracking-wider mb-1">{kpi.label}</p>
+                            <p className="text-3xl font-black text-brand-900 tracking-tight">{kpi.value}</p>
                         </div>
                     </motion.div>
                 ))}
             </div>
 
             <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 bg-brand-900 rounded-[3rem] p-10 text-white shadow-2xl relative overflow-hidden group">
-                    <div className="relative z-10">
-                        <h2 className="text-2xl font-black flex items-center gap-4">
-                            <Clock className="text-primary-orange" size={28} />
-                            Próximo Turno
-                        </h2>
+                <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="lg:col-span-2 bg-brand-900 rounded-[3rem] p-10 h-80 relative overflow-hidden group"
+                >
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-16 -mt-16 group-hover:bg-white/10 transition-colors duration-500"></div>
 
-                        {stats.nextAppointment ? (
-                            <div className="mt-10 flex flex-col md:flex-row md:items-center justify-between gap-10">
-                                <div>
-                                    <p className="text-white/40 font-black text-xs uppercase tracking-widest">Paciente</p>
-                                    <h3 className="text-4xl font-black mt-2 text-primary-orange">{stats.nextAppointment.pet_name}</h3>
-                                    <p className="mt-2 text-white/60 font-bold">{stats.nextAppointment.service}</p>
+                    <div className="relative z-10 flex flex-col justify-between h-full">
+                        <div className="flex justify-between items-start">
+                            <h2 className="text-2xl font-bold text-white">Actividad Reciente</h2>
+                            <button className="bg-white/10 hover:bg-white/20 text-white p-3 rounded-xl transition-colors backdrop-blur-md">
+                                <ArrowUpRight size={24} />
+                            </button>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-4">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="bg-white/5 rounded-2xl p-4 backdrop-blur-sm border border-white/5">
+                                    <div className="h-2 w-2 rounded-full bg-green-400 mb-2"></div>
+                                    <p className="text-white/60 text-xs mb-1">Hace {i}h</p>
+                                    <p className="text-white font-bold text-sm">Corte Completado</p>
                                 </div>
-                                <div className="bg-white/10 p-6 rounded-[2rem] border border-white/10">
-                                    <p className="text-white/40 text-xs font-black uppercase mb-1">Horario</p>
-                                    <p className="text-3xl font-black">
-                                        {new Date(stats.nextAppointment.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                    </p>
+                            ))}
+                        </div>
+                    </div>
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="bg-white rounded-[3rem] p-10 shadow-xl ring-1 ring-brand-900/5 flex flex-col justify-between h-80 relative overflow-hidden"
+                >
+                    <div>
+                        <div className="flex items-center gap-3 mb-6">
+                            <div className="bg-primary-orange/10 p-2 rounded-xl">
+                                <CalendarCheck className="text-primary-orange" size={24} />
+                            </div>
+                            <h2 className="text-xl font-bold text-brand-900">Agenda de Hoy</h2>
+                        </div>
+                        {stats.nextAppointment ? (
+                            <div className="space-y-4">
+                                <div className="p-4 rounded-2xl bg-brand-50 border border-brand-100/50">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <span className="font-bold text-brand-900">{stats.nextAppointment.pet_name}</span>
+                                        <span className="text-xs font-bold bg-white px-2 py-1 rounded-md text-brand-600 shadow-sm border border-brand-100">
+                                            {new Date(stats.nextAppointment.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
+                                    </div>
+                                    <p className="text-sm text-brand-600">{stats.nextAppointment.service}</p>
                                 </div>
                             </div>
                         ) : (
-                            <p className="mt-10 text-white/40 font-bold">No hay turnos pendientes hoy.</p>
+                            <p className="text-brand-500 text-sm">No hay más turnos por hoy.</p>
                         )}
                     </div>
-                </div>
-
-                <div className="bg-white rounded-[3rem] p-10 shadow-xl ring-1 ring-brand-900/5 flex flex-col gap-4">
-                    <h2 className="text-xl font-black text-brand-900 mb-2">Acceso Rápido</h2>
-                    <button onClick={() => window.location.href = '/admin/appointments'} className="w-full bg-brand-50 p-5 rounded-2xl font-black text-brand-900 flex items-center justify-between hover:bg-brand-900 hover:text-white transition-all">
-                        <span>Turnos</span>
-                        <ArrowUpRight size={20} />
+                    <button className="w-full py-4 rounded-2xl bg-brand-900 text-white font-bold text-sm hover:bg-brand-800 transition-colors shadow-lg shadow-brand-900/20">
+                        Ver Calendario Completo
                     </button>
-                    <button onClick={() => window.location.href = '/admin/history'} className="w-full bg-brand-50 p-5 rounded-2xl font-black text-brand-900 flex items-center justify-between hover:bg-brand-900 hover:text-white transition-all">
-                        <span>Historial</span>
-                        <ArrowUpRight size={20} />
-                    </button>
-                    <button onClick={() => window.location.href = '/admin/settings'} className="w-full bg-brand-50 p-5 rounded-2xl font-black text-brand-900 flex items-center justify-between hover:bg-brand-900 hover:text-white transition-all">
-                        <span>Ajustes</span>
-                        <ArrowUpRight size={20} />
-                    </button>
-                </div>
+                </motion.div>
             </div>
         </div>
     );

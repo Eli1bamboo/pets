@@ -1,33 +1,38 @@
 "use client";
 
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import AdminHeader from "@/components/organisms/AdminHeader";
-import { Loader2 } from "lucide-react";
+import { AdminLoader } from "@/components/molecules/AdminLoader";
 
 export default function AdminLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
+    const router = useRouter();
     const { user, isAdmin, loading } = useAuth({
         redirectToLogin: true,
         loginPath: "/admin/login"
     });
 
+    useEffect(() => {
+        if (!loading && (!user || !isAdmin)) {
+            router.push("/admin/login");
+            router.refresh();
+        }
+    }, [user, isAdmin, loading, router]);
+
     if (loading) {
-        return (
-            <div className="flex h-screen w-full items-center justify-center bg-white">
-                <Loader2 className="animate-spin text-brand-900" size={48} />
-            </div>
-        );
+        return <AdminLoader fullScreen message="Verificando permisos..." />;
     }
 
-    if (user && !isAdmin) {
-        window.location.href = "/";
-        return null;
+    // If user is not an admin, or not logged in, show a redirecting message
+    // The useEffect above will handle the actual hard redirect
+    if (!user || !isAdmin) {
+        return <AdminLoader fullScreen message="Redirigiendo..." />;
     }
-
-    if (!user || !isAdmin) return null;
 
     return (
         <div className="bg-background-cream min-h-screen">

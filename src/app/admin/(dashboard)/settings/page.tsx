@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useBusinessHours } from "@/hooks/useBusinessHours";
-import { Loader2, ArrowLeft, Save, Clock, Calendar } from "lucide-react";
+import { ArrowLeft, Save, Calendar } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
 import { BusinessHours } from "@/types";
+import { AdminLoader } from "@/components/molecules/AdminLoader";
 
 const DAYS_NAMES = [
     "Domingo",
@@ -19,7 +20,7 @@ const DAYS_NAMES = [
 ];
 
 export default function AdminSettingsPage() {
-    const { user, loading: authLoading } = useAuth({ redirectToLogin: true });
+    const { loading: authLoading } = useAuth({ redirectToLogin: true });
     const { businessHours, loading: settingsLoading, saveSettings } = useBusinessHours();
     const [localHours, setLocalHours] = useState<BusinessHours[]>([]);
     const [saving, setSaving] = useState(false);
@@ -57,11 +58,7 @@ export default function AdminSettingsPage() {
     };
 
     if (authLoading || settingsLoading) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <Loader2 className="animate-spin text-brand-600" />
-            </div>
-        );
+        return <AdminLoader message="Cargando configuración..." />;
     }
 
     return (
@@ -85,8 +82,8 @@ export default function AdminSettingsPage() {
 
                 {message && (
                     <div className={`mb-6 p-4 rounded-lg border ${message.type === 'success'
-                            ? 'bg-green-50 border-green-200 text-green-800'
-                            : 'bg-red-50 border-red-200 text-red-800'
+                        ? 'bg-green-50 border-green-200 text-green-800'
+                        : 'bg-red-50 border-red-200 text-red-800'
                         }`}>
                         {message.text}
                     </div>

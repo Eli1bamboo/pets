@@ -37,14 +37,26 @@ export async function middleware(request: NextRequest) {
 
     // Protected Routes logic
     const isLoginPage = request.nextUrl.pathname === '/login'
+    const isAdminLoginPage = request.nextUrl.pathname === '/admin/login'
     const isAdminRoute = request.nextUrl.pathname.startsWith('/admin')
+    const isProtectedCustomerRoute = ['/profile', '/booking', '/history', '/tracking'].includes(request.nextUrl.pathname)
 
-    // 1. Redirect to login if user is not authenticated and trying to access protected route
-    if (!user && (isAdminRoute || request.nextUrl.pathname === '/profile' || request.nextUrl.pathname === '/booking')) {
-        const url = request.nextUrl.clone()
-        url.pathname = '/login'
-        url.searchParams.set('redirectTo', request.nextUrl.pathname)
-        return NextResponse.redirect(url)
+    // 1. Redirect to appropriate login if user is not authenticated
+    if (!user) {
+        // If accessing admin area (but not the login page itself), redirect to admin login
+        if (isAdminRoute && !isAdminLoginPage) {
+            const url = request.nextUrl.clone()
+            url.pathname = '/admin/login'
+            return NextResponse.redirect(url)
+        }
+
+        // If accessing protected customer routes, redirect to customer login
+        if (isProtectedCustomerRoute) {
+            const url = request.nextUrl.clone()
+            url.pathname = '/login'
+            url.searchParams.set('redirectTo', request.nextUrl.pathname)
+            return NextResponse.redirect(url)
+        }
     }
 
     // 2. Admin Route Protection (RBAC)

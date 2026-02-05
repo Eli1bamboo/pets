@@ -18,8 +18,6 @@ export const metadata: Metadata = {
   keywords: ["peluquería canina", "reserva turnos", "baño perros", "corte de pelo mascotas"],
 };
 
-import Header from "@/components/organisms/Header";
-import Footer from "@/components/organisms/Footer";
 
 export default function RootLayout({
   children,

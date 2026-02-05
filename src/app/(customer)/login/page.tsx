@@ -1,56 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/utils/supabase/client";
-import { useRouter } from "next/navigation";
-import { Scissors } from "lucide-react";
 import { FormField } from "@/components/molecules/FormField";
 import { Button } from "@/components/atoms/Button";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useLogin } from "@/hooks/useLogin";
 
 export default function LoginPage() {
     const [isSignUp, setIsSignUp] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const router = useRouter();
-    const supabase = createClient();
+    const { login, signup, loading, error } = useLogin();
 
     const handleAuth = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
-        setError(null);
 
-        try {
-            if (isSignUp) {
-                const { error } = await supabase.auth.signUp({
-                    email,
-                    password,
-                    options: {
-                        emailRedirectTo: `${location.origin}/auth/callback`,
-                        data: {
-                            full_name: email.split('@')[0],
-                            role: 'customer'
-                        }
-                    },
-                });
-                if (error) throw error;
+        if (isSignUp) {
+            const result = await signup(email, password);
+            if (result.success) {
                 alert("¡Registro exitoso! Revisa tu email.");
-            } else {
-                const { error } = await supabase.auth.signInWithPassword({
-                    email,
-                    password,
-                });
-                if (error) throw error;
-                router.push("/");
-                router.refresh();
             }
-        } catch (err: any) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
+        } else {
+            await login(email, password);
         }
     };
 

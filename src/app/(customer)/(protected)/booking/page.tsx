@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { DateSelector } from "@/components/molecules/DateSelector";
 import { TimeSelector } from "@/components/molecules/TimeSelector";
 import { useAvailability } from "@/hooks/useAvailability";
 import { useBooking } from "@/hooks/useBooking";
-import { Calendar, Clock, Loader2, CheckCircle2, Dog } from "lucide-react";
+import { Loader2, CheckCircle2, Dog } from "lucide-react";
 import { FormField } from "@/components/molecules/FormField";
 import { Button } from "@/components/atoms/Button";
 

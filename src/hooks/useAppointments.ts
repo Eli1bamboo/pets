@@ -1,35 +1,38 @@
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/utils/supabase/client'
-import { Appointment } from '@/types'
+import { Appointment, AppointmentStatus } from '@/types'
 
-export function useAppointments() {
+interface UseAppointmentsOptions {
+    isAdmin?: boolean;
+}
+
+export function useAppointments({ isAdmin = false }: UseAppointmentsOptions = {}) {
     const [appointments, setAppointments] = useState<Appointment[]>([])
     const [loading, setLoading] = useState(true)
     const supabase = createClient()
 
     const fetchAppointments = useCallback(async () => {
         try {
-            // No strict need to set loading true on refetch if we want to keep data visible, 
-            // but for consistency with initial load let's keep it or make it optional. 
-            // The original code set loading false at the end.
-            // Let's only set loading true if it was explicitly asked or rely on initial state.
-            // Actually, usually refetching shouldn't blank the screen. 
-            // But let's stick to the original logic flavor but optimized.
-
-            const { data: { user } } = await supabase.auth.getUser()
-            if (!user) {
-                setLoading(false)
-                return
-            }
-
-            const { data, error } = await supabase
+            let query = supabase
                 .from("appointments")
                 .select("*")
-                .eq("user_id", user.id)
-                .order("created_at", { ascending: false })
+                .order("date", { ascending: true }) // Admin prefers date text order? Original hook was created_at desc. Admin page was date asc. Let's stick to date asc for admin, or let it be param?
+            // Admin page used: .order("date", { ascending: true });
+            // Original hook used: .order("created_at", { ascending: false })
+
+            if (!isAdmin) {
+                const { data: { user } } = await supabase.auth.getUser()
+                if (!user) {
+                    setLoading(false)
+                    return
+                }
+                query = query.eq("user_id", user.id).order("created_at", { ascending: false })
+            }
+            // If admin, we don't filter by user_id and keep default order (unless overridden)
+
+            const { data, error } = await query
 
             if (!error && data) {
-                // Supabase returns data as any[] usually unless typed, casting is fine here as we did before
                 setAppointments(data as unknown as Appointment[])
             }
         } catch (error) {
@@ -37,11 +40,32 @@ export function useAppointments() {
         } finally {
             setLoading(false)
         }
-    }, [supabase])
+    }, [supabase, isAdmin])
+
+    const updateStatus = async (id: number, newStatus: AppointmentStatus) => {
+        // Optimistic update
+        setAppointments(prev => prev.map(app =>
+            app.id === id ? { ...app, status: newStatus } : app
+        ));
+
+        const { error } = await supabase
+            .from("appointments")
+            .update({ status: newStatus })
+            .eq("id", id);
+
+        if (error) {
+            console.error("Error updating status:", error);
+            // Revert on error
+            fetchAppointments();
+            return { success: false, error };
+        }
+
+        return { success: true };
+    };
 
     useEffect(() => {
         fetchAppointments()
     }, [fetchAppointments])
 
-    return { appointments, loading, refetch: fetchAppointments }
+    return { appointments, loading, refetch: fetchAppointments, updateStatus }
 }

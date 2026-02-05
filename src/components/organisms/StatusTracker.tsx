@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppointmentStatus } from "@/hooks/useAppointmentStatus";
-import { CheckCircle2, Circle, Clock, Loader2, Sparkles, Scissors, Wind, Bath } from "lucide-react";
+import { CheckCircle2, Clock, Loader2, Sparkles, Wind, Bath } from "lucide-react";
 import { motion } from "framer-motion";
 
 const STEPS = [

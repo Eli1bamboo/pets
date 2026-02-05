@@ -1,22 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { LayoutDashboard, Lock, User } from "lucide-react";
 import { FormField } from "@/components/molecules/FormField";
 import { Button } from "@/components/atoms/Button";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
+import { useLogin } from "@/hooks/useLogin";
+import { AdminLoader } from "@/components/molecules/AdminLoader";
+
+// ... inside component ...
 
 export default function AdminLoginPage() {
     const { isAdmin, loading: authLoading } = useAuth();
+    const { adminLogin, loading, error } = useLogin();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const router = useRouter();
-    const supabase = createClient();
 
     useEffect(() => {
         if (!authLoading && isAdmin) {
@@ -24,39 +25,11 @@ export default function AdminLoginPage() {
         }
     }, [isAdmin, authLoading, router]);
 
-    if (authLoading) return null;
+    if (authLoading) return <AdminLoader fullScreen message="Cargando portal..." />;
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
-        setError(null);
-
-        try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            });
-            if (error) throw error;
-
-            // Verify if user is admin
-            const { data: profile } = await supabase
-                .from('profiles')
-                .select('role')
-                .eq('id', data.user.id)
-                .single();
-
-            if (profile?.role !== 'admin') {
-                await supabase.auth.signOut();
-                throw new Error("Acceso denegado. Esta cuenta no tiene permisos de administrador.");
-            }
-
-            router.push("/admin");
-            router.refresh();
-        } catch (err: any) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
+        await adminLogin(email, password);
     };
 
     return (

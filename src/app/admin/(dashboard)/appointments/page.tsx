@@ -1,51 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createClient } from "@/utils/supabase/client";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
-import { Appointment, AppointmentStatus } from "@/types";
-import { Check, Clock, Play, RotateCcw, XCircle, Loader2, Settings } from "lucide-react";
+import { useAppointments } from "@/hooks/useAppointments";
+import { AppointmentStatus } from "@/types";
+import { Check, Play, XCircle, Settings } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
+import { AdminLoader } from "@/components/molecules/AdminLoader";
 
 export default function AdminPage() {
-    const { user, loading: authLoading } = useAuth({ redirectToLogin: true });
-    const [appointments, setAppointments] = useState<Appointment[]>([]);
-    const [fetching, setFetching] = useState(true); // Renamed from loading to avoid conflict, or handle sequential loading
-    const supabase = createClient();
+    const { loading: authLoading } = useAuth({ redirectToLogin: true });
+    const { appointments, loading: fetching, updateStatus } = useAppointments({ isAdmin: true });
 
-    useEffect(() => {
-        if (user) {
-            fetchAppointments();
-        }
-    }, [user]); // Run when user is confirmed
-
-    // ... fetchAppointments logic ...
-
-    const fetchAppointments = async () => {
-        const { data, error } = await supabase
-            .from("appointments")
-            .select("*")
-            .order("date", { ascending: true });
-
-        if (!error && data) {
-            // Cast to Appointment[] because Supabase types might not be auto-generated yet
-            setAppointments(data as unknown as Appointment[]);
-        }
-        setFetching(false);
-    };
-
-    const updateStatus = async (id: number, newStatus: AppointmentStatus) => {
-        const { error } = await supabase
-            .from("appointments")
-            .update({ status: newStatus })
-            .eq("id", id);
-
-        if (error) {
-            alert("Error updating status: " + error.message);
-        } else {
-            fetchAppointments();
+    const handleStatusUpdate = async (id: number, newStatus: AppointmentStatus) => {
+        const { success, error } = await updateStatus(id, newStatus);
+        if (!success && error) {
+            alert("Error al actualizar el estado");
         }
     };
 
@@ -65,7 +35,7 @@ export default function AdminPage() {
         );
     };
 
-    if (authLoading || fetching) return <div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin text-brand-600" /></div>;
+    if (authLoading || fetching) return <AdminLoader message="Cargando turnos..." />;
 
     return (
         <div className="bg-white min-h-screen py-10">
@@ -110,27 +80,27 @@ export default function AdminPage() {
                                             </td>
                                             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 flex gap-2">
                                                 {apt.status === 'pending' && (
-                                                    <button onClick={() => updateStatus(apt.id, 'washing')} className="text-blue-600 hover:text-blue-900" title="Pasar a Baño">
+                                                    <button onClick={() => handleStatusUpdate(apt.id, 'washing')} className="text-blue-600 hover:text-blue-900" title="Pasar a Baño">
                                                         <Play size={18} />
                                                     </button>
                                                 )}
                                                 {apt.status === 'washing' && (
-                                                    <button onClick={() => updateStatus(apt.id, 'drying')} className="text-orange-600 hover:text-orange-900" title="Pasar a Secado">
+                                                    <button onClick={() => handleStatusUpdate(apt.id, 'drying')} className="text-orange-600 hover:text-orange-900" title="Pasar a Secado">
                                                         <Play size={18} />
                                                     </button>
                                                 )}
                                                 {apt.status === 'drying' && (
-                                                    <button onClick={() => updateStatus(apt.id, 'ready')} className="text-green-600 hover:text-green-900" title="Marcar Listo">
+                                                    <button onClick={() => handleStatusUpdate(apt.id, 'ready')} className="text-green-600 hover:text-green-900" title="Marcar Listo">
                                                         <Check size={18} />
                                                     </button>
                                                 )}
                                                 {apt.status === 'ready' && (
-                                                    <button onClick={() => updateStatus(apt.id, 'completed')} className="text-brand-600 hover:text-brand-900" title="Finalizar">
+                                                    <button onClick={() => handleStatusUpdate(apt.id, 'completed')} className="text-brand-600 hover:text-brand-900" title="Finalizar">
                                                         <Check size={18} />
                                                     </button>
                                                 )}
                                                 {apt.status !== 'cancelled' && apt.status !== 'completed' && (
-                                                    <button onClick={() => updateStatus(apt.id, 'cancelled')} className="text-red-600 hover:text-red-900" title="Cancelar">
+                                                    <button onClick={() => handleStatusUpdate(apt.id, 'cancelled')} className="text-red-600 hover:text-red-900" title="Cancelar">
                                                         <XCircle size={18} />
                                                     </button>
                                                 )}

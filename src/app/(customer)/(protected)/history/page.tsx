@@ -1,33 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { createClient } from "@/utils/supabase/client";
-import { Appointment } from "@/types";
+
 import { Calendar, Clock, Dog, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { useCustomerHistory } from "@/hooks/useCustomerHistory";
+
+// ... inside component ...
 
 export default function HistoryPage() {
     const { user, loading: authLoading } = useAuth({ redirectToLogin: true });
-    const [appointments, setAppointments] = useState<Appointment[]>([]);
-    const [loading, setLoading] = useState(true);
-    const supabase = createClient();
-
-    useEffect(() => {
-        if (user) {
-            const fetchAppointments = async () => {
-                const { data, error } = await supabase
-                    .from("appointments")
-                    .select("*")
-                    .eq("user_id", user.id)
-                    .order("date", { ascending: false });
-
-                if (data) setAppointments(data);
-                setLoading(false);
-            };
-            fetchAppointments();
-        }
-    }, [user, supabase]);
+    const { appointments, loading } = useCustomerHistory(user);
 
     const getStatusStyles = (status: string) => {
         switch (status) {
