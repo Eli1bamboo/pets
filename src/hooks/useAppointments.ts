@@ -2,23 +2,25 @@ import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { Appointment, AppointmentStatus } from '@/types'
 
+
 interface UseAppointmentsOptions {
     isAdmin?: boolean;
+    startDate?: Date;
+    endDate?: Date;
 }
 
-export function useAppointments({ isAdmin = false }: UseAppointmentsOptions = {}) {
+export function useAppointments({ isAdmin = false, startDate, endDate }: UseAppointmentsOptions = {}) {
     const [appointments, setAppointments] = useState<Appointment[]>([])
     const [loading, setLoading] = useState(true)
     const supabase = createClient()
 
     const fetchAppointments = useCallback(async () => {
+        setLoading(true);
         try {
             let query = supabase
                 .from("appointments")
                 .select("*, profiles(full_name)")
                 .order("date", { ascending: true })
-            // Admin page used: .order("date", { ascending: true });
-            // Original hook used: .order("created_at", { ascending: false })
 
             if (!isAdmin) {
                 const { data: { user } } = await supabase.auth.getUser()
@@ -28,7 +30,14 @@ export function useAppointments({ isAdmin = false }: UseAppointmentsOptions = {}
                 }
                 query = query.eq("user_id", user.id).order("created_at", { ascending: false })
             }
-            // If admin, we don't filter by user_id and keep default order (unless overridden)
+
+            // Apply Date Filters if provided
+            if (startDate) {
+                query = query.gte("date", startDate.toISOString());
+            }
+            if (endDate) {
+                query = query.lte("date", endDate.toISOString());
+            }
 
             const { data, error } = await query
 
@@ -40,7 +49,7 @@ export function useAppointments({ isAdmin = false }: UseAppointmentsOptions = {}
         } finally {
             setLoading(false)
         }
-    }, [supabase, isAdmin])
+    }, [supabase, isAdmin, startDate?.toISOString(), endDate?.toISOString()]) // Dependencies use primitive strings to avoid loops
 
     const updateStatus = async (id: number, newStatus: AppointmentStatus) => {
         // Optimistic update

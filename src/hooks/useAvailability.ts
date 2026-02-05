@@ -29,7 +29,13 @@ export function useAvailability(date: string) {
                 let start = parseInt(hoursData.open_time.split(':')[0]);
                 let end = parseInt(hoursData.close_time.split(':')[0]);
 
+                const now = new Date();
+                const isToday = date === now.toISOString().split('T')[0];
+                const currentHour = now.getHours();
+
                 for (let h = start; h < end; h++) {
+                    // Only add if it's in the future if today
+                    if (isToday && h <= currentHour) continue;
                     slots.push(`${h.toString().padStart(2, '0')}:00`);
                 }
                 setAvailableHours(slots);
