@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 
 import { Calendar, Clock, Dog, ChevronRight } from "lucide-react";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import { useCustomerHistory } from "@/hooks/useCustomerHistory";
 // ... inside component ...
 
 export default function HistoryPage() {
-    const { user, loading: authLoading } = useAuth({ redirectToLogin: true });
+    const { user, loading: authLoading } = useCustomerAuth({ redirectToLogin: true });
     const { appointments, loading } = useCustomerHistory(user);
 
     const getStatusStyles = (status: string) => {

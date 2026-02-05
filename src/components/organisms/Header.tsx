@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, Scissors, LogOut } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState(false);
-    const { user, isAdmin, loading, signOut } = useAuth();
+    const { user, loading, signOut } = useCustomerAuth();
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-brand-900/5 bg-background-cream/80 backdrop-blur-xl">
@@ -26,7 +26,7 @@ export default function Header() {
                     <Link href="/" className="text-sm font-bold text-brand-700 hover:text-primary-orange transition-colors">
                         Inicio
                     </Link>
-                    {user && !isAdmin && (
+                    {user && (
                         <Link href="/history" className="text-sm font-bold text-brand-700 hover:text-primary-orange transition-colors">
                             Mi Historial
                         </Link>

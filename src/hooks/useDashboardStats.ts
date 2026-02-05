@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useAdminAuth } from "./useAdminAuth";
 
 interface DashboardStats {
     completedMonth: number;
@@ -10,7 +10,7 @@ interface DashboardStats {
 }
 
 export function useDashboardStats() {
-    const { user } = useAuth();
+    const { user } = useAdminAuth();
     const [stats, setStats] = useState<DashboardStats>({
         completedMonth: 0,
         pendingTotal: 0,

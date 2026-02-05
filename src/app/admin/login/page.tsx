@@ -6,15 +6,15 @@ import { LayoutDashboard, Lock, User, Eye, EyeOff } from "lucide-react";
 import { FormField } from "@/components/molecules/FormField";
 import { Button } from "@/components/atoms/Button";
 import { motion } from "framer-motion";
-import { useAuth } from "@/hooks/useAuth";
-import { useLogin } from "@/hooks/useLogin";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
+import { useAdminLogin } from "@/hooks/useAdminLogin";
 import { AdminLoader } from "@/components/molecules/AdminLoader";
 
 // ... inside component ...
 
 export default function AdminLoginPage() {
-    const { isAdmin, loading: authLoading } = useAuth();
-    const { adminLogin, loading, error } = useLogin();
+    const { isAdmin, loading: authLoading } = useAdminAuth();
+    const { adminLogin, loading, error } = useAdminLogin();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -30,7 +30,10 @@ export default function AdminLoginPage() {
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        await adminLogin(email, password);
+        const result = await adminLogin(email, password);
+        if (result.success) {
+            console.log("[AdminLogin] Login successful, waiting for AuthProvider sync...");
+        }
     };
 
     return (

@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { LayoutDashboard, Calendar, History, LogOut, Scissors, Menu, X } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 
 export default function AdminHeader() {
-    const { signOut } = useAuth();
+    const { signOut } = useAdminAuth();
     const [isOpen, setIsOpen] = useState(false);
 
     const navItems = [

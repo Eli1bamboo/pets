@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 import { DateSelector } from "@/components/molecules/DateSelector";
 import { TimeSelector } from "@/components/molecules/TimeSelector";
 import { useAvailability } from "@/hooks/useAvailability";
@@ -19,7 +19,7 @@ const SERVICES = [
 // ...
 
 export default function BookingPage() {
-    const { user, loading: authLoading } = useAuth({ redirectToLogin: true });
+    const { user, loading: authLoading } = useCustomerAuth({ redirectToLogin: true });
     const { createBooking, submitting } = useBooking();
     const [step, setStep] = useState(1);
 
