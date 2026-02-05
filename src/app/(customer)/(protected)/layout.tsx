@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 import { Loader2 } from "lucide-react";
 
 export default function ProtectedCustomerLayout({
@@ -8,7 +8,7 @@ export default function ProtectedCustomerLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const { user, loading } = useAuth({
+    const { user, loading } = useCustomerAuth({
         redirectToLogin: true,
         loginPath: "/login"
     });

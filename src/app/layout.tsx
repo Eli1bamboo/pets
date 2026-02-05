@@ -19,6 +19,8 @@ export const metadata: Metadata = {
 };
 
 
+import { CustomerProvider } from "@/providers/CustomerProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,7 +31,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <CustomerProvider>
+          {children}
+        </CustomerProvider>
       </body>
     </html>
   );
