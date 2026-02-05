@@ -15,8 +15,8 @@ export function useAppointments({ isAdmin = false }: UseAppointmentsOptions = {}
         try {
             let query = supabase
                 .from("appointments")
-                .select("*")
-                .order("date", { ascending: true }) // Admin prefers date text order? Original hook was created_at desc. Admin page was date asc. Let's stick to date asc for admin, or let it be param?
+                .select("*, profiles(full_name)")
+                .order("date", { ascending: true })
             // Admin page used: .order("date", { ascending: true });
             // Original hook used: .order("created_at", { ascending: false })
 

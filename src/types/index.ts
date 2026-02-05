@@ -25,4 +25,7 @@ export interface Appointment {
     service: string;
     date: string;
     status: AppointmentStatus;
+    profiles?: {
+        full_name: string | null;
+    };
 }
