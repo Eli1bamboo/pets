@@ -27,7 +27,6 @@ function AdminContent({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         const timer = setTimeout(() => {
             if (loading) {
-                console.warn("[AdminLayout] Auth loading timed out, redirecting...");
                 router.push("/admin/login");
             }
         }, 12000);
@@ -39,7 +38,6 @@ function AdminContent({ children }: { children: React.ReactNode }) {
     }
 
     if (!user || !isAdmin) {
-        console.log("[AdminLayout] Access Denied. User:", !!user, "IsAdmin:", isAdmin, "Profile:", !!profile);
         return (
             <div className="h-screen flex flex-col items-center justify-center bg-background-cream p-6 text-center">
                 <h1 className="text-4xl font-black text-brand-900 mb-4">Acceso Denegado</h1>

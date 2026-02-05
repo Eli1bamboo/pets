@@ -32,7 +32,7 @@ export default function AdminLoginPage() {
         e.preventDefault();
         const result = await adminLogin(email, password);
         if (result.success) {
-            console.log("[AdminLogin] Login successful, waiting for AuthProvider sync...");
+            // Login successful, redirect handled by useEffect
         }
     };
 

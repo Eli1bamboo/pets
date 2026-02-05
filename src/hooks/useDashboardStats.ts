@@ -1,12 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useAdminAuth } from "./useAdminAuth";
+import { Appointment } from "@/types";
 
 interface DashboardStats {
     completedMonth: number;
     pendingTotal: number;
     totalRevenue: number;
-    nextAppointment: any;
+    nextAppointment: Appointment | null;
 }
 
 export function useDashboardStats() {

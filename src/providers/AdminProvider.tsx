@@ -26,8 +26,6 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         if (initialized.current) return;
         initialized.current = true;
 
-        console.log("[AdminProvider] Initializing...");
-
         const syncAdmin = async () => {
             try {
                 const { data: { session } } = await supabase.auth.getSession();
@@ -44,7 +42,6 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
                     if (!error && data?.role === 'admin') {
                         setProfile(data);
                     } else {
-                        console.warn("[AdminProvider] Not an admin or error:", error?.message);
                         setProfile(null);
                     }
                 }
@@ -58,7 +55,6 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
         syncAdmin();
 
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-            console.log("[AdminProvider] Auth event:", event);
             if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
                 const newUser = session?.user ?? null;
                 setUser(newUser);
