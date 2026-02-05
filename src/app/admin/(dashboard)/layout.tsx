@@ -25,13 +25,13 @@ export default function AdminLayout({
     }, [user, isAdmin, loading, router]);
 
     if (loading) {
-        return <AdminLoader fullScreen message="Verificando permisos..." />;
+        return null;
     }
 
     // If user is not an admin, or not logged in, show a redirecting message
     // The useEffect above will handle the actual hard redirect
     if (!user || !isAdmin) {
-        return <AdminLoader fullScreen message="Redirigiendo..." />;
+        return null;
     }
 
     return (

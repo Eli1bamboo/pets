@@ -58,7 +58,7 @@ export default function AdminSettingsPage() {
     };
 
     if (authLoading || settingsLoading) {
-        return <AdminLoader message="Cargando configuración..." />;
+        return null;
     }
 
     return (

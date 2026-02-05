@@ -38,7 +38,7 @@ export default function AdminHistoryPage() {
     };
 
     if (authLoading || loading) {
-        return <AdminLoader message="Cargando historial..." />;
+        return null;
     }
 
     return (

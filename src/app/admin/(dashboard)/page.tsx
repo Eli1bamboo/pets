@@ -15,7 +15,7 @@ import { AdminLoader } from "@/components/molecules/AdminLoader";
 export default function AdminDashboard() {
     const { stats, loading } = useDashboardStats();
 
-    if (loading) return <AdminLoader message="Cargando métricas de negocio..." />;
+    if (loading) return null;
 
     const kpis = [
         { label: "Cortes del Mes", value: stats.completedMonth, icon: Scissors, color: "bg-primary-orange", subtext: "Completados" },

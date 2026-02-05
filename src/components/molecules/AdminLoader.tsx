@@ -8,7 +8,7 @@ interface AdminLoaderProps {
 export function AdminLoader({ message = "Cargando...", fullScreen = false }: AdminLoaderProps) {
     const content = (
         <div className="flex flex-col items-center justify-center gap-4">
-            <Loader2 className="animate-spin text-brand-900" size={48} />
+            {/* Spinner removed as requested */}
             <p className="text-brand-600 font-bold animate-pulse">{message}</p>
         </div>
     );
