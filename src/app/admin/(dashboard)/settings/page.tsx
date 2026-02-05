@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useBusinessHours } from "@/hooks/useBusinessHours";
 import { ArrowLeft, Save, Calendar } from "lucide-react";
 import Link from "next/link";
@@ -20,7 +20,7 @@ const DAYS_NAMES = [
 ];
 
 export default function AdminSettingsPage() {
-    const { loading: authLoading } = useAuth({ redirectToLogin: true });
+    const { loading: authLoading } = useAdminAuth({ redirectToLogin: true });
     const { businessHours, loading: settingsLoading, saveSettings } = useBusinessHours();
     const [localHours, setLocalHours] = useState<BusinessHours[]>([]);
     const [saving, setSaving] = useState(false);

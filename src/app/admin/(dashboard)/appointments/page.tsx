@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useAppointments } from "@/hooks/useAppointments";
 import { Appointment, AppointmentStatus } from "@/types";
-import { Settings } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
 import AppointmentSidebar from "@/components/organisms/AppointmentSidebar";
@@ -11,11 +10,20 @@ import { AppointmentsTable } from "@/components/organisms/AppointmentsTable";
 import { TablePagination } from "@/components/molecules/TablePagination";
 import { usePagination } from "@/hooks/usePagination";
 import Modal, { ModalProps } from "@/components/molecules/Modal";
+import { Calendar, Settings } from "lucide-react";
+import { getWeekRange, formatWeekRange } from "@/utils/dateUtils";
 
 const ITEMS_PER_PAGE = 8;
 
 export default function AdminPage() {
-    const { appointments, loading: fetching, updateStatus } = useAppointments({ isAdmin: true });
+    // Current Week Range (Monday to Sunday)
+    const { start: startDate, end: endDate } = getWeekRange();
+
+    const { appointments, loading: fetching, updateStatus } = useAppointments({
+        isAdmin: true,
+        startDate,
+        endDate
+    });
 
     const {
         currentItems: currentAppointments,
@@ -90,7 +98,13 @@ export default function AdminPage() {
                             Gestión de turnos y estados de las mascotas.
                         </p>
                     </div>
-                    <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+                    <div className="mt-4 sm:flex-none flex items-center gap-4">
+                        <div className="flex items-center gap-2 px-4 py-2 bg-brand-50 rounded-2xl border border-brand-100 text-brand-700">
+                            <Calendar size={18} className="text-brand-500" />
+                            <span className="text-sm font-semibold capitalize">
+                                {formatWeekRange(startDate, endDate)}
+                            </span>
+                        </div>
                         <Link href="/admin/settings">
                             <Button className="flex items-center gap-2">
                                 <Settings size={18} />

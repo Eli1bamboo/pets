@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useAdminHistory } from "@/hooks/useAdminHistory";
 import { Search, ExternalLink } from "lucide-react";
 import Link from "next/link";
@@ -11,7 +11,7 @@ import { AdminLoader } from "@/components/molecules/AdminLoader";
 // ... inside component ...
 
 export default function AdminHistoryPage() {
-    const { isAdmin, loading: authLoading } = useAuth({ redirectToLogin: true });
+    const { isAdmin, loading: authLoading } = useAdminAuth({ redirectToLogin: true });
     const { appointments, loading } = useAdminHistory(isAdmin);
     const [searchTerm, setSearchTerm] = useState("");
 
