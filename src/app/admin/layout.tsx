@@ -1,6 +1,7 @@
 "use client";
 
 import { AdminProvider } from "@/providers/AdminProvider";
+import { AdminUIProvider } from "@/providers/AdminUIProvider";
 
 export default function RootAdminLayout({
     children,
@@ -9,7 +10,9 @@ export default function RootAdminLayout({
 }) {
     return (
         <AdminProvider>
-            {children}
+            <AdminUIProvider>
+                {children}
+            </AdminUIProvider>
         </AdminProvider>
     );
 }
