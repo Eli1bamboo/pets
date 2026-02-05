@@ -19,7 +19,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [profile, setProfile] = useState<Profile | null>(null);
     const [loading, setLoading] = useState(true);
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
     const initialized = useRef(false);
 
     useEffect(() => {
@@ -45,8 +45,11 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
                         setProfile(null);
                     }
                 }
-            } catch (err) {
-                console.error("[AdminProvider] Sync error:", err);
+            } catch (err: any) {
+                // Ignore AbortError which happens frequently in dev/strict mode during hot reloads or rapid navigation
+                if (err.name !== 'AbortError' && !err.message?.includes('signal is aborted')) {
+                    console.error("[AdminProvider] Sync error:", err);
+                }
             } finally {
                 setLoading(false);
             }

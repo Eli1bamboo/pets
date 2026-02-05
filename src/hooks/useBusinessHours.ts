@@ -5,7 +5,7 @@ import { BusinessHours } from '@/types';
 export function useBusinessHours() {
     const [businessHours, setBusinessHours] = useState<BusinessHours[]>([]);
     const [loading, setLoading] = useState(true);
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
 
     const fetchBusinessHours = useCallback(async () => {
         setLoading(true);

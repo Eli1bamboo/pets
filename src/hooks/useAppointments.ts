@@ -12,7 +12,7 @@ interface UseAppointmentsOptions {
 export function useAppointments({ isAdmin = false, startDate, endDate }: UseAppointmentsOptions = {}) {
     const [appointments, setAppointments] = useState<Appointment[]>([])
     const [loading, setLoading] = useState(true)
-    const supabase = createClient()
+    const [supabase] = useState(() => createClient())
 
     const fetchAppointments = useCallback(async () => {
         setLoading(true);
