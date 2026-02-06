@@ -60,7 +60,9 @@ openSidebar("settings");
     - **Merge Strategy**: Merge `develop` into `main` for releases.
 
 ### Credentials
-- **Test Users**: See `TEST_CREDENTIALS.md` in the root.
+- **Admin**: `admin@test.com` / `test`
+- **Customer**: `turrinelias@gmail.com` / `123456`
+- **Reset DB**: `http://localhost:3000/admin/reset` (Use if login loops occur)
 - **Mock Data**: Use `mock_history_data.sql` for generating test scenarios. **Critical**: Use valid statuses ('completed', 'cancelled', 'pending', 'ready').
 
 ## 🛡 Verification Checklist
