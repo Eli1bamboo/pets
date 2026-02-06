@@ -2,22 +2,37 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
+interface SidebarState {
+    view: "settings" | "appointment_details" | null;
+    data?: any;
+    isOpen: boolean;
+}
+
 interface AdminUIContextType {
-    isSettingsOpen: boolean;
-    openSettings: () => void;
-    closeSettings: () => void;
+    sidebar: SidebarState;
+    openSidebar: (view: SidebarState["view"], data?: any) => void;
+    closeSidebar: () => void;
 }
 
 const AdminUIContext = createContext<AdminUIContextType | undefined>(undefined);
 
 export function AdminUIProvider({ children }: { children: ReactNode }) {
-    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [sidebar, setSidebar] = useState<SidebarState>({
+        view: null,
+        data: null,
+        isOpen: false
+    });
 
-    const openSettings = () => setIsSettingsOpen(true);
-    const closeSettings = () => setIsSettingsOpen(false);
+    const openSidebar = (view: SidebarState["view"], data?: any) => {
+        setSidebar({ view, data, isOpen: true });
+    };
+
+    const closeSidebar = () => {
+        setSidebar(prev => ({ ...prev, isOpen: false }));
+    };
 
     return (
-        <AdminUIContext.Provider value={{ isSettingsOpen, openSettings, closeSettings }}>
+        <AdminUIContext.Provider value={{ sidebar, openSidebar, closeSidebar }}>
             {children}
         </AdminUIContext.Provider>
     );

@@ -11,6 +11,7 @@ interface AppointmentRowProps {
     onStatusUpdate?: (id: number, status: AppointmentStatus) => void;
     onViewDetails?: (apt: Appointment) => void;
     onCancel?: (apt: Appointment) => void;
+    actionRenderer?: (apt: Appointment) => React.ReactNode;
 }
 
 const STATUS_OPTIONS: { value: AppointmentStatus; label: string }[] = [
@@ -27,7 +28,8 @@ export function AppointmentRow({
     isEmpty = false,
     onStatusUpdate,
     onViewDetails,
-    onCancel
+    onCancel,
+    actionRenderer
 }: AppointmentRowProps) {
 
     // Skeleton Row

@@ -2,6 +2,7 @@
 
 import { AdminProvider } from "@/providers/AdminProvider";
 import { AdminUIProvider } from "@/providers/AdminUIProvider";
+import { SidebarContainer } from "@/components/organisms/SidebarContainer";
 
 export default function RootAdminLayout({
     children,
@@ -12,7 +13,8 @@ export default function RootAdminLayout({
         <AdminProvider>
             <AdminUIProvider>
                 {children}
+                <SidebarContainer />
             </AdminUIProvider>
-        </AdminProvider>
+        </AdminProvider >
     );
 }

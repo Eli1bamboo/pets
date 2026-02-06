@@ -1,11 +1,13 @@
 import { useAdminUI } from "@/providers/AdminUIProvider";
 
 export const useSidebar = () => {
-    const { isSettingsOpen, openSettings, closeSettings } = useAdminUI();
+    const { sidebar, openSidebar, closeSidebar } = useAdminUI();
 
     return {
-        isSettingsOpen,
-        openSettings,
-        closeSettings
+        isOpen: sidebar.isOpen,
+        view: sidebar.view,
+        data: sidebar.data,
+        openSidebar,
+        closeSidebar
     };
 };

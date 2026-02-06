@@ -23,14 +23,11 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     const initialized = useRef(false);
 
     useEffect(() => {
-        if (initialized.current) return;
-        initialized.current = true;
+        let mounted = true;
 
-        const syncAdmin = async () => {
+        const syncAdminSession = async (session: any) => {
             try {
-                const { data: { session } } = await supabase.auth.getSession();
                 const currentUser = session?.user ?? null;
-                setUser(currentUser);
 
                 if (currentUser) {
                     const { data, error } = await supabase
@@ -39,51 +36,60 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
                         .eq("id", currentUser.id)
                         .single();
 
-                    if (!error && data?.role === 'admin') {
-                        setProfile(data);
-                    } else {
+                    if (mounted) {
+                        if (!error && data?.role === 'admin') {
+                            setUser(currentUser);
+                            setProfile(data);
+                        } else {
+                            // User exists but not admin or profile fetch failed
+                            console.warn("[AdminProvider] Not an admin or profile missing");
+                            setUser(null);
+                            setProfile(null);
+                        }
+                    }
+                } else {
+                    if (mounted) {
+                        setUser(null);
                         setProfile(null);
                     }
                 }
-            } catch (err: any) {
-                // Ignore AbortError which happens frequently in dev/strict mode during hot reloads or rapid navigation
-                if (err.name !== 'AbortError' && !err.message?.includes('signal is aborted')) {
-                    console.error("[AdminProvider] Sync error:", err);
+            } catch (err) {
+                console.error("[AdminProvider] Session sync error:", err);
+                if (mounted) {
+                    setUser(null);
+                    setProfile(null);
                 }
             } finally {
-                setLoading(false);
+                if (mounted) {
+                    setLoading(false);
+                }
             }
         };
 
-        syncAdmin();
+        // Initialize session
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            syncAdminSession(session);
+        });
 
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-            if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-                const newUser = session?.user ?? null;
-                setUser(newUser);
-                if (newUser) {
-                    const { data } = await supabase
-                        .from("profiles")
-                        .select("*")
-                        .eq("id", newUser.id)
-                        .single();
-                    if (data?.role === 'admin') {
-                        setProfile(data);
-                    } else {
-                        setProfile(null);
-                    }
-                }
-            } else if (event === 'SIGNED_OUT') {
-                setUser(null);
-                setProfile(null);
+        // Listen for changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            // Only re-sync if session user ID changed to avoid unnecessary fetches
+            if (session?.user?.id !== user?.id) {
+                // If we are already loading, we might want to let the initial sync finish
+                // But usually auth change dictates truth.
+                // Reset loading strictly if switching users? 
+                // Better: just sync.
+                setLoading(true); // Optional: show loading on drastic state change
+                syncAdminSession(session);
             }
-            setLoading(false);
         });
 
         return () => {
+            mounted = false;
             subscription.unsubscribe();
         };
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [supabase]);
 
     const signOut = async (redirectPath: string = "/admin/login") => {
         await supabase.auth.signOut();

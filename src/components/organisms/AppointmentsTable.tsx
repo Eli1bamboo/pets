@@ -6,9 +6,11 @@ interface AppointmentsTableProps {
     appointments: Appointment[];
     isLoading: boolean;
     itemsPerPage: number;
-    onStatusUpdate: (id: number, status: AppointmentStatus) => void;
-    onViewDetails: (apt: Appointment) => void;
-    onCancel: (apt: Appointment) => void;
+    onStatusUpdate?: (id: number, status: AppointmentStatus) => void;
+    onViewDetails?: (apt: Appointment) => void;
+    onCancel?: (apt: Appointment) => void;
+    // Composition: Allow parent to render custom actions
+    actionRenderer?: (apt: Appointment) => React.ReactNode;
 }
 
 export function AppointmentsTable({
@@ -17,7 +19,8 @@ export function AppointmentsTable({
     itemsPerPage,
     onStatusUpdate,
     onViewDetails,
-    onCancel
+    onCancel,
+    actionRenderer
 }: AppointmentsTableProps) {
     return (
         <div className="mt-8 flow-root">
@@ -52,6 +55,7 @@ export function AppointmentsTable({
                                                 onStatusUpdate={onStatusUpdate}
                                                 onViewDetails={onViewDetails}
                                                 onCancel={onCancel}
+                                                actionRenderer={actionRenderer}
                                             />
                                         ))}
                                         {/* Empty rows to maintain fixed height */}
