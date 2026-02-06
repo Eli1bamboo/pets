@@ -18,7 +18,7 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [profile, setProfile] = useState<Profile | null>(null);
     const [loading, setLoading] = useState(true);
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
     const initialized = useRef(false);
 
     useEffect(() => {
@@ -39,8 +39,10 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
                         .single();
                     setProfile(data);
                 }
-            } catch (err) {
-                console.error("[CustomerProvider] Sync error:", err);
+            } catch (err: any) {
+                if (err.name !== 'AbortError' && !err.message?.includes('signal is aborted')) {
+                    console.error("[CustomerProvider] Sync error:", err);
+                }
             } finally {
                 setLoading(false);
             }

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 
-import { CustomerProvider } from "@/providers/CustomerProvider";
+
 
 export default function RootLayout({
   children,
@@ -31,9 +31,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <CustomerProvider>
-          {children}
-        </CustomerProvider>
+        {children}
       </body>
     </html>
   );
