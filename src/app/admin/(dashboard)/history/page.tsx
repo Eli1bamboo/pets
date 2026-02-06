@@ -86,7 +86,7 @@ export default function AdminHistoryPage() {
                             <div className="relative z-10">
                                 <DatePicker
                                     selected={startDate}
-                                    onChange={(date) => setStartDate(date || undefined)}
+                                    onChange={(date: Date | null) => setStartDate(date || undefined)}
                                     placeholderText="Fecha Desde"
                                     className="w-full md:w-40 rounded-2xl border-brand-200 bg-gray-50 px-4 py-3 text-sm focus:border-primary-orange focus:ring-primary-orange"
                                     locale={es}
@@ -96,7 +96,7 @@ export default function AdminHistoryPage() {
                             <div className="relative z-10">
                                 <DatePicker
                                     selected={endDate}
-                                    onChange={(date) => setEndDate(date || undefined)}
+                                    onChange={(date: Date | null) => setEndDate(date || undefined)}
                                     placeholderText="Fecha Hasta"
                                     className="w-full md:w-40 rounded-2xl border-brand-200 bg-gray-50 px-4 py-3 text-sm focus:border-primary-orange focus:ring-primary-orange"
                                     locale={es}
@@ -117,8 +117,8 @@ export default function AdminHistoryPage() {
                                 key={s.value}
                                 onClick={() => toggleStatusFilter(s.value)}
                                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all border ${selectedStatuses.includes(s.value)
-                                        ? 'bg-brand-900 text-white border-brand-900'
-                                        : 'bg-white text-brand-600 border-gray-200 hover:border-brand-300'
+                                    ? 'bg-brand-900 text-white border-brand-900'
+                                    : 'bg-white text-brand-600 border-gray-200 hover:border-brand-300'
                                     }`}
                             >
                                 {s.label}

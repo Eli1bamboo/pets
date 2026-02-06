@@ -19,7 +19,8 @@ const DAYS_NAMES = [
 ];
 
 export default function SettingsSidebar() {
-    const { isSettingsOpen, closeSettings } = useSidebar();
+    const { isOpen, view, closeSidebar } = useSidebar();
+    const isSettingsOpen = isOpen && view === "settings";
     const { businessHours, loading: settingsLoading, saveSettings } = useBusinessHours();
     const [localHours, setLocalHours] = useState<BusinessHours[]>([]);
     const [saving, setSaving] = useState(false);
@@ -45,7 +46,7 @@ export default function SettingsSidebar() {
         if (businessHours.length > 0) {
             setLocalHours(businessHours);
         }
-        closeSettings();
+        closeSidebar();
     };
 
     const handleToggle = (id: number) => {

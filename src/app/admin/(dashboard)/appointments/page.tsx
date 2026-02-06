@@ -19,7 +19,7 @@ const ITEMS_PER_PAGE = 8;
 export default function AdminPage() {
     // Current Week Range (Monday to Sunday)
     const { start: startDate, end: endDate } = getWeekRange();
-    const { openSettings } = useSidebar();
+    const { openSidebar } = useSidebar();
 
     const { appointments, loading: fetching, updateStatus } = useAppointments({
         isAdmin: true,
@@ -108,7 +108,7 @@ export default function AdminPage() {
                             </span>
                         </div>
                         <Button
-                            onClick={openSettings}
+                            onClick={() => openSidebar("settings")}
                             className="flex items-center gap-2"
                         >
                             <Settings size={18} />
