@@ -14,6 +14,7 @@ import { useAppointmentLogs } from "@/hooks/useAppointmentLogs";
 import { useAppointment } from "@/hooks/useAppointment";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { Skeleton } from "@/components/atoms/Skeleton";
 
 interface AppointmentDetailsSidebarProps {
     appointment: Appointment;
@@ -36,7 +37,7 @@ export function AppointmentDetailsSidebar({ appointment: initialAppointment }: A
     const { triggerRefresh } = useRefresh();
 
     // Fetch live data to handle real-time updates and avoid stale state
-    const { appointment: liveAppointment } = useAppointment(initialAppointment?.id);
+    const { appointment: liveAppointment, loading: aptLoading } = useAppointment(initialAppointment?.id);
     const appointment = liveAppointment || initialAppointment; // Fallback to initial if loading or error, though hook handles it.
 
     const { logs, loading: logsLoading } = useAppointmentLogs(appointment?.id);
@@ -46,6 +47,30 @@ export function AppointmentDetailsSidebar({ appointment: initialAppointment }: A
             setSelectedStatus(appointment.status);
         }
     }, [appointment]);
+
+    if (!appointment && aptLoading) {
+        return (
+            <div className="flex flex-col h-full">
+                <SheetHeader className="border-b pb-4 mb-6">
+                    <Skeleton className="h-8 w-3/4 mb-2" />
+                    <Skeleton className="h-4 w-1/2" />
+                </SheetHeader>
+                <div className="space-y-8 flex-1 overflow-y-auto pr-1">
+                    <div className="border-b border-gray-100 pb-6">
+                        <Skeleton className="h-5 w-1/4 mb-4" />
+                        <Skeleton className="h-16 w-full rounded-xl" />
+                    </div>
+                    <div className="border-b border-gray-100 pb-6">
+                        <Skeleton className="h-5 w-1/4 mb-4" />
+                        <div className="grid grid-cols-2 gap-4">
+                            <Skeleton className="h-16 w-full rounded-xl" />
+                            <Skeleton className="h-16 w-full rounded-xl" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     if (!appointment) return null;
 
@@ -107,7 +132,17 @@ export function AppointmentDetailsSidebar({ appointment: initialAppointment }: A
                     </h3>
                     <div className="bg-slate-50 rounded-xl p-4 border border-slate-100 relative">
                         {logsLoading ? (
-                            <p className="text-sm text-slate-400 text-center py-4">Cargando actividad...</p>
+                            <div className="relative pl-7 space-y-6 before:content-[''] before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
+                                {[1, 2, 3].map((i) => (
+                                    <div key={i} className="relative">
+                                        <div className="absolute -left-[21px] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-slate-200 ring-1 ring-slate-200" />
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-4 w-3/4 bg-slate-200" />
+                                            <Skeleton className="h-3 w-1/2 bg-slate-100" />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         ) : (
                             <div className="relative pl-7 space-y-6 before:content-[''] before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 max-h-[240px] overflow-y-auto pr-2 custom-scrollbar">
                                 {/* Creation Log + Logs */}
