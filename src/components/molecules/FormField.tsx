@@ -13,13 +13,14 @@ interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
     leftIcon?: LucideIcon;
     rightIcon?: LucideIcon;
     onRightIconClick?: () => void;
+    variant?: 'customer' | 'admin';
 }
 
 export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
-    ({ label, error, className, id, leftIcon, rightIcon, ...props }, ref) => {
+    ({ label, error, className, id, leftIcon, rightIcon, variant = 'customer', ...props }, ref) => {
         return (
             <div className={className}>
-                <Label htmlFor={id} className="mb-2">
+                <Label htmlFor={id} className="mb-2" variant={variant}>
                     {label}
                 </Label>
                 <div className="mt-2">
@@ -29,6 +30,7 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
                         error={!!error}
                         leftIcon={leftIcon}
                         rightIcon={rightIcon}
+                        variant={variant}
                         {...props}
                     />
                 </div>

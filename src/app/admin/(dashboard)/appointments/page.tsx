@@ -3,9 +3,7 @@
 import { useState } from "react";
 import { useAppointments } from "@/hooks/useAppointments";
 import { Appointment, AppointmentStatus } from "@/types";
-import Link from "next/link";
 import { Button } from "@/components/atoms/Button";
-import AppointmentSidebar from "@/components/organisms/AppointmentSidebar";
 import { AppointmentsTable } from "@/components/organisms/AppointmentsTable";
 import { TablePagination } from "@/components/molecules/TablePagination";
 import { usePagination } from "@/hooks/usePagination";
@@ -19,7 +17,7 @@ const ITEMS_PER_PAGE = 8;
 export default function AdminPage() {
     // Current Week Range (Monday to Sunday)
     const { start: startDate, end: endDate } = getWeekRange();
-    const { openSidebar } = useSidebar();
+    const { openSidebar, closeSidebar } = useSidebar();
 
     const { appointments, loading: fetching, updateStatus } = useAppointments({
         isAdmin: true,
@@ -38,9 +36,6 @@ export default function AdminPage() {
         items: appointments,
         itemsPerPage: ITEMS_PER_PAGE
     });
-
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
 
     const [modalConfig, setModalConfig] = useState<ModalProps>({
         open: false,
@@ -66,8 +61,7 @@ export default function AdminPage() {
     };
 
     const handleOpenSidebar = (apt: Appointment) => {
-        setSelectedAppointment(apt);
-        setSidebarOpen(true);
+        openSidebar("appointment_details", { appointment: apt });
     };
 
     const handleCancelClick = (apt: Appointment) => {
@@ -82,7 +76,7 @@ export default function AdminPage() {
             onConfirm: async () => {
                 const success = await handleStatusUpdate(apt.id, 'cancelled');
                 if (success) {
-                    setSidebarOpen(false);
+                    closeSidebar();
                 }
             }
         });
@@ -91,25 +85,25 @@ export default function AdminPage() {
     // Auth loading handled by layout or ignored to show structure
 
     return (
-        <div className="bg-white min-h-screen py-10">
+        <div className="bg-admin-bg min-h-screen py-10">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="sm:flex sm:items-center">
                     <div className="sm:flex-auto">
-                        <h1 className="text-base font-semibold leading-6 text-brand-900">Panel de Administración</h1>
-                        <p className="mt-2 text-sm text-brand-700">
+                        <h1 className="text-2xl font-black leading-6 text-admin-primary">Panel de Administración</h1>
+                        <p className="mt-2 text-sm text-admin-text-secondary">
                             Gestión de turnos y estados de las mascotas.
                         </p>
                     </div>
                     <div className="mt-4 sm:flex-none flex items-center gap-4">
-                        <div className="flex items-center gap-2 px-4 py-2 bg-brand-50 rounded-2xl border border-brand-100 text-brand-700 whitespace-nowrap">
-                            <Calendar size={18} className="text-brand-500" />
+                        <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-xl border border-slate-200 text-slate-700 whitespace-nowrap shadow-sm">
+                            <Calendar size={18} className="text-admin-accent" />
                             <span className="text-sm font-semibold capitalize">
                                 {formatWeekRange(startDate, endDate)}
                             </span>
                         </div>
                         <Button
                             onClick={() => openSidebar("settings")}
-                            className="flex items-center gap-2"
+                            className="flex items-center gap-2 bg-admin-primary hover:bg-slate-800 text-white border-none shadow-sm"
                         >
                             <Settings size={18} />
                             Configuración
@@ -133,28 +127,9 @@ export default function AdminPage() {
                     startIndex={startIndex}
                     endIndex={endIndex}
                     onPageChange={goToPage}
+                    variant="admin"
                 />
             </div>
-
-            <AppointmentSidebar
-                open={sidebarOpen}
-                onClose={() => setSidebarOpen(false)}
-                appointment={selectedAppointment}
-                onSave={async (id, status) => {
-                    if (status === 'cancelled') {
-                        // Find the appointment to get details for the modal
-                        const apt = appointments.find(a => a.id === id);
-                        if (apt) {
-                            handleCancelClick(apt);
-                        }
-                    } else {
-                        const success = await handleStatusUpdate(id, status);
-                        if (success) {
-                            setSidebarOpen(false);
-                        }
-                    }
-                }}
-            />
 
             <Modal
                 {...modalConfig}

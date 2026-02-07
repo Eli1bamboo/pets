@@ -7,8 +7,9 @@ import { TimeSelector } from "@/components/molecules/TimeSelector";
 import { useAvailability } from "@/hooks/useAvailability";
 import { useBooking } from "@/hooks/useBooking";
 import { Loader2, CheckCircle2, Dog } from "lucide-react";
-import { FormField } from "@/components/molecules/FormField";
 import { Button } from "@/components/atoms/Button";
+import { Card } from "@/components/atoms/Card";
+import { FormField } from "@/components/molecules/FormField";
 
 const SERVICES = [
     { title: 'Baño y Secado', price: '$4500' },
@@ -16,9 +17,8 @@ const SERVICES = [
     { title: 'Spa de Deslanado', price: '$8000' }
 ];
 
-// ...
-
 export default function BookingPage() {
+    // ... hooks ...
     const { user, loading: authLoading } = useCustomerAuth({ redirectToLogin: true });
     const { createBooking, submitting } = useBooking();
     const [step, setStep] = useState(1);
@@ -33,9 +33,6 @@ export default function BookingPage() {
     const [time, setTime] = useState("");
     const { busySlots, availableHours, loading: availabilityLoading } = useAvailability(date);
 
-    // ...
-
-    // Let's use authLoading as the main loading indicator for the page render
     if (authLoading) return <div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin text-brand-600" /></div>;
 
     const handleBooking = async () => {
@@ -51,15 +48,15 @@ export default function BookingPage() {
     };
 
     return (
-        <div className="bg-background-cream min-h-screen py-16">
+        <div className="py-8 md:py-16">
             <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
-                <div className="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden ring-1 ring-brand-900/5">
+                <Card variant="standard" padding="none" className="overflow-hidden ring-1 ring-brand-900/5">
                     <div className="px-6 py-10 sm:p-12">
                         <div className="flex justify-between items-center mb-10">
                             <h2 className="text-3xl font-extrabold tracking-tight text-brand-900">Reservar Turno</h2>
                             <div className="flex gap-2.5">
-                                <span className={`h-2.5 w-10 rounded-full transition-all duration-300 ${step >= 1 ? 'bg-primary-orange' : 'bg-brand-200'}`} />
-                                <span className={`h-2.5 w-10 rounded-full transition-all duration-300 ${step >= 2 ? 'bg-primary-orange' : 'bg-brand-200'}`} />
+                                <span className={`h-2.5 w-10 rounded-full transition-all duration-300 ${step >= 1 ? 'bg-brand-500' : 'bg-brand-200'}`} />
+                                <span className={`h-2.5 w-10 rounded-full transition-all duration-300 ${step >= 2 ? 'bg-brand-500' : 'bg-brand-200'}`} />
                             </div>
                         </div>
 
@@ -82,16 +79,16 @@ export default function BookingPage() {
                                                 key={s.title}
                                                 onClick={() => setFormData({ ...formData, service: s.title })}
                                                 className={`cursor-pointer rounded-2xl border-2 p-5 flex items-center justify-between transition-all duration-200 ${formData.service === s.title
-                                                    ? 'border-primary-orange bg-soft-peach/10 ring-1 ring-primary-orange shadow-md'
-                                                    : 'border-brand-900/5 hover:border-soft-peach bg-white'
+                                                    ? 'border-brand-500 bg-brand-50/50 ring-1 ring-brand-500 shadow-md'
+                                                    : 'border-brand-900/5 hover:border-brand-200 bg-white'
                                                     }`}
                                             >
                                                 <div className="flex flex-col">
-                                                    <span className={`text-base font-bold ${formData.service === s.title ? 'text-primary-orange' : 'text-brand-900'}`}>{s.title}</span>
-                                                    <span className={`text-sm font-medium ${formData.service === s.title ? 'text-primary-orange/70' : 'text-brand-500'}`}>{s.price}</span>
+                                                    <span className={`text-base font-bold ${formData.service === s.title ? 'text-brand-500' : 'text-brand-900'}`}>{s.title}</span>
+                                                    <span className={`text-sm font-medium ${formData.service === s.title ? 'text-brand-400' : 'text-brand-500'}`}>{s.price}</span>
                                                 </div>
                                                 {formData.service === s.title && (
-                                                    <div className="bg-primary-orange rounded-full p-1">
+                                                    <div className="bg-brand-500 rounded-full p-1">
                                                         <CheckCircle2 size={24} className="text-white" />
                                                     </div>
                                                 )}
@@ -104,6 +101,7 @@ export default function BookingPage() {
                                     <Button
                                         onClick={() => formData.petName ? setStep(2) : alert("Ingresa el nombre de tu mascota")}
                                         className="h-14 text-lg"
+                                        variant="primary"
                                     >
                                         Elegir fecha y hora
                                     </Button>
@@ -113,7 +111,7 @@ export default function BookingPage() {
 
                         {step === 2 && (
                             <div className="space-y-10">
-                                <div className="bg-background-cream p-6 rounded-3xl">
+                                <div className="bg-brand-50/50 p-6 rounded-3xl border border-brand-100">
                                     <DateSelector selectedDate={date} onSelect={setDate} />
                                 </div>
 
@@ -149,7 +147,7 @@ export default function BookingPage() {
                             </div>
                         )}
                     </div>
-                </div>
+                </Card>
             </div>
         </div>
     );

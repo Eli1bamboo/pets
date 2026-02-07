@@ -6,7 +6,6 @@ import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { AdminProvider } from "@/providers/AdminProvider";
 import AdminHeader from "@/components/organisms/AdminHeader";
 import { AdminLoader } from "@/components/molecules/AdminLoader";
-import SettingsSidebar from "@/components/organisms/SettingsSidebar";
 
 export default function AdminLayout({
     children,
@@ -64,12 +63,11 @@ function AdminContent({ children }: { children: React.ReactNode }) {
     }
 
     return (
-        <div className="bg-background-cream min-h-screen">
+        <div className="bg-admin-bg min-h-screen">
             <AdminHeader />
             <main className="mx-auto max-w-7xl">
                 {children}
             </main>
-            <SettingsSidebar />
         </div>
     );
 }
