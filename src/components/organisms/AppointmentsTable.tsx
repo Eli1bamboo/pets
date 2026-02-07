@@ -27,16 +27,16 @@ export function AppointmentsTable({
             <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                     <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-                        <table className="min-w-full divide-y divide-gray-300">
+                        <table className="min-w-full divide-y divide-gray-300 table-fixed">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-brand-900 sm:pl-6">ID</th>
-                                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-brand-900">Cliente</th>
-                                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-brand-900">Mascota</th>
-                                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-brand-900">Servicio</th>
-                                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-brand-900">Fecha</th>
-                                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-brand-900">Estado</th>
-                                    <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                    <th scope="col" className="w-[5%] py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-admin-primary sm:pl-6">ID</th>
+                                    <th scope="col" className="w-[20%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">Cliente</th>
+                                    <th scope="col" className="w-[15%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">Mascota</th>
+                                    <th scope="col" className="w-[15%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">Servicio</th>
+                                    <th scope="col" className="w-[15%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">Fecha</th>
+                                    <th scope="col" className="w-[15%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">Estado</th>
+                                    <th scope="col" className="w-[15%] relative py-3.5 pl-3 pr-4 sm:pr-6">
                                         <span className="sr-only">Acciones</span>
                                     </th>
                                 </tr>

@@ -9,6 +9,7 @@ interface TablePaginationProps {
     startIndex: number;
     endIndex: number;
     onPageChange: (page: number) => void;
+    variant?: 'customer' | 'admin';
 }
 
 export function TablePagination({
@@ -18,8 +19,13 @@ export function TablePagination({
     startIndex,
     endIndex,
     onPageChange,
+    variant = 'customer',
 }: TablePaginationProps) {
     if (totalPages <= 1) return null;
+
+    const activeClasses = variant === 'admin'
+        ? 'z-10 bg-admin-primary text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-600'
+        : 'z-10 bg-brand-900 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600';
 
     return (
         <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-4">
@@ -60,7 +66,7 @@ export function TablePagination({
                                 key={i + 1}
                                 onClick={() => onPageChange(i + 1)}
                                 className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${currentPage === i + 1
-                                    ? 'z-10 bg-brand-900 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600'
+                                    ? activeClasses
                                     : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
                                     }`}
                             >

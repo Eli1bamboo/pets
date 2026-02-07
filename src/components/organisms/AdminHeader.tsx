@@ -16,13 +16,13 @@ export default function AdminHeader() {
     ];
 
     return (
-        <header className="bg-brand-900 text-white sticky top-0 z-50">
+        <header className="bg-admin-primary text-white sticky top-0 z-50">
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                     <div className="flex items-center gap-8">
                         <Link href="/admin" className="flex items-center gap-2 font-black text-xl italic tracking-tighter">
-                            <Scissors size={20} className="text-primary-orange" />
-                            <span>PELUQUERIA <span className="text-primary-orange">ADMIN</span></span>
+                            <Scissors size={20} className="text-admin-accent" />
+                            <span>PELUQUERIA <span className="text-admin-accent">ADMIN</span></span>
                         </Link>
 
                         <nav className="hidden md:flex items-center gap-6">

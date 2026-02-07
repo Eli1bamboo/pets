@@ -3,6 +3,7 @@ import { Appointment, AppointmentStatus } from "@/types";
 import { Eye, Trash2, ChevronDown } from "lucide-react";
 import { Skeleton } from "@/components/atoms/Skeleton";
 import { StatusBadge } from "@/components/atoms/StatusBadge";
+import { cn } from "@/lib/utils";
 
 interface AppointmentRowProps {
     appointment?: Appointment;
@@ -95,44 +96,60 @@ export function AppointmentRow({
             </td>
             <td className="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                 <div className="flex justify-end items-center gap-2">
-                    {/* Status Dropdown */}
-                    <div className="relative">
-                        <select
-                            className="appearance-none bg-gray-50 border border-gray-300 text-gray-700 py-1 pl-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-brand-500 text-xs font-semibold cursor-pointer"
-                            value={appointment.status}
-                            onChange={(e) => onStatusUpdate?.(appointment.id, e.target.value as AppointmentStatus)}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            {STATUS_OPTIONS.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                            <option value="cancelled" disabled hidden>Cancelado</option>
-                        </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                            <ChevronDown size={14} />
-                        </div>
-                    </div>
+                    {actionRenderer ? actionRenderer(appointment) : (
+                        <>
+                            {/* Status Dropdown */}
+                            <div className="relative">
+                                <select
+                                    className="appearance-none bg-gray-50 border border-gray-300 text-gray-700 py-1 pl-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs font-semibold cursor-pointer"
+                                    value={appointment.status}
+                                    onChange={(e) => onStatusUpdate?.(appointment.id, e.target.value as AppointmentStatus)}
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    {STATUS_OPTIONS.map((option) => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    ))}
+                                    <option value="cancelled" disabled hidden>Cancelado</option>
+                                </select>
+                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <ChevronDown size={14} />
+                                </div>
+                            </div>
 
-                    {/* Details Button */}
-                    <button
-                        onClick={(e) => { e.stopPropagation(); onViewDetails?.(appointment); }}
-                        className="text-brand-600 hover:text-brand-900 p-2 rounded-full hover:bg-brand-50 transition-colors"
-                        title="Ver detalles"
-                    >
-                        <Eye size={18} />
-                    </button>
+                            {/* Details Button */}
+                            <button
+                                onClick={(e) => { e.stopPropagation(); onViewDetails?.(appointment); }}
+                                className="text-slate-400 hover:text-admin-primary p-2 rounded-full hover:bg-slate-100 transition-colors"
+                                title="Ver detalles"
+                            >
+                                <Eye size={18} />
+                            </button>
 
-                    {/* Cancel Button */}
-                    {appointment.status !== 'cancelled' && appointment.status !== 'completed' && (
-                        <button
-                            onClick={(e) => { e.stopPropagation(); onCancel?.(appointment); }}
-                            className="text-red-400 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors"
-                            title="Cancelar Turno"
-                        >
-                            <Trash2 size={18} />
-                        </button>
+                            {/* Cancel Button */}
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (appointment.status !== 'cancelled' && appointment.status !== 'completed') {
+                                        onCancel?.(appointment);
+                                    }
+                                }}
+                                disabled={appointment.status === 'cancelled' || appointment.status === 'completed'}
+                                className={cn(
+                                    "p-2 rounded-full transition-colors",
+                                    appointment.status === 'cancelled' || appointment.status === 'completed'
+                                        ? "text-gray-300 cursor-not-allowed"
+                                        : "text-red-400 hover:text-red-700 hover:bg-red-50"
+                                )}
+                                title={appointment.status === 'cancelled' || appointment.status === 'completed'
+                                    ? "No se puede cancelar"
+                                    : "Cancelar Turno"
+                                }
+                            >
+                                <Trash2 size={18} />
+                            </button>
+                        </>
                     )}
                 </div>
             </td>

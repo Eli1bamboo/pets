@@ -5,8 +5,12 @@ import { useBusinessHours } from "@/hooks/useBusinessHours";
 import { Save, Calendar } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { BusinessHours } from "@/types";
-import Sidebar from "@/components/organisms/Sidebar";
 import { useSidebar } from "@/hooks/useSidebar";
+import {
+    SheetHeader,
+    SheetTitle,
+    SheetDescription,
+} from "@/components/molecules/SidebarSheet";
 
 const DAYS_NAMES = [
     "Domingo",
@@ -19,8 +23,7 @@ const DAYS_NAMES = [
 ];
 
 export default function SettingsSidebar() {
-    const { isOpen, view, closeSidebar } = useSidebar();
-    const isSettingsOpen = isOpen && view === "settings";
+    const { closeSidebar } = useSidebar();
     const { businessHours, loading: settingsLoading, saveSettings } = useBusinessHours();
     const [localHours, setLocalHours] = useState<BusinessHours[]>([]);
     const [saving, setSaving] = useState(false);
@@ -32,14 +35,6 @@ export default function SettingsSidebar() {
             setLocalHours(businessHours);
         }
     }, [businessHours]);
-
-
-    // Reset message when opening/closing
-    useEffect(() => {
-        if (isSettingsOpen) {
-            setMessage(null);
-        }
-    }, [isSettingsOpen]);
 
     const handleClose = () => {
         // Reset local changes to last saved state
@@ -75,35 +70,16 @@ export default function SettingsSidebar() {
         }
     };
 
-    const footer = (
-        <>
-            <Button
-                variant="outline"
-                onClick={handleClose}
-                className="flex-1"
-            >
-                Cerrar
-            </Button>
-            <Button
-                onClick={handleSave}
-                isLoading={saving}
-                className="flex-1 flex items-center justify-center gap-2"
-            >
-                <Save size={16} />
-                Guardar
-            </Button>
-        </>
-    );
-
     return (
-        <Sidebar
-            open={isSettingsOpen}
-            onClose={handleClose}
-            title="Configuración del Sitio"
-            description="Define los días y horarios de atención."
-            footer={footer}
-        >
-            <div className="space-y-6">
+        <div className="h-full flex flex-col">
+            <SheetHeader className="mb-6">
+                <SheetTitle>Configuración del Sitio</SheetTitle>
+                <SheetDescription>
+                    Define los días y horarios de atención.
+                </SheetDescription>
+            </SheetHeader>
+
+            <div className="flex-1 overflow-y-auto space-y-6">
                 {message && (
                     <div className={`p-4 rounded-lg border text-sm font-medium ${message.type === 'success'
                         ? 'bg-green-50 border-green-200 text-green-800'
@@ -164,6 +140,24 @@ export default function SettingsSidebar() {
                     </div>
                 </div>
             </div>
-        </Sidebar>
+
+            <div className="mt-auto pt-6 border-t border-gray-100 flex gap-3">
+                <Button
+                    variant="outline"
+                    onClick={handleClose}
+                    className="flex-1"
+                >
+                    Cerrar
+                </Button>
+                <Button
+                    onClick={handleSave}
+                    isLoading={saving}
+                    className="flex-1 flex items-center justify-center gap-2"
+                >
+                    <Save size={16} />
+                    Guardar
+                </Button>
+            </div>
+        </div>
     );
 }
