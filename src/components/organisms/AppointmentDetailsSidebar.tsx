@@ -109,7 +109,7 @@ export function AppointmentDetailsSidebar({ appointment: initialAppointment }: A
                         {logsLoading ? (
                             <p className="text-sm text-slate-400 text-center py-4">Cargando actividad...</p>
                         ) : (
-                            <div className="relative pl-4 space-y-6 before:content-[''] before:absolute before:left-0 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 max-h-[240px] overflow-y-auto pr-2 custom-scrollbar">
+                            <div className="relative pl-7 space-y-6 before:content-[''] before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 max-h-[240px] overflow-y-auto pr-2 custom-scrollbar">
                                 {/* Creation Log + Logs */}
                                 {[
                                     ...logs,
