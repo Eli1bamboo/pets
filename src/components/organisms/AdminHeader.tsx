@@ -49,14 +49,12 @@ export default function AdminHeader() {
                         </button>
                     </div>
 
-                    {/* Mobile toggle */}
                     <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
                         {isOpen ? <X /> : <Menu />}
                     </button>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
             {isOpen && (
                 <div className="md:hidden bg-brand-900 border-t border-white/10 p-4 space-y-4">
                     {navItems.map((item) => (

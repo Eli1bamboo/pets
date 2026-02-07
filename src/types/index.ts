@@ -4,9 +4,9 @@ export type AppointmentStatus = 'pending' | 'washing' | 'drying' | 'ready' | 'co
 
 export interface BusinessHours {
     id: number;
-    day_of_week: number; // 0-6
-    open_time: string; // "HH:MM"
-    close_time: string; // "HH:MM"
+    day_of_week: number;
+    open_time: string;
+    close_time: string;
     is_active: boolean;
 }
 

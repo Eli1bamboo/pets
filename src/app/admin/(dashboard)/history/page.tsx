@@ -24,7 +24,6 @@ const STATUS_FILTERS: { value: AppointmentStatus; label: string }[] = [
 export default function AdminHistoryPage() {
     const { isAdmin, loading: authLoading } = useAdminAuth({ redirectToLogin: true });
 
-    // Filters State
     const [searchTerm, setSearchTerm] = useState("");
     const [startDate, setStartDate] = useState<Date | undefined>(undefined);
     const [endDate, setEndDate] = useState<Date | undefined>(undefined);
@@ -38,7 +37,6 @@ export default function AdminHistoryPage() {
         }
     }, [isAdmin, authLoading]);
 
-    // Pagination State
     const [currentPage, setCurrentPage] = useState(1);
     const ITEMS_PER_PAGE = 8;
 
@@ -90,10 +88,8 @@ export default function AdminHistoryPage() {
                     <p className="text-admin-text-secondary">Gestión y visualización de todos los turnos del sistema.</p>
                 </div>
 
-                {/* Filter Bar */}
                 <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
                     <div className="flex flex-col md:flex-row gap-4">
-                        {/* Search */}
                         <div className="relative flex-1">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                             <input
@@ -105,7 +101,6 @@ export default function AdminHistoryPage() {
                             />
                         </div>
 
-                        {/* Date Range */}
                         <div className="flex gap-2">
                             <div className="relative z-10">
                                 <DatePicker
@@ -130,7 +125,6 @@ export default function AdminHistoryPage() {
                         </div>
                     </div>
 
-                    {/* Status Filters */}
                     <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100">
                         <div className="flex items-center gap-2 text-sm font-bold text-slate-700 mr-2">
                             <Filter size={16} />
@@ -160,7 +154,6 @@ export default function AdminHistoryPage() {
                 </div>
             </div>
 
-            {/* Table */}
             <AppointmentsTable
                 appointments={appointments}
                 isLoading={dataLoading}

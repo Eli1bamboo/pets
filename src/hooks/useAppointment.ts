@@ -26,7 +26,6 @@ export function useAppointment(id?: number) {
 
         fetchAppointment();
 
-        // Realtime subscription for this specific appointment
         const channel = supabase
             .channel(`appointment-${id}`)
             .on(
@@ -41,9 +40,6 @@ export function useAppointment(id?: number) {
                     const updated = payload.new as Appointment;
                     setAppointment((prev) => {
                         if (!prev) return updated;
-                        // Use loose equality for ID check if we were to check it, 
-                        // but here we are filtered by ID so we assume it matches or we just replace.
-                        // Ideally we merge.
                         return { ...prev, ...updated };
                     });
                 }

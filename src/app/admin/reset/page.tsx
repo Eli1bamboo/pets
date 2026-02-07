@@ -14,7 +14,6 @@ export default function ResetSessionPage() {
         const clearSession = async () => {
             try {
                 setStatus("Cerrando sesión de Supabase...");
-                // Attempt standard sign out
                 await supabase.auth.signOut();
             } catch (e) {
                 console.error("Error signing out:", e);
@@ -26,7 +25,6 @@ export default function ResetSessionPage() {
                 window.localStorage.clear();
                 window.sessionStorage.clear();
 
-                // Clear all cookies
                 document.cookie.split(";").forEach((c) => {
                     document.cookie = c
                         .replace(/^ +/, "")

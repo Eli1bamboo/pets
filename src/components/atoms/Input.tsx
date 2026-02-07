@@ -31,9 +31,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                     ref={ref}
                     className={cn(
                         'block w-full transition-all duration-200 outline-none',
-                        // Customer Styles (Rounded-xl, Brand Focus)
                         isCustomer && 'rounded-xl border border-brand-200 py-3.5 px-4 text-brand-900 placeholder:text-brand-400 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white shadow-sm',
-                        // Admin Styles (Rounded-lg, Slate Focus)
                         !isCustomer && 'rounded-lg border border-slate-300 py-2 px-3 text-slate-900 placeholder:text-slate-400 focus:border-slate-500 focus:ring-1 focus:ring-slate-500 bg-white',
 
                         LeftIcon && 'pl-11',

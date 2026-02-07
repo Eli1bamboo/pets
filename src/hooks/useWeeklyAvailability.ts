@@ -15,7 +15,6 @@ export function useWeeklyAvailability() {
             const startStr = days[0].dateStr + 'T00:00:00';
             const endStr = days[6].dateStr + 'T23:59:59';
 
-            // 1. Fetch all appointments for the week
             const { data: appointments, error: appError } = await supabase
                 .from('appointments')
                 .select('date')
@@ -23,7 +22,6 @@ export function useWeeklyAvailability() {
                 .lte('date', new Date(endStr).toISOString())
                 .neq('status', 'cancelled');
 
-            // 2. Fetch business hours to know capacity
             const { data: hours, error: hoursError } = await supabase
                 .from('business_hours')
                 .select('*');
@@ -60,7 +58,7 @@ export function useWeeklyAvailability() {
         };
 
         fetchWeeklyStatus();
-    }, [supabase]); // Run once on mount since weeks are fixed for now
+    }, [supabase]);
 
     return { fullDays, loading };
 }

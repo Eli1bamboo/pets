@@ -25,7 +25,6 @@ export function useAppointmentStatus(appointmentId: number | string) {
 
         fetchStatus();
 
-        // Realtime subscription
         const channel = supabase
             .channel("appointment-status")
             .on(

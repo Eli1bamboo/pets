@@ -38,14 +38,12 @@ export default function LoginPage() {
 
     return (
         <div className="relative flex min-h-screen items-center justify-center bg-background-cream px-6 py-4 lg:px-8 lg:py-12 overflow-hidden">
-            {/* Background Decorations */}
             <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-primary-orange/10 blur-3xl opacity-60" />
             <div className="absolute -bottom-24 -right-24 h-96 w-96 rounded-full bg-secondary-teal/10 blur-3xl opacity-60" />
 
             <div className="relative w-full max-w-5xl">
                 <div className="grid grid-cols-1 lg:grid-cols-2 bg-white rounded-3xl lg:rounded-[2.5rem] shadow-2xl shadow-brand-900/10 overflow-hidden ring-1 ring-brand-900/5">
 
-                    {/* Visual Section - Desktop */}
                     <div className="hidden lg:flex flex-col bg-soft-peach/5 p-16">
                         <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl ring-4 ring-white">
                             <Image
@@ -67,7 +65,6 @@ export default function LoginPage() {
                         </div>
                     </div>
 
-                    {/* Auth Section */}
                     <div className="flex flex-col justify-center p-6 lg:p-20 flex-1">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}

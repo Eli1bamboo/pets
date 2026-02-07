@@ -28,12 +28,10 @@ export function useAppointmentLogs(appointmentId?: number) {
         setLoading(false);
     }, [appointmentId, supabase]);
 
-    // Initial fetch
     useEffect(() => {
         fetchLogs();
     }, [fetchLogs]);
 
-    // Real-time subscription
     useEffect(() => {
         if (!appointmentId) return;
 
@@ -64,8 +62,6 @@ export function useAppointmentLogs(appointmentId?: number) {
             { appointment_id: appointmentId, description }
         ]);
         if (!error) {
-            // No need to manually fetch if subscription works, but safe to keep or remove.
-            // fetchLogs(); 
         }
     };
 

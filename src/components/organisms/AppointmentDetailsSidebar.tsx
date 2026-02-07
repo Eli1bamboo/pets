@@ -4,7 +4,7 @@ import {
     SheetDescription,
 } from "@/components/molecules/SidebarSheet";
 import { Appointment, AppointmentStatus } from "@/types";
-import { Calendar, Clock, User, Dog, Save, History, Activity } from "lucide-react";
+import { User, Dog, Save, Activity } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { useState, useEffect } from "react";
 import { useAppointments } from "@/hooks/useAppointments";
@@ -15,30 +15,21 @@ import { useAppointment } from "@/hooks/useAppointment";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Skeleton } from "@/components/atoms/Skeleton";
+import { APPOINTMENT_STATUSES } from "@/config/appointments";
 
 interface AppointmentDetailsSidebarProps {
     appointment: Appointment;
 }
 
-const STATUS_OPTIONS: { value: AppointmentStatus; label: string; color: string }[] = [
-    { value: 'pending', label: 'Pendiente', color: 'bg-slate-100 text-slate-700' },
-    { value: 'washing', label: 'En Baño', color: 'bg-blue-100 text-blue-700' },
-    { value: 'drying', label: 'En Secado', color: 'bg-orange-100 text-orange-800' },
-    { value: 'ready', label: 'Listo', color: 'bg-purple-100 text-purple-700' },
-    { value: 'completed', label: 'Completado', color: 'bg-emerald-100 text-emerald-700' },
-    { value: 'cancelled', label: 'Cancelado', color: 'bg-red-100 text-red-700' },
-];
-
 export function AppointmentDetailsSidebar({ appointment: initialAppointment }: AppointmentDetailsSidebarProps) {
     const [selectedStatus, setSelectedStatus] = useState<AppointmentStatus>('pending');
     const [saving, setSaving] = useState(false);
-    const { updateStatus } = useAppointments({}); // Get updater
+    const { updateStatus } = useAppointments({});
     const { closeSidebar } = useSidebar();
     const { triggerRefresh } = useRefresh();
 
-    // Fetch live data to handle real-time updates and avoid stale state
     const { appointment: liveAppointment, loading: aptLoading } = useAppointment(initialAppointment?.id);
-    const appointment = liveAppointment || initialAppointment; // Fallback to initial if loading or error, though hook handles it.
+    const appointment = liveAppointment || initialAppointment;
 
     const { logs, loading: logsLoading } = useAppointmentLogs(appointment?.id);
 
@@ -70,7 +61,6 @@ export function AppointmentDetailsSidebar({ appointment: initialAppointment }: A
             </SheetHeader>
 
             <div className="space-y-8 flex-1 overflow-y-auto pr-1">
-                {/* Client Info */}
                 <div className="border-b border-gray-100 pb-6">
                     <h3 className="text-base font-semibold text-admin-primary mb-4 flex items-center gap-2">
                         <User size={18} className="text-admin-accent" />
@@ -82,7 +72,7 @@ export function AppointmentDetailsSidebar({ appointment: initialAppointment }: A
                 </div>
 
 
-                {/* Pet Info */}
+
                 <div className="border-b border-gray-100 pb-6">
                     <h3 className="text-base font-semibold text-admin-primary mb-4 flex items-center gap-2">
                         <Dog size={18} className="text-admin-accent" />
@@ -100,7 +90,6 @@ export function AppointmentDetailsSidebar({ appointment: initialAppointment }: A
                     </div>
                 </div>
 
-                {/* Activity Logs */}
                 <div className="border-b border-gray-100 pb-6">
                     <h3 className="text-base font-semibold text-admin-primary mb-4 flex items-center gap-2">
                         <Activity size={18} className="text-admin-accent" />
@@ -122,7 +111,6 @@ export function AppointmentDetailsSidebar({ appointment: initialAppointment }: A
                         ) : (
                             <div className="h-[240px] overflow-y-auto pr-2 custom-scrollbar">
                                 <div className="relative pl-7 space-y-6 before:content-[''] before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 min-h-full">
-                                    {/* Creation Log + Logs */}
                                     {[
                                         ...logs,
                                         {
@@ -148,11 +136,10 @@ export function AppointmentDetailsSidebar({ appointment: initialAppointment }: A
                     </div>
                 </div>
 
-                {/* Status Management */}
                 <div>
                     <h3 className="text-base font-semibold text-admin-primary mb-4">Estado del Turno</h3>
                     <div className="space-y-3">
-                        {STATUS_OPTIONS.map((option) => (
+                        {APPOINTMENT_STATUSES.map((option) => (
                             <div
                                 key={option.value}
                                 onClick={() => setSelectedStatus(option.value)}
@@ -176,7 +163,6 @@ export function AppointmentDetailsSidebar({ appointment: initialAppointment }: A
                 </div>
             </div>
 
-            {/* Footer */}
             <div className="border-t border-gray-100 pt-6 mt-4 flex gap-3 bg-white sticky bottom-0 z-10">
                 <Button
                     variant="admin-outline"

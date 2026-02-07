@@ -10,7 +10,6 @@ import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useAdminLogin } from "@/hooks/useAdminLogin";
 import { AdminLoader } from "@/components/molecules/AdminLoader";
 
-// ... inside component ...
 
 export default function AdminLoginPage() {
     const { isAdmin, loading: authLoading } = useAdminAuth();
@@ -32,13 +31,11 @@ export default function AdminLoginPage() {
         e.preventDefault();
         const result = await adminLogin(email, password);
         if (result.success) {
-            // Login successful, redirect handled by useEffect
         }
     };
 
     return (
         <div className="relative flex min-h-screen items-center justify-center bg-slate-900 px-6 py-12 overflow-hidden">
-            {/* Professional Background Pattern */}
             <div className="absolute inset-0 opacity-10 pointer-events-none">
                 <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px]" />
             </div>
@@ -116,7 +113,6 @@ export default function AdminLoginPage() {
                 </div>
             </motion.div>
 
-            {/* Bottom Accent */}
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-2 text-slate-500/40 text-xs font-bold tracking-widest uppercase">
                 <LayoutDashboard size={14} />
                 <span>Business Control Center v2.0</span>

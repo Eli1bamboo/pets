@@ -11,7 +11,6 @@ export default function CustomerBottomNav() {
     const navItems = [
         { name: "Inicio", href: "/", icon: Home },
         { name: "Seguimiento", href: "/tracking", icon: Activity },
-        // Middle item is handled separately as FAB
         { name: "Historial", href: "/history", icon: Clock },
         { name: "Perfil", href: "/profile", icon: User },
     ];
@@ -22,7 +21,6 @@ export default function CustomerBottomNav() {
         <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden pb-safe">
             <div className="mx-4 mb-4 rounded-3xl bg-white shadow-xl shadow-brand-900/10 border border-brand-50 relative h-20 flex items-center justify-around px-2">
 
-                {/* Left Items */}
                 <Link
                     href="/"
                     className={cn(
@@ -45,7 +43,6 @@ export default function CustomerBottomNav() {
                     <span className="text-[10px] font-bold">Seguimiento</span>
                 </Link>
 
-                {/* Center FAB (Booking) */}
                 <div className="relative -top-8">
                     <Link
                         href="/booking"
@@ -55,7 +52,6 @@ export default function CustomerBottomNav() {
                     </Link>
                 </div>
 
-                {/* Right Items */}
                 <Link
                     href="/history"
                     className={cn(

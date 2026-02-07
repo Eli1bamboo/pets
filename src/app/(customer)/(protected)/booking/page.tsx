@@ -18,7 +18,6 @@ const SERVICES = [
 ];
 
 export default function BookingPage() {
-    // ... hooks ...
     const { user, loading: authLoading } = useCustomerAuth({ redirectToLogin: true });
     const { createBooking, submitting } = useBooking();
     const [step, setStep] = useState(1);

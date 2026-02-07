@@ -30,7 +30,6 @@ export const DateSelector: React.FC<DateSelectorProps> = ({ selectedDate, onSele
                 {days.map((day: any) => {
                     const isSelected = selectedDate === day.dateStr;
                     const isPast = day.dateStr < todayStr;
-                    // day.fullDate.getDay() returns 0 for Sunday, 1 for Monday etc.
                     const closed = isDayClosed(day.fullDate.getDay());
                     const isFull = fullDays.includes(day.dateStr);
                     const isDisabled = isPast || closed || isFull;

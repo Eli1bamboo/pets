@@ -38,7 +38,6 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
                 query = query.eq("user_id", user.id).order("created_at", { ascending: false })
             }
 
-            // Apply Date Filters
             if (startDate) {
                 query = query.gte("date", startDate.toISOString());
             }
@@ -46,17 +45,14 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
                 query = query.lte("date", endDate.toISOString());
             }
 
-            // Apply Status Filter
             if (statuses && statuses.length > 0) {
                 query = query.in("status", statuses);
             }
 
-            // Apply Search Filter (Pet Name)
             if (searchQuery) {
                 query = query.ilike('pet_name', `%${searchQuery}%`);
             }
 
-            // Apply Pagination
             const from = (page - 1) * limit;
             const to = from + limit - 1;
 
@@ -78,7 +74,6 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
     }, [supabase, isAdmin, startDate?.toISOString(), endDate?.toISOString(), searchQuery, JSON.stringify(statuses), page, limit, refreshTrigger])
 
     const updateStatus = async (id: number, newStatus: AppointmentStatus) => {
-        // Optimistic update
         setAppointments(prev => prev.map(app =>
             app.id === id ? { ...app, status: newStatus } : app
         ));
@@ -90,12 +85,10 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
 
         if (error) {
             console.error("Error updating status:", error);
-            // Revert on error
             fetchAppointments();
             return { success: false, error };
         }
 
-        // Log the activity
         const { error: logError } = await supabase.from("appointment_logs").insert([
             {
                 appointment_id: id,
@@ -112,7 +105,6 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
         fetchAppointments()
     }, [fetchAppointments])
 
-    // Real-time subscription for updates
     useEffect(() => {
         const channel = supabase
             .channel('appointments-changes')
@@ -126,18 +118,16 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
                 (payload) => {
                     console.log('Realtime Payload Received:', payload);
                     const updatedAppointment = payload.new as Appointment;
-                    // Verify if updatedAppointment has a valid ID
                     if (!updatedAppointment || updatedAppointment.id === undefined || updatedAppointment.id === null) {
                         console.warn('Realtime update received without a valid appointment ID:', payload);
-                        return; // Skip processing if ID is missing
+                        return;
                     }
                     console.log('Updating appointment:', updatedAppointment.id, 'New Status:', updatedAppointment.status);
 
                     setAppointments((prev) => {
                         return prev.map((app) =>
-                            // Use loose equality to handle string/number mismatch for IDs
                             app.id == updatedAppointment.id
-                                ? { ...app, ...updatedAppointment } // Merge updates
+                                ? { ...app, ...updatedAppointment }
                                 : app
                         )
                     });

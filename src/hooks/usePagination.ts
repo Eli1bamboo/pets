@@ -12,7 +12,6 @@ export function usePagination<T>({ items, itemsPerPage, initialPage = 1 }: UsePa
 
     const totalPages = Math.ceil(items.length / itemsPerPage);
 
-    // Ensure current page is valid when items change
     if (currentPage > totalPages && totalPages > 0) {
         setCurrentPage(totalPages);
     }

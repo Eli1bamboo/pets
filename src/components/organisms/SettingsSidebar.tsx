@@ -29,7 +29,6 @@ export default function SettingsSidebar() {
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
-    // Initial load effect to sync state
     useEffect(() => {
         if (businessHours.length > 0) {
             setLocalHours(businessHours);
@@ -37,7 +36,6 @@ export default function SettingsSidebar() {
     }, [businessHours]);
 
     const handleClose = () => {
-        // Reset local changes to last saved state
         if (businessHours.length > 0) {
             setLocalHours(businessHours);
         }
@@ -64,7 +62,6 @@ export default function SettingsSidebar() {
 
         if (success) {
             setMessage({ type: 'success', text: 'Configuración guardada correctamente.' });
-            // Optional: Close after success? User might want to keep editing.
         } else {
             setMessage({ type: 'error', text: 'Error al guardar: ' + (error as any).message });
         }

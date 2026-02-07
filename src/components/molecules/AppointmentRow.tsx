@@ -15,13 +15,7 @@ interface AppointmentRowProps {
     actionRenderer?: (apt: Appointment) => React.ReactNode;
 }
 
-const STATUS_OPTIONS: { value: AppointmentStatus; label: string }[] = [
-    { value: 'pending', label: 'Pendiente' },
-    { value: 'washing', label: 'En Baño' },
-    { value: 'drying', label: 'En Secado' },
-    { value: 'ready', label: 'Listo' },
-    { value: 'completed', label: 'Completado' },
-];
+import { APPOINTMENT_STATUSES } from "@/config/appointments";
 
 export function AppointmentRow({
     appointment,
@@ -33,10 +27,10 @@ export function AppointmentRow({
     actionRenderer
 }: AppointmentRowProps) {
 
-    // Skeleton Row
     if (isLoading) {
         return (
             <tr className="h-[67px]">
+
                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-brand-900 sm:pl-6">
                     <Skeleton className="h-5 w-8" />
                 </td>
@@ -66,7 +60,6 @@ export function AppointmentRow({
         );
     }
 
-    // Empty Placeholder Row
     if (isEmpty || !appointment) {
         return (
             <tr className="h-[67px]">
@@ -81,7 +74,6 @@ export function AppointmentRow({
         );
     }
 
-    // Data Row
     return (
         <tr className="cursor-pointer hover:bg-gray-50 transition-colors h-[67px]">
             <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-brand-900 sm:pl-6">{appointment.id}</td>
@@ -98,7 +90,6 @@ export function AppointmentRow({
                 <div className="flex justify-end items-center gap-2">
                     {actionRenderer ? actionRenderer(appointment) : (
                         <>
-                            {/* Status Dropdown */}
                             <div className="relative">
                                 <select
                                     className="appearance-none bg-gray-50 border border-gray-300 text-gray-700 py-1 pl-3 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-xs font-semibold cursor-pointer"
@@ -106,7 +97,7 @@ export function AppointmentRow({
                                     onChange={(e) => onStatusUpdate?.(appointment.id, e.target.value as AppointmentStatus)}
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    {STATUS_OPTIONS.map((option) => (
+                                    {APPOINTMENT_STATUSES.map((option) => (
                                         <option key={option.value} value={option.value}>
                                             {option.label}
                                         </option>
@@ -118,7 +109,6 @@ export function AppointmentRow({
                                 </div>
                             </div>
 
-                            {/* Details Button */}
                             <button
                                 onClick={(e) => { e.stopPropagation(); onViewDetails?.(appointment); }}
                                 className="text-slate-400 hover:text-admin-primary p-2 rounded-full hover:bg-slate-100 transition-colors"
@@ -127,7 +117,6 @@ export function AppointmentRow({
                                 <Eye size={18} />
                             </button>
 
-                            {/* Cancel Button */}
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();

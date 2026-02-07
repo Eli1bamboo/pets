@@ -14,7 +14,6 @@ export function useAvailability(date: string) {
             setLoading(true);
             const selectedDateObj = new Date(date + 'T12:00:00');
 
-            // 1. Fetch Business Hours for this specific day
             const dayOfWeek = selectedDateObj.getDay();
             const { data: hoursData, error: hoursError } = await supabase
                 .from('business_hours')
@@ -34,14 +33,12 @@ export function useAvailability(date: string) {
                 const currentHour = now.getHours();
 
                 for (let h = start; h < end; h++) {
-                    // Only add if it's in the future if today
                     if (isToday && h <= currentHour) continue;
                     slots.push(`${h.toString().padStart(2, '0')}:00`);
                 }
                 setAvailableHours(slots);
             }
 
-            // 2. Fetch Busy Slots
             const startOfDay = new Date(`${date}T00:00:00`).toISOString();
             const endOfDay = new Date(`${date}T23:59:59`).toISOString();
 

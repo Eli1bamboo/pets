@@ -41,7 +41,6 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
                             setUser(currentUser);
                             setProfile(data);
                         } else {
-                            // User exists but not admin or profile fetch failed
                             console.warn("[AdminProvider] Not an admin or profile missing");
                             setUser(null);
                             setProfile(null);
@@ -66,20 +65,13 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
             }
         };
 
-        // Initialize session
         supabase.auth.getSession().then(({ data: { session } }) => {
             syncAdminSession(session);
         });
 
-        // Listen for changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-            // Only re-sync if session user ID changed to avoid unnecessary fetches
             if (session?.user?.id !== user?.id) {
-                // If we are already loading, we might want to let the initial sync finish
-                // But usually auth change dictates truth.
-                // Reset loading strictly if switching users? 
-                // Better: just sync.
-                setLoading(true); // Optional: show loading on drastic state change
+                setLoading(true);
                 syncAdminSession(session);
             }
         });
@@ -88,7 +80,6 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
             mounted = false;
             subscription.unsubscribe();
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [supabase]);
 
     const signOut = async (redirectPath: string = "/admin/login") => {

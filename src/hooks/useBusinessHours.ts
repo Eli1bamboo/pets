@@ -35,7 +35,6 @@ export function useBusinessHours() {
             return { success: false, error };
         }
 
-        // Optimistic update
         setBusinessHours(prev =>
             prev.map(bh => bh.id === id ? { ...bh, ...updates } : bh)
         );
@@ -45,9 +44,6 @@ export function useBusinessHours() {
 
     const saveSettings = async (hours: BusinessHours[]) => {
         setLoading(true);
-        // Supabase update multiple is tricky without unique IDs in the array for upsert.
-        // We'll update them one by one or use a more complex query.
-        // For simplicity and 7 entries, we can do parallel updates or a single batch if we use upsert.
 
         const { error } = await supabase
             .from('business_hours')

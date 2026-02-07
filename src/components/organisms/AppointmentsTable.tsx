@@ -9,7 +9,6 @@ interface AppointmentsTableProps {
     onStatusUpdate?: (id: number, status: AppointmentStatus) => void;
     onViewDetails?: (apt: Appointment) => void;
     onCancel?: (apt: Appointment) => void;
-    // Composition: Allow parent to render custom actions
     actionRenderer?: (apt: Appointment) => React.ReactNode;
 }
 
@@ -58,7 +57,6 @@ export function AppointmentsTable({
                                                 actionRenderer={actionRenderer}
                                             />
                                         ))}
-                                        {/* Empty rows to maintain fixed height */}
                                         {Array.from({ length: Math.max(0, itemsPerPage - appointments.length) }).map((_, index) => (
                                             <AppointmentRow key={`empty-${index}`} isEmpty />
                                         ))}

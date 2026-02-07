@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-react";
+
 
 interface AdminLoaderProps {
     message?: string;

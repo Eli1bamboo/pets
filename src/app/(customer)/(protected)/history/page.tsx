@@ -6,7 +6,6 @@ import { Calendar, Clock, Dog, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useCustomerHistory } from "@/hooks/useCustomerHistory";
 
-// ... inside component ...
 
 export default function HistoryPage() {
     const { user, loading: authLoading } = useCustomerAuth({ redirectToLogin: true });

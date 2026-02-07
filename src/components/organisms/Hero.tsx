@@ -68,7 +68,6 @@ export default function Hero() {
                             priority
                         />
                     </div>
-                    {/* Decorative element */}
                     <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-secondary-teal/20 rounded-full blur-3xl -z-10" />
                     <div className="absolute -top-6 -left-6 w-32 h-32 bg-primary-orange/20 rounded-full blur-3xl -z-10" />
                 </motion.div>

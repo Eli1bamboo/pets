@@ -15,7 +15,6 @@ import { useSidebar } from "@/hooks/useSidebar";
 const ITEMS_PER_PAGE = 8;
 
 export default function AdminPage() {
-    // Current Week Range (Monday to Sunday)
     const { start: startDate, end: endDate } = getWeekRange();
     const { openSidebar, closeSidebar } = useSidebar();
 
@@ -82,7 +81,7 @@ export default function AdminPage() {
         });
     };
 
-    // Auth loading handled by layout or ignored to show structure
+
 
     return (
         <div className="bg-admin-bg min-h-screen py-10">

@@ -21,7 +21,6 @@ export default function Header() {
                     </span>
                 </Link>
 
-                {/* Desktop Navigation */}
                 <nav className="hidden md:flex gap-10">
                     <Link href="/" className="text-sm font-bold text-brand-700 hover:text-primary-orange transition-colors">
                         Inicio
@@ -65,7 +64,6 @@ export default function Header() {
                     </Link>
                 </div>
 
-                {/* Mobile menu button */}
                 <div className="flex md:hidden">
                     <button
                         onClick={() => setIsOpen(!isOpen)}
@@ -77,7 +75,6 @@ export default function Header() {
                 </div>
             </div>
 
-            {/* Mobile Navigation */}
             {isOpen && (
                 <div className="md:hidden border-b border-brand-900/5 bg-background-cream">
                     <div className="space-y-1 px-4 pb-6 pt-2">

@@ -16,7 +16,6 @@ export function useAdminLogin() {
             });
             if (error) throw error;
 
-            // Simple check to ensure we don't allow non-admins into the panel
             const { data: profile } = await supabase
                 .from('profiles')
                 .select('role')

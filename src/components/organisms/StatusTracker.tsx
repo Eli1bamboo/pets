@@ -29,7 +29,6 @@ export default function StatusTracker({ appointmentId }: StatusTrackerProps) {
         <div className="py-8">
             <div className="relative">
                 <div className="absolute left-0 top-1/2 -mt-px h-1 w-full bg-brand-900/5 rounded-full" aria-hidden="true" />
-                {/* Progress Bar Animation */}
                 <motion.div
                     className="absolute left-0 top-1/2 -mt-px h-1 bg-primary-orange rounded-full shadow-[0_0_10px_rgba(255,179,71,0.5)]"
                     initial={{ width: 0 }}
@@ -50,7 +49,7 @@ export default function StatusTracker({ appointmentId }: StatusTrackerProps) {
                                         <motion.span
                                             initial={false}
                                             animate={{
-                                                backgroundColor: isCompleted || isCurrent ? "#FFB347" : "#FFFFFF", // primary-orange
+                                                backgroundColor: isCompleted || isCurrent ? "#FFB347" : "#FFFFFF",
                                                 borderColor: isCompleted || isCurrent ? "#FFB347" : "#EDF2F7",
                                                 scale: isCurrent ? 1.25 : 1,
                                                 boxShadow: isCurrent ? "0 0 20px rgba(255,179,71,0.4)" : "none"

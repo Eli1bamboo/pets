@@ -2,14 +2,12 @@
 @plugin "tailwindcss-animate";
 
 @theme {
-  /* Brand Palette - From Figma */
   --color-brand-50: #FDE9DA;
   --color-brand-100: #FCDBC1;
   --color-brand-200: #FAC9A2;
   --color-brand-300: #F8B683;
   --color-brand-400: #F7A464;
   --color-brand-500: #F59245;
-  /* Main */
   --color-brand-600: #CC7A3A;
   --color-brand-700: #A3612E;
   --color-brand-800: #7B4923;
@@ -20,29 +18,20 @@
 
   --font-sans: var(--font-sans);
 
-  /* Admin Palette - Semantic Aliases */
   --color-admin-bg: #f8fafc;
-  /* slate-50 */
   --color-admin-surface: #FFFFFF;
   --color-admin-border: #e2e8f0;
-  /* slate-200 */
   --color-admin-text-primary: #0f172a;
-  /* slate-900 */
   --color-admin-text-secondary: #64748b;
-  /* slate-500 */
   --color-admin-primary: #0f172a;
-  /* slate-900 */
   --color-admin-accent: #2563eb;
-  /* blue-600 */
 
-  /* Shared Radius */
   --radius-xl: 1.5rem;
   --radius-2xl: 2rem;
   --radius-3xl: 2.5rem;
   --radius-full: 9999px;
 }
 
-/* Custom Base Styles */
 body {
   background-color: var(--color-background-cream);
   color: var(--color-brand-900);
@@ -61,7 +50,6 @@ h6 {
   letter-spacing: -0.025em;
 }
 
-/* Custom Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
 }

@@ -17,9 +17,6 @@ interface SheetProps {
 }
 
 export function SidebarSheet({ children, open = false, onOpenChange }: SheetProps) {
-    // Sync external open prop with internal state or just pass through.
-    // Actually, simple context provider is enough if we trust props. 
-    // But keeping original logic of sync:
     const [isOpen, setIsOpen] = React.useState(open);
 
     React.useEffect(() => {
@@ -57,7 +54,6 @@ export function SheetContent({
         <AnimatePresence mode="wait">
             {open && (
                 <>
-                    {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -66,7 +62,6 @@ export function SheetContent({
                         className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
                     />
 
-                    {/* Sidebar Panel */}
                     <motion.div
                         initial={{ x: side === "right" ? "100%" : "-100%" }}
                         animate={{ x: 0 }}
