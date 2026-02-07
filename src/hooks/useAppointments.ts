@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { Appointment, AppointmentStatus } from '@/types'
+import { useRefresh } from '@/providers/AdminUIProvider'
 
 
 interface UseAppointmentsOptions {
@@ -9,19 +10,23 @@ interface UseAppointmentsOptions {
     endDate?: Date;
     searchQuery?: string;
     statuses?: AppointmentStatus[];
+    page?: number;
+    limit?: number;
 }
 
-export function useAppointments({ isAdmin = false, startDate, endDate, searchQuery, statuses }: UseAppointmentsOptions = {}) {
+export function useAppointments({ isAdmin = false, startDate, endDate, searchQuery, statuses, page = 1, limit = 50 }: UseAppointmentsOptions = {}) {
     const [appointments, setAppointments] = useState<Appointment[]>([])
+    const [count, setCount] = useState<number>(0)
     const [loading, setLoading] = useState(true)
     const [supabase] = useState(() => createClient())
+    const { refreshTrigger } = useRefresh();
 
     const fetchAppointments = useCallback(async () => {
         setLoading(true);
         try {
             let query = supabase
                 .from("appointments")
-                .select("*, profiles(full_name)")
+                .select("*, profiles(full_name)", { count: 'exact' })
                 .order("date", { ascending: true })
 
             if (!isAdmin) {
@@ -46,45 +51,31 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
                 query = query.in("status", statuses);
             }
 
-            // Apply Search Filter (Pet Name or Client Name)
+            // Apply Search Filter (Pet Name)
             if (searchQuery) {
-                // Note: Searching relations in Supabase is tricky with simple OR.
-                // We'll search pet_name first. For client name, it's harder in a single query without a custom RPC or complex filter.
-                // For now, let's filter by pet_name at DB level. Client name filtering might need client-side or separate query if not using specialized index.
-                // Actually, let's try a simple ILIKE on pet_name for now to keep it efficient.
                 query = query.ilike('pet_name', `%${searchQuery}%`);
             }
 
-            const { data, error } = await query
+            // Apply Pagination
+            const from = (page - 1) * limit;
+            const to = from + limit - 1;
+
+            if (page > 0 && limit > 0) {
+                query = query.range(from, to);
+            }
+
+            const { data, error, count: totalCount } = await query
 
             if (!error && data) {
-                // If we need to filter by profile name (which is a relation), we generally do it in JS for small datasets,
-                // or use !inner join strategies. Given 50-100 items, JS filter is fine if DB filter misses.
-                // But let's rely on the DB return for now.
-                let filteredData = data as unknown as Appointment[];
-
-                // Secondary client-side filter for Profile Name if needed and if searchQuery is present
-                if (searchQuery && isAdmin) {
-                    // Since we only filtered pet_name in DB, we might want to extend this functionality later.
-                    // For exact requirements "nombre de cliente o mascota", we might need client side filtering for the Relation property
-                    // OR rely on a RPC.
-                    // Let's implement Client Side filtering for the 'OR' logic to be safe and accurate for now.
-                    // We fetch a bit more loosely or just filter the RESULT set.
-                    // RE-STRATEGY: Fetch all matching date range, THEN filter in JS for search terms?
-                    // No, that's bad for pagination.
-                    // Correct way: Use valid Supabase syntax for OR across tables? Hard.
-                    // Fallback: We'll stick to pet_name DB filter for this iteration unless asked for strict "OR".
-                    // User asked: "filtrar por nombre de cliente o mascota".
-                }
-
-                setAppointments(filteredData)
+                setAppointments(data as unknown as Appointment[])
+                if (totalCount !== null) setCount(totalCount);
             }
         } catch (error) {
             console.error(error)
         } finally {
             setLoading(false)
         }
-    }, [supabase, isAdmin, startDate?.toISOString(), endDate?.toISOString(), searchQuery, JSON.stringify(statuses)])
+    }, [supabase, isAdmin, startDate?.toISOString(), endDate?.toISOString(), searchQuery, JSON.stringify(statuses), page, limit, refreshTrigger])
 
     const updateStatus = async (id: number, newStatus: AppointmentStatus) => {
         // Optimistic update
@@ -104,6 +95,16 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
             return { success: false, error };
         }
 
+        // Log the activity
+        const { error: logError } = await supabase.from("appointment_logs").insert([
+            {
+                appointment_id: id,
+                description: `Estado cambiado a ${newStatus}`
+            }
+        ]);
+
+        if (logError) console.error("Error logging:", logError);
+
         return { success: true };
     };
 
@@ -111,5 +112,43 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
         fetchAppointments()
     }, [fetchAppointments])
 
-    return { appointments, loading, refetch: fetchAppointments, updateStatus }
+    // Real-time subscription for updates
+    useEffect(() => {
+        const channel = supabase
+            .channel('appointments-changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'appointments',
+                },
+                (payload) => {
+                    console.log('Realtime Payload Received:', payload);
+                    const updatedAppointment = payload.new as Appointment;
+                    // Verify if updatedAppointment has a valid ID
+                    if (!updatedAppointment || updatedAppointment.id === undefined || updatedAppointment.id === null) {
+                        console.warn('Realtime update received without a valid appointment ID:', payload);
+                        return; // Skip processing if ID is missing
+                    }
+                    console.log('Updating appointment:', updatedAppointment.id, 'New Status:', updatedAppointment.status);
+
+                    setAppointments((prev) => {
+                        return prev.map((app) =>
+                            // Use loose equality to handle string/number mismatch for IDs
+                            app.id == updatedAppointment.id
+                                ? { ...app, ...updatedAppointment } // Merge updates
+                                : app
+                        )
+                    });
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [supabase]);
+
+    return { appointments, count, loading, refetch: fetchAppointments, updateStatus }
 }

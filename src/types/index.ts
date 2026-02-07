@@ -29,3 +29,9 @@ export interface Appointment {
         full_name: string | null;
     };
 }
+export interface AppointmentLog {
+    id: string;
+    appointment_id: number;
+    description: string;
+    created_at: string;
+}

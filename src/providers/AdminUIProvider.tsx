@@ -12,6 +12,8 @@ interface AdminUIContextType {
     sidebar: SidebarState;
     openSidebar: (view: SidebarState["view"], data?: any) => void;
     closeSidebar: () => void;
+    refreshTrigger: number;
+    triggerRefresh: () => void;
 }
 
 const AdminUIContext = createContext<AdminUIContextType | undefined>(undefined);
@@ -22,6 +24,7 @@ export function AdminUIProvider({ children }: { children: ReactNode }) {
         data: null,
         isOpen: false
     });
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
 
     const openSidebar = (view: SidebarState["view"], data?: any) => {
         setSidebar({ view, data, isOpen: true });
@@ -31,8 +34,12 @@ export function AdminUIProvider({ children }: { children: ReactNode }) {
         setSidebar(prev => ({ ...prev, isOpen: false }));
     };
 
+    const triggerRefresh = () => {
+        setRefreshTrigger(prev => prev + 1);
+    };
+
     return (
-        <AdminUIContext.Provider value={{ sidebar, openSidebar, closeSidebar }}>
+        <AdminUIContext.Provider value={{ sidebar, openSidebar, closeSidebar, refreshTrigger, triggerRefresh }}>
             {children}
         </AdminUIContext.Provider>
     );
@@ -44,4 +51,9 @@ export function useAdminUI() {
         throw new Error("useAdminUI must be used within an AdminUIProvider");
     }
     return context;
+}
+
+export function useRefresh() {
+    const { refreshTrigger, triggerRefresh } = useAdminUI();
+    return { refreshTrigger, triggerRefresh };
 }

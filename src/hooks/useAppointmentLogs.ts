@@ -1,0 +1,73 @@
+import { createClient } from "@/utils/supabase/client";
+import { useState, useCallback, useEffect } from "react";
+
+export interface AppointmentLog {
+    id: string;
+    appointment_id: number;
+    description: string;
+    created_at: string;
+}
+
+export function useAppointmentLogs(appointmentId?: number) {
+    const [logs, setLogs] = useState<AppointmentLog[]>([]);
+    const [loading, setLoading] = useState(false);
+    const supabase = createClient();
+
+    const fetchLogs = useCallback(async () => {
+        if (!appointmentId) return;
+        setLoading(true);
+        const { data, error } = await supabase
+            .from("appointment_logs")
+            .select("*")
+            .eq("appointment_id", appointmentId)
+            .order("created_at", { ascending: false });
+
+        if (!error && data) {
+            setLogs(data as AppointmentLog[]);
+        }
+        setLoading(false);
+    }, [appointmentId, supabase]);
+
+    // Initial fetch
+    useEffect(() => {
+        fetchLogs();
+    }, [fetchLogs]);
+
+    // Real-time subscription
+    useEffect(() => {
+        if (!appointmentId) return;
+
+        const channel = supabase
+            .channel(`logs-${appointmentId}`)
+            .on(
+                "postgres_changes",
+                {
+                    event: "INSERT",
+                    schema: "public",
+                    table: "appointment_logs",
+                    filter: `appointment_id=eq.${appointmentId}`,
+                },
+                (payload) => {
+                    setLogs((prev) => [payload.new as AppointmentLog, ...prev]);
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [appointmentId, supabase]);
+
+    const addLog = async (description: string) => {
+        if (!appointmentId) return;
+        const { error } = await supabase.from("appointment_logs").insert([
+            { appointment_id: appointmentId, description }
+        ]);
+        if (!error) {
+            // No need to manually fetch if subscription works, but safe to keep or remove.
+            // fetchLogs(); 
+        }
+    };
+
+    return { logs, loading, fetchLogs, addLog };
+}

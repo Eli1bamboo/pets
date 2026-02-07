@@ -1,0 +1,59 @@
+import { useState, useEffect } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { Appointment } from "@/types";
+
+export function useAppointment(id?: number) {
+    const [appointment, setAppointment] = useState<Appointment | null>(null);
+    const [loading, setLoading] = useState(false);
+    const supabase = createClient();
+
+    useEffect(() => {
+        if (!id) return;
+
+        const fetchAppointment = async () => {
+            setLoading(true);
+            const { data, error } = await supabase
+                .from("appointments")
+                .select("*, profiles(full_name)")
+                .eq("id", id)
+                .single();
+
+            if (!error && data) {
+                setAppointment(data as unknown as Appointment);
+            }
+            setLoading(false);
+        };
+
+        fetchAppointment();
+
+        // Realtime subscription for this specific appointment
+        const channel = supabase
+            .channel(`appointment-${id}`)
+            .on(
+                "postgres_changes",
+                {
+                    event: "UPDATE",
+                    schema: "public",
+                    table: "appointments",
+                    filter: `id=eq.${id}`,
+                },
+                (payload) => {
+                    const updated = payload.new as Appointment;
+                    setAppointment((prev) => {
+                        if (!prev) return updated;
+                        // Use loose equality for ID check if we were to check it, 
+                        // but here we are filtered by ID so we assume it matches or we just replace.
+                        // Ideally we merge.
+                        return { ...prev, ...updated };
+                    });
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [id, supabase]);
+
+    return { appointment, loading };
+}
