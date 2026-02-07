@@ -147,9 +147,9 @@ openSidebar("settings");
     - Format: `feature/short-description` or `fix/issue-description`.
     - Create off `develop`.
 3.  **Checkin Process**:
-    - Commit format: `type(scope): summary` (e.g., `feat(ui): add sidebar`, `fix(auth): login race condition`).
+    - Commit format: `type: summary` (e.g., `feat: add sidebar`, `fix: login race condition`).
     - **Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`.
-    - **Scopes** (Optional but recommended): `ui`, `db`, `auth`, `api`, `hooks`, `admin`, `customer`.
+    - **Scopes**: Do NOT use scopes. Keep it simple.
     - **Push/Merge Policy**: Do NOT push to origin or merge branches automatically. Wait for explicit user instruction (e.g., "Push changes", "Merge PR").
     - **Merge Strategy**: Merge `develop` into `main` only on approval.
 
