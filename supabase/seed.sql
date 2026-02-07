@@ -1,13 +1,3 @@
--- 1. Create Test Users in Auth (for local development only)
--- These satisfy the foreign key requirements for profiles
--- Note: On a real Supabase cloud project, you should invite these emails or sign up manually.
-
--- ⚠️ IMPORTANTE: En proyectos de Supabase CLOUD (no Docker), 
--- no puedes insertar en 'profiles' sin que el usuario exista primero en 'auth.users'.
--- Crea un usuario manualmente en el panel de Supabase y usa su ID aquí.
-
-
--- 4. Verify Business Hours (already handled by migrations, but ensuring defaults)
 INSERT INTO public.business_hours (day_of_week, open_time, close_time, is_active)
 VALUES 
 (0, '09:00', '18:00', false),
