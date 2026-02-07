@@ -1,4 +1,3 @@
--- Create appointment_logs table
 CREATE TABLE IF NOT EXISTS public.appointment_logs (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     appointment_id BIGINT REFERENCES public.appointments(id) ON DELETE CASCADE,
@@ -6,11 +5,8 @@ CREATE TABLE IF NOT EXISTS public.appointment_logs (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
--- Enable RLS
 ALTER TABLE public.appointment_logs ENABLE ROW LEVEL SECURITY;
 
--- Policies (Admin can read all, User can read own)
--- Prerequisite: appointments table has user_id
 CREATE POLICY "Users can view logs of their own appointments"
 ON public.appointment_logs
 FOR SELECT
@@ -33,7 +29,6 @@ USING (
     )
 );
 
--- Admins can insert logs (system triggers or admin actions)
 CREATE POLICY "Admins can insert logs"
 ON public.appointment_logs
 FOR INSERT

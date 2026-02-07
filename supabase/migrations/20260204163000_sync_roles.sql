@@ -1,16 +1,10 @@
--- 1. Standardize role names: change 'client' to 'customer'
--- Update existing data
 UPDATE public.profiles SET role = 'customer' WHERE role = 'client';
 
--- Update the check constraint
 ALTER TABLE public.profiles DROP CONSTRAINT IF EXISTS profiles_role_check;
 ALTER TABLE public.profiles ADD CONSTRAINT profiles_role_check CHECK (role IN ('customer', 'admin'));
 
--- Update the default value
 ALTER TABLE public.profiles ALTER COLUMN role SET DEFAULT 'customer';
 
--- 2. Automated Profile Creation Trigger
--- Function to handle new user signups
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -25,7 +19,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Trigger to run after a new user is created in auth.users
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
