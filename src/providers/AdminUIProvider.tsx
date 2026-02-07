@@ -4,13 +4,13 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface SidebarState {
     view: "settings" | "appointment_details" | null;
-    data?: any;
+    data?: Record<string, unknown> | null;
     isOpen: boolean;
 }
 
 interface AdminUIContextType {
     sidebar: SidebarState;
-    openSidebar: (view: SidebarState["view"], data?: any) => void;
+    openSidebar: (view: SidebarState["view"], data?: Record<string, unknown> | null) => void;
     closeSidebar: () => void;
     refreshTrigger: number;
     triggerRefresh: () => void;
@@ -26,7 +26,7 @@ export function AdminUIProvider({ children }: { children: ReactNode }) {
     });
     const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-    const openSidebar = (view: SidebarState["view"], data?: any) => {
+    const openSidebar = (view: SidebarState["view"], data?: Record<string, unknown> | null) => {
         setSidebar({ view, data, isOpen: true });
     };
 

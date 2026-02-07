@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { User } from "@supabase/supabase-js";
+import { User, Session } from "@supabase/supabase-js";
 import { Profile } from "@/types";
 
 interface AdminContextType {
@@ -25,7 +25,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         let mounted = true;
 
-        const syncAdminSession = async (session: any) => {
+        const syncAdminSession = async (session: Session | null) => {
             try {
                 const currentUser = session?.user ?? null;
 
