@@ -120,27 +120,29 @@ export function AppointmentDetailsSidebar({ appointment: initialAppointment }: A
                                 ))}
                             </div>
                         ) : (
-                            <div className="relative pl-7 space-y-6 before:content-[''] before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 h-[240px] overflow-y-auto pr-2 custom-scrollbar">
-                                {/* Creation Log + Logs */}
-                                {[
-                                    ...logs,
-                                    {
-                                        id: 'creation',
-                                        appointment_id: appointment.id,
-                                        description: 'Turno solicitado',
-                                        created_at: appointment.created_at
-                                    }
-                                ]
-                                    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-                                    .map((log) => (
-                                        <div key={log.id} className="relative">
-                                            <div className="absolute -left-[21px] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-admin-accent ring-1 ring-slate-200" />
-                                            <p className="text-sm text-slate-900 font-medium">{log.description}</p>
-                                            <p className="text-xs text-slate-500 mt-1">
-                                                {format(new Date(log.created_at), "d MMM yyyy, HH:mm", { locale: es })}
-                                            </p>
-                                        </div>
-                                    ))}
+                            <div className="h-[240px] overflow-y-auto pr-2 custom-scrollbar">
+                                <div className="relative pl-7 space-y-6 before:content-[''] before:absolute before:left-3 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 min-h-full">
+                                    {/* Creation Log + Logs */}
+                                    {[
+                                        ...logs,
+                                        {
+                                            id: 'creation',
+                                            appointment_id: appointment.id,
+                                            description: 'Turno solicitado',
+                                            created_at: appointment.created_at
+                                        }
+                                    ]
+                                        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+                                        .map((log) => (
+                                            <div key={log.id} className="relative">
+                                                <div className="absolute -left-[21px] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-admin-accent ring-1 ring-slate-200" />
+                                                <p className="text-sm text-slate-900 font-medium">{log.description}</p>
+                                                <p className="text-xs text-slate-500 mt-1">
+                                                    {format(new Date(log.created_at), "d MMM yyyy, HH:mm", { locale: es })}
+                                                </p>
+                                            </div>
+                                        ))}
+                                </div>
                             </div>
                         )}
                     </div>
