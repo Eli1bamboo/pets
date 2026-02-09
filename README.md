@@ -98,27 +98,40 @@ Since roles are managed in the `public.profiles` table, follow these steps to cr
 
 ## 🏁 Getting Started
 
+If you are a new developer, follow these steps to set up the project locally:
+
 1. **Clone the repository**:
    ```bash
    git clone <repository-url>
+   cd peluqueria_canina
    ```
 
-2. **Install dependencies**:
+2. **Required Files**:
+   Since some configuration files are sensitive, they are not in the repository. Ask a team member for the `ignored_files.zip` and extract its content into the project root. This ZIP should contain:
+   - `.env.dev`, `.env.local`, `.env.prod`
+   - `TEST_CREDENTIALS.md`
+   - `supabase/config.toml`
+
+3. **Install dependencies**:
    ```bash
    npm install
    ```
 
-3. **Configure environment variables**:
-   Create a `.env.local` file with your Supabase credentials:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+4. **Start Supabase (if using local development)**:
+   ```bash
+   npx supabase start
    ```
 
-4. **Run the development server**:
+5. **Run the development server**:
    ```bash
    npm run dev
    ```
+
+### 🛠️ Common Commands
+
+- `npm run dbenv dev`: Switch local environment to Development project.
+- `npm run dbenv prod`: Switch local environment to Production project.
+- `npx supabase db push`: Push your local migrations to the linked Supabase project.
 
 ## 📄 License
 
