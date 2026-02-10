@@ -97,7 +97,7 @@ export default function AdminHistoryPage() {
                                 placeholder="Buscar por mascota..."
                                 value={searchTerm}
                                 onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-                                className="w-full rounded-2xl border-slate-200 bg-slate-50 pl-11 pr-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500 transition-all"
+                                className="w-full rounded-2xl border-slate-200 bg-slate-50 pl-11 pr-4 py-3 text-sm focus:border-admin-accent focus:ring-admin-accent transition-all outline-none"
                             />
                         </div>
 
@@ -107,7 +107,7 @@ export default function AdminHistoryPage() {
                                     selected={startDate}
                                     onChange={(date: Date | null) => { setStartDate(date || undefined); setCurrentPage(1); }}
                                     placeholderText="Fecha Desde"
-                                    className="w-full md:w-40 rounded-2xl border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500"
+                                    className="w-full md:w-40 rounded-2xl border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:border-admin-accent focus:ring-admin-accent outline-none"
                                     locale={es}
                                     dateFormat="dd/MM/yyyy"
                                 />
@@ -117,7 +117,7 @@ export default function AdminHistoryPage() {
                                     selected={endDate}
                                     onChange={(date: Date | null) => { setEndDate(date || undefined); setCurrentPage(1); }}
                                     placeholderText="Fecha Hasta"
-                                    className="w-full md:w-40 rounded-2xl border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500"
+                                    className="w-full md:w-40 rounded-2xl border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:border-admin-accent focus:ring-admin-accent outline-none"
                                     locale={es}
                                     dateFormat="dd/MM/yyyy"
                                 />

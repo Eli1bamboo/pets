@@ -12,8 +12,10 @@ export default function RootAdminLayout({
     return (
         <AdminProvider>
             <AdminUIProvider>
-                {children}
-                <SidebarContainer />
+                <div className="theme-admin min-h-screen">
+                    {children}
+                    <SidebarContainer />
+                </div>
             </AdminUIProvider>
         </AdminProvider >
     );

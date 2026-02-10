@@ -25,6 +25,7 @@
   --color-admin-text-secondary: #64748b;
   --color-admin-primary: #0f172a;
   --color-admin-accent: #2563eb;
+  /* Blue for Admin */
 
   --radius-xl: 1.5rem;
   --radius-2xl: 2rem;
@@ -32,13 +33,7 @@
   --radius-full: 9999px;
 }
 
-body {
-  background-color: var(--color-background-cream);
-  color: var(--color-brand-900);
-  font-family: var(--font-sans), system-ui, sans-serif;
-  @apply antialiased;
-}
-
+/* Base resets */
 h1,
 h2,
 h3,
@@ -65,4 +60,99 @@ h6 {
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+/* --- Theming System --- */
+
+/* Customer Theme (Orange/Playful) */
+.theme-customer {
+  background-color: var(--color-background-cream, #FDFFFC);
+  color: var(--color-brand-900);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.theme-customer .react-datepicker__header {
+  background-color: var(--color-brand-50) !important;
+  border-bottom: 1px solid var(--color-brand-200) !important;
+}
+
+.theme-customer .react-datepicker__current-month,
+.theme-customer .react-datepicker-time__header,
+.theme-customer .react-datepicker-year-header {
+  color: var(--color-brand-900) !important;
+}
+
+.theme-customer .react-datepicker__day-name {
+  color: var(--color-brand-700) !important;
+}
+
+.theme-customer .react-datepicker__day--selected,
+.theme-customer .react-datepicker__day--keyboard-selected,
+.theme-customer .react-datepicker__month-text--keyboard-selected {
+  background-color: var(--color-brand-500) !important;
+  color: white !important;
+}
+
+.theme-customer .react-datepicker__day--today {
+  font-weight: bold;
+  color: var(--color-brand-600);
+}
+
+.theme-customer .react-datepicker {
+  font-family: var(--font-sans) !important;
+  border-color: var(--color-brand-200) !important;
+  overflow: hidden;
+  border-radius: 1.5rem !important;
+}
+
+.theme-customer .react-datepicker__navigation-icon::before {
+  border-color: var(--color-brand-600) !important;
+}
+
+
+/* Admin Theme (Slate/Professional) */
+.theme-admin {
+  background-color: var(--color-admin-bg);
+  color: var(--color-admin-text-primary);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Admin Datepicker partial overrides to behave nicely */
+.theme-admin .react-datepicker {
+  font-family: var(--font-sans) !important;
+  border-color: var(--color-admin-border) !important;
+  border-radius: 0.5rem !important;
+  /* Cleaner look for admin */
+}
+
+.theme-admin .react-datepicker__header {
+  background-color: var(--color-admin-surface) !important;
+  border-bottom: 1px solid var(--color-admin-border) !important;
+}
+
+.theme-admin .react-datepicker__current-month {
+  color: var(--color-admin-text-primary) !important;
+}
+
+.theme-admin .react-datepicker__day-name {
+  color: var(--color-admin-text-secondary) !important;
+}
+
+/* Using Admin Accent (Brand 600) for selection */
+.theme-admin .react-datepicker__day--selected,
+.theme-admin .react-datepicker__day--keyboard-selected {
+  background-color: var(--color-brand-600) !important;
+  color: white !important;
+}
+
+.theme-admin .react-datepicker__day--today {
+  font-weight: bold;
+  color: var(--color-brand-600);
+}
+
+/* Shared fixes */
+.react-datepicker-wrapper {
+  width: 100%;
 }
