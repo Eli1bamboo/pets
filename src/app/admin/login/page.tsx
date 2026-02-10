@@ -17,6 +17,7 @@ export default function AdminLoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [isRedirecting, setIsRedirecting] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -25,12 +26,14 @@ export default function AdminLoginPage() {
         }
     }, [isAdmin, authLoading, router]);
 
-    if (authLoading) return <AdminLoader fullScreen message="Cargando portal..." />;
+    if (authLoading || isRedirecting) return <AdminLoader fullScreen message="Cargando portal..." />;
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         const result = await adminLogin(email, password);
         if (result.success) {
+            setIsRedirecting(true);
+            router.push("/admin");
         }
     };
 
