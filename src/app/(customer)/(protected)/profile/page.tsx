@@ -6,6 +6,7 @@ import { useCancelAppointment } from "@/hooks/useCancelAppointment";
 import { Calendar, Clock, Scissors, XCircle } from "lucide-react";
 import Modal from "@/components/molecules/Modal";
 import { Appointment } from "@/types";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function ProfilePage() {
     const { appointments, loading, refetch } = useAppointments();
@@ -13,12 +14,13 @@ export default function ProfilePage() {
     const [modal, setModal] = useState<{ open: boolean; title: string; message: string; type: 'warning' | 'error' | 'success'; onConfirm?: () => void }>({
         open: false, title: "", message: "", type: "warning"
     });
+    const { t } = useTranslation();
 
     const handleCancelClick = (apt: Appointment) => {
         setModal({
             open: true,
-            title: "¿Cancelar turno?",
-            message: `Vas a cancelar el turno de ${apt.pet_name}. Esta acción no se puede deshacer.`,
+            title: t.profile.cancelTitle,
+            message: t.profile.cancelMessage.replace('{petName}', apt.pet_name),
             type: "warning",
             onConfirm: async () => {
                 const result = await cancelAppointment(apt.id);
@@ -27,8 +29,8 @@ export default function ProfilePage() {
                 } else {
                     setModal({
                         open: true,
-                        title: "Error",
-                        message: result.error || "No se pudo cancelar el turno.",
+                        title: t.profile.cancelErrorTitle,
+                        message: result.error || t.profile.cancelErrorFallback,
                         type: "error"
                     });
                 }
@@ -37,15 +39,8 @@ export default function ProfilePage() {
     };
 
     const getStatusLabel = (status: string) => {
-        const labels: Record<string, string> = {
-            pending: "Esperando",
-            washing: "Baño",
-            drying: "Secado",
-            ready: "Listo",
-            completed: "Retirado",
-            cancelled: "Cancelado",
-        };
-        return labels[status] || status;
+        const s = t.status as Record<string, string>;
+        return s[status] || status;
     };
 
     const getStatusColor = (status: string) => {
@@ -64,9 +59,9 @@ export default function ProfilePage() {
         <div className="bg-brand-50 min-h-screen py-24 sm:py-32">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
                 <div className="mx-auto max-w-2xl lg:mx-0">
-                    <h2 className="text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">Mis Turnos</h2>
+                    <h2 className="text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">{t.profile.title}</h2>
                     <p className="mt-2 text-lg leading-8 text-brand-700">
-                        Historial de visitas de tus mascotas y gestión de reservas.
+                        {t.profile.subtitle}
                     </p>
                 </div>
 
@@ -78,8 +73,8 @@ export default function ProfilePage() {
                     ) : appointments.length === 0 ? (
                         <div className="text-center py-12 bg-white rounded-2xl shadow-sm ring-1 ring-brand-900/5">
                             <Scissors className="mx-auto h-12 w-12 text-brand-300" />
-                            <h3 className="mt-2 text-sm font-semibold text-brand-900">No tienes turnos</h3>
-                            <p className="mt-1 text-sm text-brand-500">Empieza reservando un turno para tu mascota.</p>
+                            <h3 className="mt-2 text-sm font-semibold text-brand-900">{t.profile.emptyTitle}</h3>
+                            <p className="mt-1 text-sm text-brand-500">{t.profile.emptySubtitle}</p>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -115,7 +110,7 @@ export default function ProfilePage() {
                                                 className="flex items-center gap-1 text-xs font-medium text-red-600 hover:text-red-800 transition-colors"
                                             >
                                                 <XCircle size={14} />
-                                                Cancelar Turno
+                                                {t.profile.cancelButton}
                                             </button>
                                         </div>
                                     )}
@@ -132,8 +127,8 @@ export default function ProfilePage() {
                 message={modal.message}
                 type={modal.type}
                 onConfirm={modal.onConfirm}
-                confirmText="Sí, cancelar turno"
-                cancelText="Volver atrás"
+                confirmText={t.profile.cancelConfirm}
+                cancelText={t.profile.cancelBack}
             />
         </div>
     );

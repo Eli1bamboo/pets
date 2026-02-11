@@ -10,7 +10,7 @@ import { AppointmentsTable } from "@/components/organisms/AppointmentsTable";
 import { TablePagination } from "@/components/molecules/TablePagination";
 import { usePagination } from "@/hooks/usePagination";
 import { Appointment, AppointmentStatus } from "@/types";
-import { useSidebar } from "@/hooks/useSidebar";
+import { useAdminUI } from "@/providers/AdminUIProvider";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { es } from 'date-fns/locale';
@@ -29,7 +29,7 @@ export default function AdminHistoryPage() {
     const [endDate, setEndDate] = useState<Date | undefined>(undefined);
     const [selectedStatuses, setSelectedStatuses] = useState<AppointmentStatus[]>([]);
 
-    const { openSidebar } = useSidebar();
+    const { openSidebar } = useAdminUI();
 
     useEffect(() => {
         if (!authLoading && !isAdmin) {

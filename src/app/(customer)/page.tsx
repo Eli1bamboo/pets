@@ -3,20 +3,23 @@
 import Hero from "@/components/organisms/Hero";
 import ServiceCard from "@/components/organisms/ServiceCard";
 import { Bath, Scissors, Wind } from "lucide-react";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function Home() {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-background-cream">
       <Hero />
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-24 sm:py-32" id="services">
         <div className="mx-auto max-max-2xl lg:text-center">
-          <h2 className="text-base font-bold uppercase tracking-wider text-primary-orange">Nuestros Servicios</h2>
+          <h2 className="text-base font-bold uppercase tracking-wider text-primary-orange">{t.services.sectionTag}</h2>
           <p className="mt-4 text-4xl font-extrabold tracking-tight text-brand-900 sm:text-5xl">
-            Cuidado integral para tu mejor amigo
+            {t.services.sectionTitle}
           </p>
           <p className="mt-6 text-xl leading-8 text-brand-700">
-            Utilizamos productos hipoalergénicos y técnicas libres de estrés para asegurar que tu mascota disfrute de la experiencia.
+            {t.services.sectionSubtitle}
           </p>
         </div>
         <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">

@@ -8,7 +8,7 @@ import { User, Dog, Save, Activity } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { useState, useEffect } from "react";
 import { useAppointments } from "@/hooks/useAppointments";
-import { useSidebar } from "@/hooks/useSidebar";
+import { useAdminUI } from "@/providers/AdminUIProvider";
 import { useRefresh } from "@/providers/AdminUIProvider";
 import { useAppointmentLogs } from "@/hooks/useAppointmentLogs";
 import { useAppointment } from "@/hooks/useAppointment";
@@ -25,7 +25,7 @@ export function AppointmentDetailsSidebar({ appointment: initialAppointment }: A
     const [selectedStatus, setSelectedStatus] = useState<AppointmentStatus>('pending');
     const [saving, setSaving] = useState(false);
     const { updateStatus } = useAppointments({});
-    const { closeSidebar } = useSidebar();
+    const { closeSidebar } = useAdminUI();
     const { triggerRefresh } = useRefresh();
 
     const { appointment: liveAppointment, loading: aptLoading } = useAppointment(initialAppointment?.id);

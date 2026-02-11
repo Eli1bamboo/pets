@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { Check, LucideIcon } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 interface ServiceCardProps {
     title: string;
@@ -12,6 +13,8 @@ interface ServiceCardProps {
 }
 
 export default function ServiceCard({ title, price, features, icon: Icon, delay = 0 }: ServiceCardProps) {
+    const { t } = useTranslation();
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -29,10 +32,10 @@ export default function ServiceCard({ title, price, features, icon: Icon, delay 
                 </div>
                 <div className="mt-6 flex items-baseline gap-x-2">
                     <span className="text-4xl font-extrabold tracking-tight text-brand-900">${price}</span>
-                    <span className="text-sm font-semibold leading-6 text-brand-500">/sesión</span>
+                    <span className="text-sm font-semibold leading-6 text-brand-500">{t.services.perSession}</span>
                 </div>
                 <p className="mt-4 text-base leading-7 text-brand-700">
-                    Cuidado especializado con productos de primera calidad.
+                    {t.services.cardDescription}
                 </p>
                 <ul role="list" className="mt-8 space-y-4 text-sm leading-6 text-brand-700">
                     {features.map((feature) => (
@@ -49,7 +52,7 @@ export default function ServiceCard({ title, price, features, icon: Icon, delay 
                 href="/booking"
                 className="mt-10 block rounded-full bg-brand-900 px-6 py-3.5 text-center text-sm font-bold text-white shadow-sm hover:bg-primary-orange transition-all hover:scale-[1.02] active:scale-95"
             >
-                Reservar turno
+                {t.services.ctaBook}
             </Link>
         </motion.div>
     );

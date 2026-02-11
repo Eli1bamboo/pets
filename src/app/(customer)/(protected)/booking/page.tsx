@@ -12,6 +12,7 @@ import { Card } from "@/components/atoms/Card";
 import { FormField } from "@/components/molecules/FormField";
 import { SERVICES_PRICE_MAP } from "@/config/appointments";
 import Modal from "@/components/molecules/Modal";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 const SERVICES = [
     { title: 'Baño y Secado', price: '$4500' },
@@ -25,6 +26,7 @@ export default function BookingPage() {
     const [step, setStep] = useState(1);
     const [formError, setFormError] = useState<string | null>(null);
     const [modal, setModal] = useState({ open: false, title: "", message: "", type: "error" as const });
+    const { t } = useTranslation();
 
     const [formData, setFormData] = useState({
         petName: "",
@@ -51,7 +53,7 @@ export default function BookingPage() {
         });
 
         if (result && !result.success) {
-            setModal({ open: true, title: "Error al reservar", message: result.error || "Ocurrió un error inesperado.", type: "error" });
+            setModal({ open: true, title: t.booking.errorTitle, message: result.error || t.booking.errorFallback, type: "error" });
         }
     };
 
@@ -61,7 +63,7 @@ export default function BookingPage() {
                 <Card variant="standard" padding="none" className="overflow-hidden ring-1 ring-brand-900/5">
                     <div className="px-6 py-10 sm:p-12">
                         <div className="flex justify-between items-center mb-10">
-                            <h2 className="text-3xl font-extrabold tracking-tight text-brand-900">Reservar Turno</h2>
+                            <h2 className="text-3xl font-extrabold tracking-tight text-brand-900">{t.booking.title}</h2>
                             <div className="flex gap-2.5">
                                 <span className={`h-2.5 w-10 rounded-full transition-all duration-300 ${step >= 1 ? 'bg-brand-500' : 'bg-brand-200'}`} />
                                 <span className={`h-2.5 w-10 rounded-full transition-all duration-300 ${step >= 2 ? 'bg-brand-500' : 'bg-brand-200'}`} />
@@ -72,15 +74,15 @@ export default function BookingPage() {
                             <div className="space-y-8">
                                 <FormField
                                     id="petName"
-                                    label="Nombre de tu Mascota"
-                                    placeholder="Ej: Rocco"
+                                    label={t.booking.petNameLabel}
+                                    placeholder={t.booking.petNamePlaceholder}
                                     leftIcon={Dog}
                                     value={formData.petName}
                                     onChange={(e) => setFormData({ ...formData, petName: e.target.value })}
                                 />
 
                                 <div>
-                                    <label className="block text-sm font-bold leading-6 text-brand-900 mb-3">¿Qué servicio necesita?</label>
+                                    <label className="block text-sm font-bold leading-6 text-brand-900 mb-3">{t.booking.serviceLabel}</label>
                                     <div className="grid grid-cols-1 gap-4">
                                         {SERVICES.map((s) => (
                                             <div
@@ -115,7 +117,7 @@ export default function BookingPage() {
                                     <Button
                                         onClick={() => {
                                             if (!formData.petName) {
-                                                setFormError("Ingresa el nombre de tu mascota");
+                                                setFormError(t.booking.petNameRequired);
                                                 return;
                                             }
                                             setFormError(null);
@@ -124,7 +126,7 @@ export default function BookingPage() {
                                         className="h-14 text-lg"
                                         variant="primary"
                                     >
-                                        Elegir fecha y hora
+                                        {t.booking.nextStep}
                                     </Button>
                                 </div>
                             </div>
@@ -154,7 +156,7 @@ export default function BookingPage() {
                                         onClick={() => setStep(1)}
                                         className="h-14"
                                     >
-                                        Atrás
+                                        {t.booking.back}
                                     </Button>
                                     <Button
                                         onClick={handleBooking}
@@ -162,7 +164,7 @@ export default function BookingPage() {
                                         disabled={!date || !time}
                                         className="h-14 text-lg"
                                     >
-                                        Confirmar Turno
+                                        {t.booking.confirm}
                                     </Button>
                                 </div>
                             </div>

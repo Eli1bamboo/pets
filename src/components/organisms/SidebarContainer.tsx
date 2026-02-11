@@ -1,12 +1,13 @@
 "use client";
 
-import { useSidebar } from "@/hooks/useSidebar";
+import { useAdminUI } from "@/providers/AdminUIProvider";
 import { SidebarSheet, SheetContent } from "@/components/molecules/SidebarSheet";
 import { AppointmentDetailsSidebar } from "./AppointmentDetailsSidebar";
 import SettingsSidebar from "./SettingsSidebar";
 
 export function SidebarContainer() {
-    const { isOpen, view, data, closeSidebar } = useSidebar();
+    const { sidebar, closeSidebar } = useAdminUI();
+    const { isOpen, view, data } = sidebar;
 
     return (
         <SidebarSheet open={isOpen} onOpenChange={(open) => !open && closeSidebar()}>

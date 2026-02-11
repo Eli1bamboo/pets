@@ -10,13 +10,13 @@ import { usePagination } from "@/hooks/usePagination";
 import Modal, { ModalProps } from "@/components/molecules/Modal";
 import { Calendar, Settings } from "lucide-react";
 import { getWeekRange, formatWeekRange } from "@/utils/dateUtils";
-import { useSidebar } from "@/hooks/useSidebar";
+import { useAdminUI } from "@/providers/AdminUIProvider";
 
 const ITEMS_PER_PAGE = 8;
 
 export default function AdminPage() {
     const { start: startDate, end: endDate } = getWeekRange();
-    const { openSidebar, closeSidebar } = useSidebar();
+    const { openSidebar, closeSidebar } = useAdminUI();
 
     const { appointments, loading: fetching, updateStatus } = useAppointments({
         isAdmin: true,

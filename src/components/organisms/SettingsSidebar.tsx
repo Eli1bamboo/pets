@@ -5,7 +5,7 @@ import { useBusinessHours } from "@/hooks/useBusinessHours";
 import { Save, Calendar } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { BusinessHours } from "@/types";
-import { useSidebar } from "@/hooks/useSidebar";
+import { useAdminUI } from "@/providers/AdminUIProvider";
 import {
     SheetHeader,
     SheetTitle,
@@ -23,7 +23,7 @@ const DAYS_NAMES = [
 ];
 
 export default function SettingsSidebar() {
-    const { closeSidebar } = useSidebar();
+    const { closeSidebar } = useAdminUI();
     const { businessHours, loading: settingsLoading, saveSettings } = useBusinessHours();
     const [localHours, setLocalHours] = useState<BusinessHours[]>([]);
     const [saving, setSaving] = useState(false);
