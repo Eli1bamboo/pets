@@ -68,7 +68,7 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
             const { data, error, count: totalCount } = await query
 
             if (!error && data) {
-                setAppointments(data as unknown as Appointment[])
+                setAppointments(data as Appointment[])
                 if (totalCount !== null) setCount(totalCount);
                 setError(null)
             }

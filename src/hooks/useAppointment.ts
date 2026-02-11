@@ -19,7 +19,7 @@ export function useAppointment(id?: number) {
                 .single();
 
             if (!error && data) {
-                setAppointment(data as unknown as Appointment);
+                setAppointment(data as Appointment);
             }
             setLoading(false);
         };

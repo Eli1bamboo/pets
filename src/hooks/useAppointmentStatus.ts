@@ -35,8 +35,9 @@ export function useAppointmentStatus(appointmentId: number | string) {
                     table: "appointments",
                     filter: `id=eq.${appointmentId}`,
                 },
-                (payload: any) => {
-                    setStatus(payload.new.status);
+                (payload) => {
+                    const updated = payload.new as { status: string };
+                    setStatus(updated.status);
                 }
             )
             .subscribe();
