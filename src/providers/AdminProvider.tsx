@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, useRef } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { User, Session } from "@supabase/supabase-js";
 import { Profile } from "@/types";
@@ -20,7 +20,6 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     const [profile, setProfile] = useState<Profile | null>(null);
     const [loading, setLoading] = useState(true);
     const [supabase] = useState(() => createClient());
-    const initialized = useRef(false);
 
     useEffect(() => {
         let mounted = true;

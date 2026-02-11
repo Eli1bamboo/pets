@@ -56,7 +56,7 @@ export default function AdminHeader() {
             </div>
 
             {isOpen && (
-                <div className="md:hidden bg-brand-900 border-t border-white/10 p-4 space-y-4">
+                <div className="md:hidden bg-admin-primary border-t border-white/10 p-4 space-y-4">
                     {navItems.map((item) => (
                         <Link
                             key={item.href}

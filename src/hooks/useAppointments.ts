@@ -123,13 +123,11 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
                     table: 'appointments',
                 },
                 (payload) => {
-                    console.log('Realtime Payload Received:', payload);
                     const updatedAppointment = payload.new as Appointment;
                     if (!updatedAppointment || updatedAppointment.id === undefined || updatedAppointment.id === null) {
                         console.warn('Realtime update received without a valid appointment ID:', payload);
                         return;
                     }
-                    console.log('Updating appointment:', updatedAppointment.id, 'New Status:', updatedAppointment.status);
 
                     setAppointments((prev) => {
                         return prev.map((app) =>

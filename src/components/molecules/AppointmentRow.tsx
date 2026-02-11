@@ -4,6 +4,7 @@ import { Eye, Trash2, ChevronDown } from "lucide-react";
 import { Skeleton } from "@/components/atoms/Skeleton";
 import { StatusBadge } from "@/components/atoms/StatusBadge";
 import { cn } from "@/lib/utils";
+import { APPOINTMENT_STATUSES } from "@/config/appointments";
 
 interface AppointmentRowProps {
     appointment?: Appointment;
@@ -14,8 +15,6 @@ interface AppointmentRowProps {
     onCancel?: (apt: Appointment) => void;
     actionRenderer?: (apt: Appointment) => React.ReactNode;
 }
-
-import { APPOINTMENT_STATUSES } from "@/config/appointments";
 
 export function AppointmentRow({
     appointment,
