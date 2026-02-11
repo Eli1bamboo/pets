@@ -25,6 +25,7 @@ export interface Appointment {
     service: string;
     date: string;
     status: AppointmentStatus;
+    price: number;
     profiles?: {
         full_name: string | null;
     };

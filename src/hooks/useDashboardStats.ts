@@ -19,7 +19,7 @@ export function useDashboardStats() {
         nextAppointment: null
     });
     const [loading, setLoading] = useState(true);
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
 
     const fetchStats = useCallback(async () => {
         if (!user) return;
@@ -34,6 +34,16 @@ export function useDashboardStats() {
                 .select("*", { count: 'exact', head: true })
                 .eq("status", "completed")
                 .gte("date", startOfMonth.toISOString());
+
+            const { data: completedApps } = await supabase
+                .from("appointments")
+                .select("price")
+                .eq("status", "completed")
+                .gte("date", startOfMonth.toISOString());
+
+            const totalRevenue = (completedApps || []).reduce(
+                (sum, app) => sum + (Number(app.price) || 0), 0
+            );
 
             const { count: pendingCount } = await supabase
                 .from("appointments")
@@ -52,7 +62,7 @@ export function useDashboardStats() {
             setStats({
                 completedMonth: completedCount || 0,
                 pendingTotal: pendingCount || 0,
-                totalRevenue: (completedCount || 0) * 4500,
+                totalRevenue,
                 nextAppointment: nextApt
             });
         } catch (error) {

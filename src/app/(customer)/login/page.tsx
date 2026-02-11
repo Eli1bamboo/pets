@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 import { useCustomerLogin } from "@/hooks/useCustomerLogin";
+import Modal from "@/components/molecules/Modal";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -16,6 +17,7 @@ export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const { login, signup, loading, error } = useCustomerLogin();
+    const [modal, setModal] = useState({ open: false, title: "", message: "", type: "success" as const });
 
     useEffect(() => {
         if (user) {
@@ -29,7 +31,7 @@ export default function LoginPage() {
         if (isSignUp) {
             const result = await signup(email, password);
             if (result.success) {
-                alert("¡Registro exitoso! Revisa tu email.");
+                setModal({ open: true, title: "¡Registro exitoso!", message: "Revisa tu email para confirmar tu cuenta.", type: "success" });
             }
         } else {
             await login(email, password);
@@ -134,6 +136,13 @@ export default function LoginPage() {
                     </div>
                 </div>
             </div>
+            <Modal
+                open={modal.open}
+                onClose={() => setModal(prev => ({ ...prev, open: false }))}
+                title={modal.title}
+                message={modal.message}
+                type={modal.type}
+            />
         </div>
     );
 }

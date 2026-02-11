@@ -10,6 +10,8 @@ import { Loader2, CheckCircle2, Dog } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { Card } from "@/components/atoms/Card";
 import { FormField } from "@/components/molecules/FormField";
+import { SERVICES_PRICE_MAP } from "@/config/appointments";
+import Modal from "@/components/molecules/Modal";
 
 const SERVICES = [
     { title: 'Baño y Secado', price: '$4500' },
@@ -19,8 +21,10 @@ const SERVICES = [
 
 export default function BookingPage() {
     const { user, loading: authLoading } = useCustomerAuth({ redirectToLogin: true });
-    const { createBooking, submitting } = useBooking();
+    const { createBooking, submitting, error: bookingError } = useBooking();
     const [step, setStep] = useState(1);
+    const [formError, setFormError] = useState<string | null>(null);
+    const [modal, setModal] = useState({ open: false, title: "", message: "", type: "error" as const });
 
     const [formData, setFormData] = useState({
         petName: "",
@@ -37,13 +41,18 @@ export default function BookingPage() {
     const handleBooking = async () => {
         if (!user) return;
 
-        await createBooking({
+        const result = await createBooking({
             userId: user.id,
             petName: formData.petName,
             service: formData.service,
             date,
-            time
+            time,
+            price: SERVICES_PRICE_MAP[formData.service] || 0,
         });
+
+        if (result && !result.success) {
+            setModal({ open: true, title: "Error al reservar", message: result.error || "Ocurrió un error inesperado.", type: "error" });
+        }
     };
 
     return (
@@ -96,9 +105,22 @@ export default function BookingPage() {
                                     </div>
                                 </div>
 
+                                {formError && (
+                                    <p className="text-sm text-red-600 font-medium bg-red-50 p-3 rounded-xl border border-red-100">
+                                        {formError}
+                                    </p>
+                                )}
+
                                 <div className="pt-6">
                                     <Button
-                                        onClick={() => formData.petName ? setStep(2) : alert("Ingresa el nombre de tu mascota")}
+                                        onClick={() => {
+                                            if (!formData.petName) {
+                                                setFormError("Ingresa el nombre de tu mascota");
+                                                return;
+                                            }
+                                            setFormError(null);
+                                            setStep(2);
+                                        }}
                                         className="h-14 text-lg"
                                         variant="primary"
                                     >
@@ -148,6 +170,13 @@ export default function BookingPage() {
                     </div>
                 </Card>
             </div>
+            <Modal
+                open={modal.open}
+                onClose={() => setModal(prev => ({ ...prev, open: false }))}
+                title={modal.title}
+                message={modal.message}
+                type={modal.type}
+            />
         </div>
     );
 }

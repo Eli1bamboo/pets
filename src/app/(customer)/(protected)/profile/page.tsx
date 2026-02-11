@@ -1,18 +1,39 @@
 "use client";
 
+import { useState } from "react";
 import { useAppointments } from "@/hooks/useAppointments";
 import { useCancelAppointment } from "@/hooks/useCancelAppointment";
 import { Calendar, Clock, Scissors, XCircle } from "lucide-react";
+import Modal from "@/components/molecules/Modal";
+import { Appointment } from "@/types";
 
 export default function ProfilePage() {
     const { appointments, loading, refetch } = useAppointments();
     const { cancelAppointment } = useCancelAppointment();
+    const [modal, setModal] = useState<{ open: boolean; title: string; message: string; type: 'warning' | 'error' | 'success'; onConfirm?: () => void }>({
+        open: false, title: "", message: "", type: "warning"
+    });
 
-    const handleCancel = async (id: number) => {
-        const success = await cancelAppointment(id);
-        if (success) {
-            refetch();
-        }
+    const handleCancelClick = (apt: Appointment) => {
+        setModal({
+            open: true,
+            title: "¿Cancelar turno?",
+            message: `Vas a cancelar el turno de ${apt.pet_name}. Esta acción no se puede deshacer.`,
+            type: "warning",
+            onConfirm: async () => {
+                const result = await cancelAppointment(apt.id);
+                if (result.success) {
+                    refetch();
+                } else {
+                    setModal({
+                        open: true,
+                        title: "Error",
+                        message: result.error || "No se pudo cancelar el turno.",
+                        type: "error"
+                    });
+                }
+            }
+        });
     };
 
     const getStatusLabel = (status: string) => {
@@ -90,7 +111,7 @@ export default function ProfilePage() {
                                     {apt.status === 'pending' && (
                                         <div className="mt-6 border-t border-brand-100 pt-4">
                                             <button
-                                                onClick={() => handleCancel(apt.id)}
+                                                onClick={() => handleCancelClick(apt)}
                                                 className="flex items-center gap-1 text-xs font-medium text-red-600 hover:text-red-800 transition-colors"
                                             >
                                                 <XCircle size={14} />
@@ -104,6 +125,16 @@ export default function ProfilePage() {
                     )}
                 </div>
             </div>
+            <Modal
+                open={modal.open}
+                onClose={() => setModal(prev => ({ ...prev, open: false }))}
+                title={modal.title}
+                message={modal.message}
+                type={modal.type}
+                onConfirm={modal.onConfirm}
+                confirmText="Sí, cancelar turno"
+                cancelText="Volver atrás"
+            />
         </div>
     );
 }
