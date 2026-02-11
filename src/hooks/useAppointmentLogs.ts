@@ -11,7 +11,7 @@ export interface AppointmentLog {
 export function useAppointmentLogs(appointmentId?: number) {
     const [logs, setLogs] = useState<AppointmentLog[]>([]);
     const [loading, setLoading] = useState(false);
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
 
     const fetchLogs = useCallback(async () => {
         if (!appointmentId) return;

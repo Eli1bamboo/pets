@@ -4,7 +4,7 @@ import { createClient } from '@/utils/supabase/client';
 export function useAppointmentStatus(appointmentId: number | string) {
     const [status, setStatus] = useState<string>("pending");
     const [loading, setLoading] = useState(true);
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
 
     useEffect(() => {
         if (!appointmentId) return;

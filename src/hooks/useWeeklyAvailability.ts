@@ -6,7 +6,7 @@ import { getWeekDates } from '@/utils/dateUtils';
 export function useWeeklyAvailability() {
     const [fullDays, setFullDays] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
     const days = getWeekDates();
 
     useEffect(() => {

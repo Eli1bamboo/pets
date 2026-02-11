@@ -4,7 +4,7 @@ import { createClient } from '@/utils/supabase/client';
 export function useCustomerLogin() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
 
     const login = async (email: string, password: string) => {
         setLoading(true);

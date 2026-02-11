@@ -6,7 +6,8 @@ import { User } from "@supabase/supabase-js";
 export function useCustomerHistory(user: User | null) {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [loading, setLoading] = useState(true);
-    const supabase = createClient();
+    const [error, setError] = useState<string | null>(null);
+    const [supabase] = useState(() => createClient());
 
     const fetchAppointments = useCallback(async () => {
         if (!user) return;
@@ -19,8 +20,10 @@ export function useCustomerHistory(user: User | null) {
                 .order("date", { ascending: false });
 
             if (data) setAppointments(data as Appointment[]);
-        } catch (error) {
-            console.error("Error fetching customer history:", error);
+            setError(null);
+        } catch (err) {
+            console.error("Error fetching customer history:", err);
+            setError("Error al cargar el historial");
         } finally {
             setLoading(false);
         }
@@ -32,5 +35,5 @@ export function useCustomerHistory(user: User | null) {
         }
     }, [fetchAppointments, user]);
 
-    return { appointments, loading, refetch: fetchAppointments };
+    return { appointments, loading, error, refetch: fetchAppointments };
 }
