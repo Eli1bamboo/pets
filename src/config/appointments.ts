@@ -14,9 +14,3 @@ export const getStatusLabel = (status: string) =>
 
 export const getStatusColor = (status: string) =>
     APPOINTMENT_STATUSES.find(s => s.value === status)?.color || 'bg-gray-100 text-gray-800';
-
-export const SERVICES_PRICE_MAP: Record<string, number> = {
-    'Baño y Secado': 4500,
-    'Corte Completo': 6500,
-    'Spa de Deslanado': 8000,
-};
