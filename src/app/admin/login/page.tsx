@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useAdminLogin } from "@/hooks/useAdminLogin";
 import { AdminLoader } from "@/components/molecules/AdminLoader";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 
 export default function AdminLoginPage() {
@@ -19,6 +20,7 @@ export default function AdminLoginPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [isRedirecting, setIsRedirecting] = useState(false);
     const router = useRouter();
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (!authLoading && isAdmin) {
@@ -26,7 +28,7 @@ export default function AdminLoginPage() {
         }
     }, [isAdmin, authLoading, router]);
 
-    if (authLoading || isRedirecting) return <AdminLoader fullScreen message="Cargando portal..." />;
+    if (authLoading || isRedirecting) return <AdminLoader fullScreen message={t.admin.login.loadingPortal} />;
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -52,16 +54,16 @@ export default function AdminLoginPage() {
                     <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-slate-100 text-admin-primary mb-6 border border-slate-200">
                         <Lock size={28} />
                     </div>
-                    <h1 className="text-2xl font-bold text-admin-primary tracking-tight text-center">Admin Portal</h1>
+                    <h1 className="text-2xl font-bold text-admin-primary tracking-tight text-center">{t.admin.login.title}</h1>
                     <p className="mt-2 text-admin-text-secondary text-sm text-center">
-                        Gestiona tu tienda y administra tus turnos.
+                        {t.admin.login.subtitle}
                     </p>
                 </div>
 
                 <form className="space-y-5" onSubmit={handleLogin}>
                     <FormField
                         id="email"
-                        label="Email Profesional"
+                        label={t.admin.login.emailLabel}
                         type="email"
                         required
                         placeholder="admin@empresa.com"
@@ -73,7 +75,7 @@ export default function AdminLoginPage() {
 
                     <FormField
                         id="password"
-                        label="Contraseña"
+                        label={t.admin.login.passwordLabel}
                         type={showPassword ? "text" : "password"}
                         required
                         placeholder="••••••••"
@@ -102,7 +104,7 @@ export default function AdminLoginPage() {
                         className="w-full h-12 text-base font-semibold"
                         variant="admin-primary"
                     >
-                        Ingresar
+                        {t.admin.login.submit}
                     </Button>
                 </form>
 
@@ -111,14 +113,14 @@ export default function AdminLoginPage() {
                         onClick={() => router.push("/")}
                         className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors flex items-center justify-center gap-2 mx-auto"
                     >
-                        &larr; Volver al sitio público
+                        {t.admin.login.backToPublic}
                     </button>
                 </div>
             </motion.div>
 
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-2 text-slate-500/40 text-xs font-bold tracking-widest uppercase">
                 <LayoutDashboard size={14} />
-                <span>Business Control Center v2.0</span>
+                <span>{t.admin.login.version}</span>
             </div>
         </div>
     );

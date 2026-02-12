@@ -13,13 +13,10 @@ import { Appointment, AppointmentStatus } from "@/types";
 import { useAdminUI } from "@/providers/AdminUIProvider";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { es } from 'date-fns/locale';
+import { es as esLocale } from 'date-fns/locale';
+import { useTranslation } from "@/i18n/LanguageContext";
 
-const STATUS_FILTERS: { value: AppointmentStatus; label: string }[] = [
-    { value: 'completed', label: 'Completado' },
-    { value: 'cancelled', label: 'Cancelado' },
-    { value: 'pending', label: 'Pendiente' },
-];
+
 
 export default function AdminHistoryPage() {
     const { isAdmin, loading: authLoading } = useAdminAuth({ redirectToLogin: true });
@@ -30,6 +27,13 @@ export default function AdminHistoryPage() {
     const [selectedStatuses, setSelectedStatuses] = useState<AppointmentStatus[]>([]);
 
     const { openSidebar } = useAdminUI();
+    const { t } = useTranslation();
+
+    const STATUS_FILTERS: { value: AppointmentStatus; label: string }[] = [
+        { value: 'completed', label: t.admin.statuses.completed },
+        { value: 'cancelled', label: t.admin.statuses.cancelled },
+        { value: 'pending', label: t.admin.statuses.pending },
+    ];
 
     useEffect(() => {
         if (!authLoading && !isAdmin) {
@@ -84,8 +88,8 @@ export default function AdminHistoryPage() {
         <main className="mx-auto max-w-7xl px-6 py-12">
             <div className="flex flex-col gap-8 mb-10">
                 <div>
-                    <h1 className="text-4xl font-black text-admin-primary mb-2">Historial Global</h1>
-                    <p className="text-admin-text-secondary">Gestión y visualización de todos los turnos del sistema.</p>
+                    <h1 className="text-4xl font-black text-admin-primary mb-2">{t.admin.history.title}</h1>
+                    <p className="text-admin-text-secondary">{t.admin.history.subtitle}</p>
                 </div>
 
                 <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
@@ -94,7 +98,7 @@ export default function AdminHistoryPage() {
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                             <input
                                 type="text"
-                                placeholder="Buscar por mascota..."
+                                placeholder={t.admin.history.searchPlaceholder}
                                 value={searchTerm}
                                 onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
                                 className="w-full rounded-2xl border-slate-200 bg-slate-50 pl-11 pr-4 py-3 text-sm focus:border-admin-accent focus:ring-admin-accent transition-all outline-none"
@@ -106,9 +110,9 @@ export default function AdminHistoryPage() {
                                 <DatePicker
                                     selected={startDate}
                                     onChange={(date: Date | null) => { setStartDate(date || undefined); setCurrentPage(1); }}
-                                    placeholderText="Fecha Desde"
+                                    placeholderText={t.admin.history.dateFrom}
                                     className="w-full md:w-40 rounded-2xl border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:border-admin-accent focus:ring-admin-accent outline-none"
-                                    locale={es}
+                                    locale={esLocale}
                                     dateFormat="dd/MM/yyyy"
                                 />
                             </div>
@@ -116,9 +120,9 @@ export default function AdminHistoryPage() {
                                 <DatePicker
                                     selected={endDate}
                                     onChange={(date: Date | null) => { setEndDate(date || undefined); setCurrentPage(1); }}
-                                    placeholderText="Fecha Hasta"
+                                    placeholderText={t.admin.history.dateTo}
                                     className="w-full md:w-40 rounded-2xl border-slate-200 bg-slate-50 px-4 py-3 text-sm focus:border-admin-accent focus:ring-admin-accent outline-none"
-                                    locale={es}
+                                    locale={esLocale}
                                     dateFormat="dd/MM/yyyy"
                                 />
                             </div>
@@ -128,7 +132,7 @@ export default function AdminHistoryPage() {
                     <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100">
                         <div className="flex items-center gap-2 text-sm font-bold text-slate-700 mr-2">
                             <Filter size={16} />
-                            <span>Estado:</span>
+                            <span>{t.admin.history.filterLabel}</span>
                         </div>
                         {STATUS_FILTERS.map((s) => (
                             <button
@@ -147,7 +151,7 @@ export default function AdminHistoryPage() {
                                 onClick={() => { setSelectedStatuses([]); setCurrentPage(1); }}
                                 className="text-xs text-red-500 font-bold hover:underline ml-auto"
                             >
-                                Limpiar Filtros
+                                {t.admin.history.clearFilters}
                             </button>
                         )}
                     </div>
@@ -163,9 +167,9 @@ export default function AdminHistoryPage() {
                         <button
                             onClick={(e) => { e.stopPropagation(); handleViewDetails(apt); }}
                             className="text-slate-600 hover:text-admin-primary p-2 rounded-full hover:bg-slate-100 transition-colors group flex items-center gap-2"
-                            title="Ver detalles"
+                            title={t.admin.history.viewDetails}
                         >
-                            <span className="text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">Ver</span>
+                            <span className="text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">{t.admin.history.view}</span>
                             <Eye size={18} />
                         </button>
                     </div>

@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/atoms/Button";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function ResetSessionPage() {
     const [status, setStatus] = useState("Iniciando limpieza...");
     const router = useRouter();
     const [supabase] = useState(() => createClient());
+    const { t } = useTranslation();
 
     useEffect(() => {
         const clearSession = async () => {
@@ -45,10 +47,10 @@ export default function ResetSessionPage() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-white p-8">
-            <h1 className="text-2xl font-bold text-red-600 mb-4">Reseteando Sesión</h1>
+            <h1 className="text-2xl font-bold text-red-600 mb-4">{t.admin.reset.title}</h1>
             <p className="text-gray-600 font-mono text-sm mb-6">{status}</p>
             <Button onClick={() => window.location.href = "/admin/login"}>
-                Ir al Login ahora
+                {t.admin.reset.goToLogin}
             </Button>
         </div>
     );
