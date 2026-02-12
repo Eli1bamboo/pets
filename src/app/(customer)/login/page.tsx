@@ -8,6 +8,8 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 import { useCustomerLogin } from "@/hooks/useCustomerLogin";
+import Modal from "@/components/molecules/Modal";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -16,6 +18,8 @@ export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const { login, signup, loading, error } = useCustomerLogin();
+    const { t } = useTranslation();
+    const [modal, setModal] = useState({ open: false, title: "", message: "", type: "success" as const });
 
     useEffect(() => {
         if (user) {
@@ -29,7 +33,7 @@ export default function LoginPage() {
         if (isSignUp) {
             const result = await signup(email, password);
             if (result.success) {
-                alert("¡Registro exitoso! Revisa tu email.");
+                setModal({ open: true, title: t.login.signupSuccess, message: t.login.signupSuccessMsg, type: "success" });
             }
         } else {
             await login(email, password);
@@ -57,10 +61,10 @@ export default function LoginPage() {
 
                         <div className="mt-12">
                             <h3 className="text-3xl font-black text-brand-900 leading-tight">
-                                Gestiona el cuidado de <span className="text-primary-orange">tu mascota</span>
+                                Gestiona el cuidado de <span className="text-primary-orange">{t.login.sideTitleHighlight}</span>
                             </h3>
                             <p className="mt-6 text-brand-600 font-medium text-lg leading-relaxed">
-                                Accede a tu panel personal para revisar el historial de sesiones, realizar nuevas reservas en segundos y seguir el progreso de tu mejor amigo en tiempo real.
+                                {t.login.sideSubtitle}
                             </p>
                         </div>
                     </div>
@@ -73,17 +77,17 @@ export default function LoginPage() {
                         >
                             <div className="mb-4 lg:mb-12 text-center lg:text-left">
                                 <h2 className="text-xl lg:text-4xl font-black tracking-tight text-brand-900 leading-tight mb-1 lg:mb-4">
-                                    {isSignUp ? "Crea una cuenta" : "¡Hola de nuevo!"}
+                                    {isSignUp ? t.login.titleSignup : t.login.titleLogin}
                                 </h2>
                                 <p className="text-brand-600 font-medium text-xs lg:text-lg">
-                                    {isSignUp ? "Únete a nuestra comunidad." : "Ingresa tus datos para continuar."}
+                                    {isSignUp ? t.login.subtitleSignup : t.login.subtitleLogin}
                                 </p>
                             </div>
 
                             <form className="space-y-3 lg:space-y-6" onSubmit={handleAuth}>
                                 <FormField
                                     id="email"
-                                    label="Email"
+                                    label={t.login.email}
                                     type="email"
                                     required
                                     placeholder="tu@email.com"
@@ -94,7 +98,7 @@ export default function LoginPage() {
 
                                 <FormField
                                     id="password"
-                                    label="Contraseña"
+                                    label={t.login.password}
                                     type="password"
                                     required
                                     placeholder="••••••••"
@@ -116,24 +120,31 @@ export default function LoginPage() {
 
                                 <div className="pt-2 lg:pt-4">
                                     <Button type="submit" isLoading={loading} className="py-3.5 lg:py-5 text-base lg:text-xl font-black rounded-xl lg:rounded-2xl shadow-xl shadow-primary-orange/10 transition-transform active:scale-[0.98]">
-                                        {isSignUp ? "Cerrar Registro" : "Ingresar"}
+                                        {isSignUp ? t.login.submitSignup : t.login.submitLogin}
                                     </Button>
                                 </div>
                             </form>
 
                             <div className="mt-6 lg:mt-12 border-t border-brand-900/5 pt-4 lg:pt-10 text-center text-[10px] lg:text-sm font-bold text-brand-500">
-                                {isSignUp ? "¿Ya tienes una cuenta? " : "¿No tienes cuenta aún? "}
+                                {isSignUp ? t.login.switchToLogin : t.login.switchToSignup}
                                 <button
                                     onClick={() => setIsSignUp(!isSignUp)}
                                     className="text-primary-orange hover:text-brand-900 transition-colors font-black ml-1"
                                 >
-                                    {isSignUp ? "Inicia sesión" : "Regístrate gratis"}
+                                    {isSignUp ? t.login.linkLogin : t.login.linkSignup}
                                 </button>
                             </div>
                         </motion.div>
                     </div>
                 </div>
             </div>
+            <Modal
+                open={modal.open}
+                onClose={() => setModal(prev => ({ ...prev, open: false }))}
+                title={modal.title}
+                message={modal.message}
+                type={modal.type}
+            />
         </div>
     );
 }

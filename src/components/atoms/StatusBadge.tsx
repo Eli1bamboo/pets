@@ -1,6 +1,6 @@
 
 import { AppointmentStatus } from "@/types";
-import { getStatusColor } from "@/config/appointments";
+import { getStatusColor, getStatusLabel } from "@/config/appointments";
 
 interface StatusBadgeProps {
     status: AppointmentStatus;
@@ -11,7 +11,7 @@ export function StatusBadge({ status }: StatusBadgeProps) {
 
     return (
         <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ring-gray-500/10 ${colorClass}`}>
-            {status}
+            {getStatusLabel(status)}
         </span>
     );
 }

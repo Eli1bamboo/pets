@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface UsePaginationProps<T> {
     items: T[];
@@ -12,9 +12,11 @@ export function usePagination<T>({ items, itemsPerPage, initialPage = 1 }: UsePa
 
     const totalPages = Math.ceil(items.length / itemsPerPage);
 
-    if (currentPage > totalPages && totalPages > 0) {
-        setCurrentPage(totalPages);
-    }
+    useEffect(() => {
+        if (currentPage > totalPages && totalPages > 0) {
+            setCurrentPage(totalPages);
+        }
+    }, [currentPage, totalPages]);
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;

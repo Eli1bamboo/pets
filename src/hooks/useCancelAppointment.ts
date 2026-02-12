@@ -3,11 +3,9 @@ import { createClient } from '@/utils/supabase/client'
 
 export function useCancelAppointment() {
     const [loading, setLoading] = useState(false)
-    const supabase = createClient()
+    const [supabase] = useState(() => createClient())
 
-    const cancelAppointment = async (id: number): Promise<boolean> => {
-        if (!confirm("¿Estás seguro de que quieres cancelar este turno?")) return false
-
+    const cancelAppointment = async (id: number): Promise<{ success: boolean; error?: string }> => {
         setLoading(true)
         const { error } = await supabase
             .from("appointments")
@@ -17,10 +15,9 @@ export function useCancelAppointment() {
         setLoading(false)
 
         if (error) {
-            alert("Error al cancelar: " + error.message)
-            return false
+            return { success: false, error: error.message }
         }
-        return true
+        return { success: true }
     }
 
     return { cancelAppointment, isCancelling: loading }

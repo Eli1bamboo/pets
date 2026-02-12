@@ -10,13 +10,15 @@ import { usePagination } from "@/hooks/usePagination";
 import Modal, { ModalProps } from "@/components/molecules/Modal";
 import { Calendar, Settings } from "lucide-react";
 import { getWeekRange, formatWeekRange } from "@/utils/dateUtils";
-import { useSidebar } from "@/hooks/useSidebar";
+import { useAdminUI } from "@/providers/AdminUIProvider";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 const ITEMS_PER_PAGE = 8;
 
 export default function AdminPage() {
     const { start: startDate, end: endDate } = getWeekRange();
-    const { openSidebar, closeSidebar } = useSidebar();
+    const { openSidebar, closeSidebar } = useAdminUI();
+    const { t } = useTranslation();
 
     const { appointments, loading: fetching, updateStatus } = useAppointments({
         isAdmin: true,
@@ -50,8 +52,8 @@ export default function AdminPage() {
             setModalConfig({
                 open: true,
                 onClose: () => setModalConfig(prev => ({ ...prev, open: false })),
-                title: "Error al actualizar",
-                message: "No se pudo cambiar el estado del turno. Por favor intenta nuevamente.",
+                title: t.admin.appointments.updateError,
+                message: t.admin.appointments.updateErrorMsg,
                 details: typeof error === 'object' ? JSON.stringify(error) : String(error),
                 type: "error"
             });
@@ -67,11 +69,11 @@ export default function AdminPage() {
         setModalConfig({
             open: true,
             onClose: () => setModalConfig(prev => ({ ...prev, open: false })),
-            title: "¿Cancelar turno?",
-            message: `Vas a cancelar el turno de ${apt.pet_name} (Cliente: ${apt.profiles?.full_name || 'Desconocido'}). Esta acción no se puede deshacer.`,
+            title: t.admin.appointments.cancelTitle,
+            message: t.admin.appointments.cancelMsg.replace('{petName}', apt.pet_name).replace('{clientName}', apt.profiles?.full_name || 'Desconocido'),
             type: "warning",
-            confirmText: "Sí, cancelar turno",
-            cancelText: "Volver atrás",
+            confirmText: t.admin.appointments.cancelConfirm,
+            cancelText: t.admin.appointments.cancelBack,
             onConfirm: async () => {
                 const success = await handleStatusUpdate(apt.id, 'cancelled');
                 if (success) {
@@ -88,9 +90,9 @@ export default function AdminPage() {
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="sm:flex sm:items-center">
                     <div className="sm:flex-auto">
-                        <h1 className="text-2xl font-black leading-6 text-admin-primary">Panel de Administración</h1>
+                        <h1 className="text-2xl font-black leading-6 text-admin-primary">{t.admin.appointments.title}</h1>
                         <p className="mt-2 text-sm text-admin-text-secondary">
-                            Gestión de turnos y estados de las mascotas.
+                            {t.admin.appointments.subtitle}
                         </p>
                     </div>
                     <div className="mt-4 sm:flex-none flex items-center gap-4">
@@ -105,7 +107,7 @@ export default function AdminPage() {
                             className="flex items-center gap-2 bg-admin-primary hover:bg-slate-800 text-white border-none shadow-sm"
                         >
                             <Settings size={18} />
-                            Configuración
+                            {t.admin.appointments.settings}
                         </Button>
                     </div>
                 </div>

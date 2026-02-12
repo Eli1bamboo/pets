@@ -4,7 +4,7 @@ import { createClient } from '@/utils/supabase/client';
 export function useAdminLogin() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
 
     const adminLogin = async (email: string, password: string) => {
         setLoading(true);

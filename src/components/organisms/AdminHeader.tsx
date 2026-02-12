@@ -2,17 +2,20 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { LayoutDashboard, Calendar, History, LogOut, Scissors, Menu, X } from "lucide-react";
+import { LayoutDashboard, Calendar, History, LogOut, Scissors, Menu, X, Package } from "lucide-react";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function AdminHeader() {
     const { signOut } = useAdminAuth();
     const [isOpen, setIsOpen] = useState(false);
+    const { t } = useTranslation();
 
     const navItems = [
-        { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-        { label: "Turnos", href: "/admin/appointments", icon: Calendar },
-        { label: "Historial", href: "/admin/history", icon: History },
+        { label: t.admin.header.dashboard, href: "/admin", icon: LayoutDashboard },
+        { label: t.admin.header.appointments, href: "/admin/appointments", icon: Calendar },
+        { label: t.admin.header.services, href: "/admin/services", icon: Package },
+        { label: t.admin.header.history, href: "/admin/history", icon: History },
     ];
 
     return (
@@ -45,7 +48,7 @@ export default function AdminHeader() {
                             className="text-xs font-black uppercase tracking-widest bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg flex items-center gap-2 transition-all"
                         >
                             <LogOut size={14} />
-                            Salir
+                            {t.admin.header.logout}
                         </button>
                     </div>
 
@@ -56,7 +59,7 @@ export default function AdminHeader() {
             </div>
 
             {isOpen && (
-                <div className="md:hidden bg-brand-900 border-t border-white/10 p-4 space-y-4">
+                <div className="md:hidden bg-admin-primary border-t border-white/10 p-4 space-y-4">
                     {navItems.map((item) => (
                         <Link
                             key={item.href}
@@ -71,7 +74,7 @@ export default function AdminHeader() {
                         onClick={() => signOut("/admin/login")}
                         className="w-full text-left text-sm font-bold text-red-400"
                     >
-                        Cerrar Sesión
+                        {t.admin.header.logoutMobile}
                     </button>
                 </div>
             )}

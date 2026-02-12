@@ -5,7 +5,7 @@ export function useAvailability(date: string) {
     const [busySlots, setBusySlots] = useState<string[]>([]);
     const [availableHours, setAvailableHours] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
 
     useEffect(() => {
         if (!date) return;

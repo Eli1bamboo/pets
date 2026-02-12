@@ -1,26 +1,18 @@
 "use client";
 
-import { useCustomerAuth } from "@/hooks/useCustomerAuth";
+import { useCustomerContext } from "@/providers/CustomerProvider";
 
 import { Calendar, Clock, Dog, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useCustomerHistory } from "@/hooks/useCustomerHistory";
+import { useTranslation } from "@/i18n/LanguageContext";
+import { getStatusColor } from "@/config/appointments";
 
 
 export default function HistoryPage() {
-    const { user, loading: authLoading } = useCustomerAuth({ redirectToLogin: true });
+    const { user, loading: authLoading } = useCustomerContext();
     const { appointments, loading } = useCustomerHistory(user);
-
-    const getStatusStyles = (status: string) => {
-        switch (status) {
-            case "ready": return "bg-green-100 text-green-700 border-green-200";
-            case "washing":
-            case "drying": return "bg-blue-100 text-blue-700 border-blue-200 animate-pulse";
-            case "pending": return "bg-orange-100 text-orange-700 border-orange-200";
-            case "completed": return "bg-gray-100 text-gray-600 border-gray-200";
-            default: return "bg-gray-100 text-gray-600 border-gray-200";
-        }
-    };
+    const { t } = useTranslation();
 
     if (authLoading || loading) {
         return (
@@ -33,8 +25,8 @@ export default function HistoryPage() {
     return (
         <main className="mx-auto max-w-4xl px-6 py-12">
             <div className="mb-10">
-                <h1 className="text-4xl font-black text-brand-900 mb-2">Mi Historial</h1>
-                <p className="text-brand-600">Revisa tus turnos pasados y el estado de los actuales.</p>
+                <h1 className="text-4xl font-black text-brand-900 mb-2">{t.history.title}</h1>
+                <p className="text-brand-600">{t.history.subtitle}</p>
             </div>
 
             {appointments.length === 0 ? (
@@ -42,13 +34,13 @@ export default function HistoryPage() {
                     <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-50 text-brand-400">
                         <Calendar size={32} />
                     </div>
-                    <h3 className="text-xl font-bold text-brand-900">No tienes turnos aún</h3>
-                    <p className="mb-8 text-brand-500">Cuando reserves tu primer servicio, aparecerá aquí.</p>
+                    <h3 className="text-xl font-bold text-brand-900">{t.history.emptyTitle}</h3>
+                    <p className="mb-8 text-brand-500">{t.history.emptySubtitle}</p>
                     <Link
                         href="/booking"
                         className="inline-block rounded-full bg-primary-orange px-8 py-3 font-bold text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
                     >
-                        Reservar mi primer turno
+                        {t.history.emptyAction}
                     </Link>
                 </div>
             ) : (
@@ -80,18 +72,14 @@ export default function HistoryPage() {
                                 </div>
 
                                 <div className="flex items-center justify-between md:flex-col md:items-end gap-3">
-                                    <span className={`rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-wider ${getStatusStyles(app.status)}`}>
-                                        {app.status === 'pending' ? 'Pendiente' :
-                                            app.status === 'washing' ? 'Lavando' :
-                                                app.status === 'drying' ? 'Secando' :
-                                                    app.status === 'ready' ? '¡Listo!' :
-                                                        app.status === 'completed' ? 'Completado' : 'Cancelado'}
+                                    <span className={`rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-wider ${getStatusColor(app.status)}`}>
+                                        {(t.statusHistory as Record<string, string>)[app.status] || app.status}
                                     </span>
                                     <Link
                                         href={`/tracking?id=${app.id}`}
                                         className="flex items-center gap-1 text-sm font-bold text-primary-orange hover:underline"
                                     >
-                                        Ver seguimiento
+                                        {t.history.viewTracking}
                                         <ChevronRight size={16} />
                                     </Link>
                                 </div>

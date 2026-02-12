@@ -11,26 +11,29 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { AdminLoader } from "@/components/molecules/AdminLoader";
+import { useTranslation } from "@/i18n/LanguageContext";
+import Link from "next/link";
 
 export default function AdminDashboard() {
     const { stats, loading } = useDashboardStats();
+    const { t } = useTranslation();
 
     if (loading) return null;
 
     const kpis = [
-        { label: "Cortes del Mes", value: stats.completedMonth, icon: Scissors, color: "bg-admin-accent", subtext: "Completados" },
-        { label: "Turnos Pendientes", value: stats.pendingTotal, icon: Clock, color: "bg-blue-600", subtext: "En espera" },
-        { label: "Ingresos Estimados", value: `$${stats.totalRevenue.toLocaleString()}`, icon: TrendingUp, color: "bg-emerald-600", subtext: "Este mes" },
-        { label: "Próximo Cliente", value: stats.nextAppointment?.pet_name || "Nadie", icon: Users, color: "bg-violet-600", subtext: stats.nextAppointment ? stats.nextAppointment.service : "-" }
+        { label: t.admin.dashboard.cutsMonth, value: stats.completedMonth, icon: Scissors, color: "bg-admin-accent", subtext: t.admin.dashboard.completed },
+        { label: t.admin.dashboard.pendingTotal, value: stats.pendingTotal, icon: Clock, color: "bg-blue-600", subtext: t.admin.dashboard.waiting },
+        { label: t.admin.dashboard.estimatedRevenue, value: `$${stats.totalRevenue.toLocaleString()}`, icon: TrendingUp, color: "bg-emerald-600", subtext: t.admin.dashboard.thisMonth },
+        { label: t.admin.dashboard.nextClient, value: stats.nextAppointment?.pet_name || t.admin.dashboard.nobody, icon: Users, color: "bg-violet-600", subtext: stats.nextAppointment ? stats.nextAppointment.service : "-" }
     ];
 
     return (
         <div className="p-8 lg:p-12">
             <div className="mb-10 text-center lg:text-left">
                 <h1 className="text-4xl font-black text-admin-primary mb-2 tracking-tight">
-                    Panel de Control
+                    {t.admin.dashboard.title}
                 </h1>
-                <p className="text-admin-text-secondary text-lg">Resumen de actividad y métricas clave.</p>
+                <p className="text-admin-text-secondary text-lg">{t.admin.dashboard.subtitle}</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -69,7 +72,7 @@ export default function AdminDashboard() {
 
                     <div className="relative z-10 flex flex-col justify-between h-full">
                         <div className="flex justify-between items-start">
-                            <h2 className="text-2xl font-bold text-white">Actividad Reciente</h2>
+                            <h2 className="text-2xl font-bold text-white">{t.admin.dashboard.recentActivity}</h2>
                         </div>
 
                         <div className="grid grid-cols-3 gap-4">
@@ -95,7 +98,7 @@ export default function AdminDashboard() {
                             <div className="bg-slate-100 p-2 rounded-xl">
                                 <CalendarCheck className="text-admin-primary" size={24} />
                             </div>
-                            <h2 className="text-xl font-bold text-admin-primary">Agenda de Hoy</h2>
+                            <h2 className="text-xl font-bold text-admin-primary">{t.admin.dashboard.todaySchedule}</h2>
                         </div>
                         {stats.nextAppointment ? (
                             <div className="space-y-4">
@@ -110,12 +113,12 @@ export default function AdminDashboard() {
                                 </div>
                             </div>
                         ) : (
-                            <p className="text-slate-500 text-sm">No hay más turnos por hoy.</p>
+                            <p className="text-slate-500 text-sm">{t.admin.dashboard.noMoreToday}</p>
                         )}
                     </div>
-                    <button className="w-full py-4 rounded-2xl bg-admin-primary text-white font-bold text-sm hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/10">
-                        Ver Calendario Completo
-                    </button>
+                    <Link href="/admin/appointments" className="w-full py-4 rounded-2xl bg-admin-primary text-white font-bold text-sm hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/10 block text-center">
+                        {t.admin.dashboard.viewFullCalendar}
+                    </Link>
                 </motion.div>
             </div>
         </div>

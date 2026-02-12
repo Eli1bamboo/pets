@@ -4,7 +4,7 @@ import { createClient } from '@/utils/supabase/client';
 export function useAppointmentStatus(appointmentId: number | string) {
     const [status, setStatus] = useState<string>("pending");
     const [loading, setLoading] = useState(true);
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
 
     useEffect(() => {
         if (!appointmentId) return;
@@ -35,8 +35,9 @@ export function useAppointmentStatus(appointmentId: number | string) {
                     table: "appointments",
                     filter: `id=eq.${appointmentId}`,
                 },
-                (payload: any) => {
-                    setStatus(payload.new.status);
+                (payload) => {
+                    const updated = payload.new as { status: string };
+                    setStatus(updated.status);
                 }
             )
             .subscribe();

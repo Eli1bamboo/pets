@@ -5,7 +5,7 @@ import { Appointment } from "@/types";
 export function useAppointment(id?: number) {
     const [appointment, setAppointment] = useState<Appointment | null>(null);
     const [loading, setLoading] = useState(false);
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
 
     useEffect(() => {
         if (!id) return;
@@ -19,7 +19,7 @@ export function useAppointment(id?: number) {
                 .single();
 
             if (!error && data) {
-                setAppointment(data as unknown as Appointment);
+                setAppointment(data as Appointment);
             }
             setLoading(false);
         };

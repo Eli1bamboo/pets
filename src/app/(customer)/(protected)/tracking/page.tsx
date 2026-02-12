@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 import StatusTracker from "@/components/organisms/StatusTracker";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Input";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 
 export default function TrackingPage() {
-    useCustomerAuth({ redirectToLogin: true });
     const [inputId, setInputId] = useState("");
     const [appointmentId, setAppointmentId] = useState<string | null>(null);
+    const { t } = useTranslation();
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -24,12 +24,12 @@ export default function TrackingPage() {
     return (
         <div className="min-h-screen bg-background-cream px-6 py-24 sm:py-32 lg:px-8">
             <div className="mx-auto max-w-2xl text-center">
-                <span className="text-primary-orange font-bold uppercase tracking-wider text-sm">Seguimiento en Vivo</span>
+                <span className="text-primary-orange font-bold uppercase tracking-wider text-sm">{t.tracking.badge}</span>
                 <h2 className="mt-4 text-4xl font-extrabold tracking-tight text-brand-900 sm:text-5xl leading-[1.1]">
-                    Rastrea el progreso de tu mascota
+                    {t.tracking.title}
                 </h2>
                 <p className="mt-6 text-xl leading-8 text-brand-700">
-                    Ingresa el número de tu turno para ver en qué etapa del spa se encuentra tu mejor amigo en tiempo real.
+                    {t.tracking.subtitle}
                 </p>
             </div>
 
@@ -41,7 +41,7 @@ export default function TrackingPage() {
                             name="id"
                             type="number"
                             required
-                            placeholder="Número de Turno (ej: 15)"
+                            placeholder={t.tracking.placeholder}
                             value={inputId}
                             onChange={(e) => setInputId(e.target.value)}
                             leftIcon={Search}
@@ -51,7 +51,7 @@ export default function TrackingPage() {
                         type="submit"
                         className="sm:w-32 h-14"
                     >
-                        Buscar
+                        {t.tracking.search}
                     </Button>
                 </form>
 
@@ -63,9 +63,9 @@ export default function TrackingPage() {
                     >
                         <div className="flex items-center justify-between mb-8 border-b border-brand-900/5 pb-6">
                             <h3 className="text-2xl font-extrabold text-brand-900">
-                                Turno <span className="text-primary-orange">#{appointmentId}</span>
+                                {t.tracking.appointmentLabel} <span className="text-primary-orange">#{appointmentId}</span>
                             </h3>
-                            <span className="bg-soft-peach/20 text-primary-orange px-4 py-1 rounded-full text-sm font-bold">En Proceso</span>
+                            <span className="bg-soft-peach/20 text-primary-orange px-4 py-1 rounded-full text-sm font-bold">{t.tracking.inProgress}</span>
                         </div>
                         <StatusTracker appointmentId={appointmentId} />
                     </motion.div>

@@ -27,7 +27,7 @@ export const DateSelector: React.FC<DateSelectorProps> = ({ selectedDate, onSele
                 <span>Elegí una fecha (Semana Actual)</span>
             </div>
             <div className="grid grid-cols-4 sm:grid-cols-7 gap-3">
-                {days.map((day: any) => {
+                {days.map((day) => {
                     const isSelected = selectedDate === day.dateStr;
                     const isPast = day.dateStr < todayStr;
                     const closed = isDayClosed(day.fullDate.getDay());

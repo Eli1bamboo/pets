@@ -1,17 +1,11 @@
 import { createClient } from "@/utils/supabase/client";
 import { useState, useCallback, useEffect } from "react";
-
-export interface AppointmentLog {
-    id: string;
-    appointment_id: number;
-    description: string;
-    created_at: string;
-}
+import { AppointmentLog } from "@/types";
 
 export function useAppointmentLogs(appointmentId?: number) {
     const [logs, setLogs] = useState<AppointmentLog[]>([]);
     const [loading, setLoading] = useState(false);
-    const supabase = createClient();
+    const [supabase] = useState(() => createClient());
 
     const fetchLogs = useCallback(async () => {
         if (!appointmentId) return;
@@ -58,11 +52,9 @@ export function useAppointmentLogs(appointmentId?: number) {
 
     const addLog = async (description: string) => {
         if (!appointmentId) return;
-        const { error } = await supabase.from("appointment_logs").insert([
+        await supabase.from("appointment_logs").insert([
             { appointment_id: appointmentId, description }
         ]);
-        if (!error) {
-        }
     };
 
     return { logs, loading, fetchLogs, addLog };

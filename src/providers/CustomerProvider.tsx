@@ -39,8 +39,9 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
                         .single();
                     setProfile(data);
                 }
-            } catch (err: any) {
-                if (err.name !== 'AbortError' && !err.message?.includes('signal is aborted')) {
+            } catch (err: unknown) {
+                const isAbort = err instanceof Error && (err.name === 'AbortError' || err.message?.includes('signal is aborted'));
+                if (!isAbort) {
                     console.error("[CustomerProvider] Sync error:", err);
                 }
             } finally {

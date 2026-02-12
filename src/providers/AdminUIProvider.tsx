@@ -1,16 +1,22 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
+import { Appointment, Service } from "@/types";
+
+interface SidebarData {
+    appointment?: Appointment;
+    service?: Service;
+}
 
 interface SidebarState {
-    view: "settings" | "appointment_details" | null;
-    data?: Record<string, unknown> | null;
+    view: "settings" | "appointment_details" | "service_form" | null;
+    data?: SidebarData | null;
     isOpen: boolean;
 }
 
 interface AdminUIContextType {
     sidebar: SidebarState;
-    openSidebar: (view: SidebarState["view"], data?: Record<string, unknown> | null) => void;
+    openSidebar: (view: SidebarState["view"], data?: SidebarData | null) => void;
     closeSidebar: () => void;
     refreshTrigger: number;
     triggerRefresh: () => void;
@@ -26,7 +32,7 @@ export function AdminUIProvider({ children }: { children: ReactNode }) {
     });
     const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-    const openSidebar = (view: SidebarState["view"], data?: Record<string, unknown> | null) => {
+    const openSidebar = (view: SidebarState["view"], data?: SidebarData | null) => {
         setSidebar({ view, data, isOpen: true });
     };
 

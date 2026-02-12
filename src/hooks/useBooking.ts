@@ -8,32 +8,37 @@ interface CreateBookingData {
     service: string;
     date: string;
     time: string;
+    price: number;
 }
 
 export function useBooking() {
     const [submitting, setSubmitting] = useState(false);
-    const supabase = createClient();
+    const [error, setError] = useState<string | null>(null);
+    const [supabase] = useState(() => createClient());
     const router = useRouter();
 
-    const createBooking = async ({ userId, petName, service, date, time }: CreateBookingData) => {
+    const createBooking = async ({ userId, petName, service, date, time, price }: CreateBookingData) => {
         setSubmitting(true);
-        const { error } = await supabase.from("appointments").insert({
+        setError(null);
+        const { error: insertError } = await supabase.from("appointments").insert({
             user_id: userId,
             pet_name: petName,
             service: service,
             date: new Date(`${date}T${time}`).toISOString(),
             status: "pending",
+            price,
         });
 
-        if (error) {
-            alert("Error: " + error.message);
-            setSubmitting(false);
-            return false;
-        } else {
-            router.push("/profile");
-            return true;
+        setSubmitting(false);
+
+        if (insertError) {
+            setError(insertError.message);
+            return { success: false, error: insertError.message };
         }
+
+        router.push("/profile");
+        return { success: true };
     };
 
-    return { createBooking, submitting };
+    return { createBooking, submitting, error };
 }

@@ -2,8 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { CalendarCheck, Search } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function Hero() {
+    const { t } = useTranslation();
+
     return (
         <div className="relative isolate overflow-hidden bg-background-cream pt-14">
             <div className="mx-auto max-w-7xl px-6 py-12 sm:py-20 lg:flex lg:items-center lg:gap-x-10 lg:px-8">
@@ -15,7 +18,7 @@ export default function Hero() {
                         className="mb-8"
                     >
                         <span className="rounded-full bg-primary-orange/20 px-4 py-1.5 text-sm font-semibold leading-6 text-primary-orange ring-1 ring-inset ring-primary-orange/20">
-                            Estética de Primer Nivel
+                            {t.hero.badge}
                         </span>
                     </motion.div>
                     <motion.h1
@@ -24,7 +27,7 @@ export default function Hero() {
                         transition={{ duration: 0.5, delay: 0.1 }}
                         className="text-5xl font-bold tracking-tight text-brand-900 sm:text-7xl leading-[1.1]"
                     >
-                        Cuidado <span className="text-primary-orange">Premium</span> para tu mejor amigo
+                        {t.hero.title} <span className="text-primary-orange">{t.hero.titleHighlight}</span> {t.hero.titleEnd}
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
@@ -32,7 +35,7 @@ export default function Hero() {
                         transition={{ duration: 0.5, delay: 0.2 }}
                         className="mt-6 text-xl leading-8 text-brand-700 max-w-lg"
                     >
-                        Tu mascota merece lo mejor. Ofrecemos servicios de spa, baño y corte con productos premium y un trato lleno de amor.
+                        {t.hero.subtitle}
                     </motion.p>
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -45,11 +48,11 @@ export default function Hero() {
                             className="rounded-full bg-primary-orange px-10 py-4 text-lg font-bold text-white shadow-lg hover:bg-soft-peach hover:scale-105 transition-all flex items-center gap-2"
                         >
                             <CalendarCheck size={22} />
-                            Reservar Turno
+                            {t.hero.ctaBooking}
                         </Link>
                         <Link href="/tracking" className="text-lg font-semibold leading-6 text-brand-900 flex items-center gap-2 hover:text-primary-orange transition-colors">
                             <Search size={22} />
-                            Rastrear Pedido
+                            {t.hero.ctaTracking}
                         </Link>
                     </motion.div>
                 </div>

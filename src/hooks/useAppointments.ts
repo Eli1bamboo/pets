@@ -18,8 +18,13 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
     const [appointments, setAppointments] = useState<Appointment[]>([])
     const [count, setCount] = useState<number>(0)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
     const [supabase] = useState(() => createClient())
     const { refreshTrigger } = useRefresh();
+
+    const statusesKey = statuses?.join(",") ?? "";
+    const startDateKey = startDate?.toISOString() ?? "";
+    const endDateKey = endDate?.toISOString() ?? "";
 
     const fetchAppointments = useCallback(async () => {
         setLoading(true);
@@ -63,15 +68,17 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
             const { data, error, count: totalCount } = await query
 
             if (!error && data) {
-                setAppointments(data as unknown as Appointment[])
+                setAppointments(data as Appointment[])
                 if (totalCount !== null) setCount(totalCount);
+                setError(null)
             }
-        } catch (error) {
-            console.error(error)
+        } catch (err) {
+            console.error(err)
+            setError("Error al cargar los turnos")
         } finally {
             setLoading(false)
         }
-    }, [supabase, isAdmin, startDate?.toISOString(), endDate?.toISOString(), searchQuery, JSON.stringify(statuses), page, limit, refreshTrigger])
+    }, [supabase, isAdmin, startDateKey, endDateKey, searchQuery, statusesKey, page, limit, refreshTrigger])
 
     const updateStatus = async (id: number, newStatus: AppointmentStatus) => {
         setAppointments(prev => prev.map(app =>
@@ -116,13 +123,11 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
                     table: 'appointments',
                 },
                 (payload) => {
-                    console.log('Realtime Payload Received:', payload);
                     const updatedAppointment = payload.new as Appointment;
                     if (!updatedAppointment || updatedAppointment.id === undefined || updatedAppointment.id === null) {
                         console.warn('Realtime update received without a valid appointment ID:', payload);
                         return;
                     }
-                    console.log('Updating appointment:', updatedAppointment.id, 'New Status:', updatedAppointment.status);
 
                     setAppointments((prev) => {
                         return prev.map((app) =>
@@ -140,5 +145,5 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
         };
     }, [supabase]);
 
-    return { appointments, count, loading, refetch: fetchAppointments, updateStatus }
+    return { appointments, count, loading, error, refetch: fetchAppointments, updateStatus }
 }
