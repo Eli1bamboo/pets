@@ -6,6 +6,7 @@ import { useAdminUI } from "@/providers/AdminUIProvider";
 import { useServices } from "@/hooks/useServices";
 import { Save, Trash2 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
+import { useTranslation } from "@/i18n/LanguageContext";
 import {
     SheetHeader,
     SheetTitle,
@@ -37,6 +38,7 @@ export default function ServiceFormSidebar({ service }: ServiceFormSidebarProps)
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
     const [lang, setLang] = useState<"es" | "en">("es");
+    const { t } = useTranslation();
 
     const isEditing = !!service;
 
@@ -62,7 +64,7 @@ export default function ServiceFormSidebar({ service }: ServiceFormSidebarProps)
 
     const handleSave = async () => {
         if (!form.name.trim()) {
-            setMessage({ type: "error", text: "El nombre es obligatorio." });
+            setMessage({ type: "error", text: t.admin.services.nameRequired });
             return;
         }
         setSaving(true);
@@ -82,11 +84,11 @@ export default function ServiceFormSidebar({ service }: ServiceFormSidebarProps)
         setSaving(false);
 
         if (result.success) {
-            setMessage({ type: "success", text: isEditing ? "Servicio actualizado." : "Servicio creado." });
+            setMessage({ type: "success", text: isEditing ? t.admin.services.updated : t.admin.services.created });
             triggerRefresh();
             setTimeout(() => closeSidebar(), 800);
         } else {
-            setMessage({ type: "error", text: result.error || "Error al guardar." });
+            setMessage({ type: "error", text: result.error || t.admin.services.saveError });
         }
     };
 
@@ -99,7 +101,7 @@ export default function ServiceFormSidebar({ service }: ServiceFormSidebarProps)
             triggerRefresh();
             closeSidebar();
         } else {
-            setMessage({ type: "error", text: "Error al eliminar." });
+            setMessage({ type: "error", text: t.admin.services.deleteError });
         }
     };
 
@@ -126,9 +128,9 @@ export default function ServiceFormSidebar({ service }: ServiceFormSidebarProps)
     return (
         <div className="h-full flex flex-col">
             <SheetHeader className="mb-6">
-                <SheetTitle>{isEditing ? "Editar Servicio" : "Nuevo Servicio"}</SheetTitle>
+                <SheetTitle>{isEditing ? t.admin.services.editTitle : t.admin.services.newTitle}</SheetTitle>
                 <SheetDescription>
-                    {isEditing ? "Editá los datos del servicio seleccionado." : "Completá los campos para crear un nuevo servicio."}
+                    {isEditing ? t.admin.services.editDescription : t.admin.services.newDescription}
                 </SheetDescription>
             </SheetHeader>
 
@@ -167,7 +169,7 @@ export default function ServiceFormSidebar({ service }: ServiceFormSidebarProps)
                 {/* Name (language-dependent) */}
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">
-                        {lang === "es" ? "Nombre" : "Name"}
+                        {t.admin.services.nameLabel}
                     </label>
                     <input
                         type="text"
@@ -180,7 +182,7 @@ export default function ServiceFormSidebar({ service }: ServiceFormSidebarProps)
 
                 {/* Price (shared) */}
                 <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">Precio</label>
+                    <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">{t.admin.services.price}</label>
                     <input
                         type="number"
                         value={form.price}
@@ -192,7 +194,7 @@ export default function ServiceFormSidebar({ service }: ServiceFormSidebarProps)
                 {/* Description (language-dependent) */}
                 <div className="space-y-1">
                     <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">
-                        {lang === "es" ? "Descripción" : "Description"}
+                        {t.admin.services.descriptionLabel}
                     </label>
                     <textarea
                         value={descValue}
@@ -205,7 +207,7 @@ export default function ServiceFormSidebar({ service }: ServiceFormSidebarProps)
                 {/* Features (language-dependent) */}
                 <div className="space-y-2">
                     <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">
-                        {lang === "es" ? "Características" : "Features"}
+                        {t.admin.services.featuresLabel}
                     </label>
                     <div className="flex gap-2">
                         <input
@@ -214,7 +216,7 @@ export default function ServiceFormSidebar({ service }: ServiceFormSidebarProps)
                             onChange={e => setFeatureInput(e.target.value)}
                             onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addFeature())}
                             className="flex-1 rounded-xl border border-gray-200 px-4 py-2 text-sm focus:border-admin-accent focus:ring-admin-accent"
-                            placeholder={lang === "es" ? "Agregar característica..." : "Add feature..."}
+                            placeholder={t.admin.services.addFeaturePlaceholder}
                         />
                         <Button variant="admin-outline" onClick={addFeature} className="px-3 py-2 text-xs">+</Button>
                     </div>
@@ -230,7 +232,7 @@ export default function ServiceFormSidebar({ service }: ServiceFormSidebarProps)
 
                 {/* Icon (shared) */}
                 <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">Ícono</label>
+                    <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">{t.admin.services.iconLabel}</label>
                     <select
                         value={form.icon}
                         onChange={e => setForm({ ...form, icon: e.target.value })}
@@ -247,7 +249,7 @@ export default function ServiceFormSidebar({ service }: ServiceFormSidebarProps)
 
                 {/* Sort order (shared) */}
                 <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">Orden</label>
+                    <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">{t.admin.services.sortOrderLabel}</label>
                     <input
                         type="number"
                         value={form.sort_order}
@@ -258,7 +260,7 @@ export default function ServiceFormSidebar({ service }: ServiceFormSidebarProps)
 
                 {/* Active toggle (shared) */}
                 <div className="flex items-center justify-between py-2">
-                    <span className="text-sm font-bold text-gray-700">Activo</span>
+                    <span className="text-sm font-bold text-gray-700">{t.admin.services.activeLabel}</span>
                     <button
                         onClick={() => setForm({ ...form, is_active: !form.is_active })}
                         className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${form.is_active ? "bg-admin-accent" : "bg-gray-200"}`}
@@ -279,7 +281,7 @@ export default function ServiceFormSidebar({ service }: ServiceFormSidebarProps)
                     </Button>
                 )}
                 <Button variant="admin-outline" onClick={() => closeSidebar()} className="flex-1">
-                    Cerrar
+                    {t.admin.services.close}
                 </Button>
                 <Button
                     variant="admin-primary"
@@ -288,7 +290,7 @@ export default function ServiceFormSidebar({ service }: ServiceFormSidebarProps)
                     className="flex-1 flex items-center justify-center gap-2"
                 >
                     <Save size={16} />
-                    {isEditing ? "Guardar" : "Crear"}
+                    {isEditing ? t.admin.services.save : t.admin.services.create}
                 </Button>
             </div>
         </div>

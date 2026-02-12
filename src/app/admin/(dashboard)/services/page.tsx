@@ -6,6 +6,7 @@ import { Service } from "@/types";
 import { Plus, Package, Pencil, DollarSign } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { useEffect } from "react";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -13,6 +14,7 @@ export default function ServicesPage() {
     const { services, loading, refetch } = useServices({ includeInactive: true });
     const { openSidebar } = useAdminUI();
     const { refreshTrigger } = useRefresh();
+    const { t } = useTranslation();
 
     useEffect(() => {
         refetch();
@@ -31,9 +33,9 @@ export default function ServicesPage() {
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div className="sm:flex sm:items-center">
                     <div className="sm:flex-auto">
-                        <h1 className="text-2xl font-black leading-6 text-admin-primary">Servicios</h1>
+                        <h1 className="text-2xl font-black leading-6 text-admin-primary">{t.admin.services.title}</h1>
                         <p className="mt-2 text-sm text-admin-text-secondary">
-                            Gestioná los servicios que ofrecés a tus clientes.
+                            {t.admin.services.subtitle}
                         </p>
                     </div>
                     <div className="mt-4 sm:flex-none">
@@ -43,7 +45,7 @@ export default function ServicesPage() {
                             className="flex items-center gap-2 bg-admin-primary hover:bg-slate-800 text-white border-none shadow-sm"
                         >
                             <Plus size={18} />
-                            Nuevo Servicio
+                            {t.admin.services.newService}
                         </Button>
                     </div>
                 </div>
@@ -56,10 +58,10 @@ export default function ServicesPage() {
                                     <table className="min-w-full divide-y divide-gray-300 table-fixed">
                                         <thead className="bg-gray-50">
                                             <tr>
-                                                <th className="w-[35%] py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-admin-primary sm:pl-6">Servicio</th>
-                                                <th className="w-[15%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">Precio</th>
-                                                <th className="w-[15%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">Estado</th>
-                                                <th className="w-[15%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">Orden</th>
+                                                <th className="w-[35%] py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-admin-primary sm:pl-6">{t.admin.services.service}</th>
+                                                <th className="w-[15%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">{t.admin.services.price}</th>
+                                                <th className="w-[15%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">{t.admin.services.status}</th>
+                                                <th className="w-[15%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">{t.admin.services.order}</th>
                                                 <th className="w-[20%] relative py-3.5 pl-3 pr-4 sm:pr-6">
                                                     <span className="sr-only">Acciones</span>
                                                 </th>
@@ -84,11 +86,11 @@ export default function ServicesPage() {
                 ) : services.length === 0 ? (
                     <div className="mt-8 text-center py-20 border-2 border-dashed border-gray-200 rounded-lg">
                         <Package size={48} className="mx-auto text-gray-300 mb-4" />
-                        <h3 className="text-xl font-bold text-gray-500">No hay servicios</h3>
-                        <p className="text-gray-400 mt-1 mb-6">Creá tu primer servicio para empezar.</p>
+                        <h3 className="text-xl font-bold text-gray-500">{t.admin.services.noServices}</h3>
+                        <p className="text-gray-400 mt-1 mb-6">{t.admin.services.noServicesMsg}</p>
                         <Button variant="admin-primary" onClick={handleCreate} className="inline-flex items-center gap-2">
                             <Plus size={18} />
-                            Crear Servicio
+                            {t.admin.services.createService}
                         </Button>
                     </div>
                 ) : (
@@ -99,10 +101,10 @@ export default function ServicesPage() {
                                     <table className="min-w-full divide-y divide-gray-300 table-fixed">
                                         <thead className="bg-gray-50">
                                             <tr>
-                                                <th scope="col" className="w-[35%] py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-admin-primary sm:pl-6">Servicio</th>
-                                                <th scope="col" className="w-[15%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">Precio</th>
-                                                <th scope="col" className="w-[15%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">Estado</th>
-                                                <th scope="col" className="w-[15%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">Orden</th>
+                                                <th scope="col" className="w-[35%] py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-admin-primary sm:pl-6">{t.admin.services.service}</th>
+                                                <th scope="col" className="w-[15%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">{t.admin.services.price}</th>
+                                                <th scope="col" className="w-[15%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">{t.admin.services.status}</th>
+                                                <th scope="col" className="w-[15%] px-3 py-3.5 text-left text-sm font-semibold text-admin-primary">{t.admin.services.order}</th>
                                                 <th scope="col" className="w-[20%] relative py-3.5 pl-3 pr-4 sm:pr-6">
                                                     <span className="sr-only">Acciones</span>
                                                 </th>
@@ -134,7 +136,7 @@ export default function ServicesPage() {
                                                             ? "bg-green-50 text-green-700 border border-green-200"
                                                             : "bg-gray-100 text-gray-500 border border-gray-200"
                                                             }`}>
-                                                            {service.is_active ? "Activo" : "Inactivo"}
+                                                            {service.is_active ? t.admin.services.active : t.admin.services.inactive}
                                                         </span>
                                                     </td>
                                                     <td className="whitespace-nowrap px-3 py-4">
