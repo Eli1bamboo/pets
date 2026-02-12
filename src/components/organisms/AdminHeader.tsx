@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { LayoutDashboard, Calendar, History, LogOut, Scissors, Menu, X, Package } from "lucide-react";
+import { LayoutDashboard, Calendar, History, LogOut, Scissors, Menu, X, Package, Globe } from "lucide-react";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function AdminHeader() {
     const { signOut } = useAdminAuth();
     const [isOpen, setIsOpen] = useState(false);
-    const { t } = useTranslation();
+    const { t, language, setLanguage } = useTranslation();
 
     const navItems = [
         { label: t.admin.header.dashboard, href: "/admin", icon: LayoutDashboard },
@@ -42,7 +42,18 @@ export default function AdminHeader() {
                         </nav>
                     </div>
 
-                    <div className="hidden md:flex items-center gap-4">
+                    <div className="hidden md:flex items-center gap-3">
+                        <div className="relative">
+                            <Globe size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/60 pointer-events-none" />
+                            <select
+                                value={language}
+                                onChange={(e) => setLanguage(e.target.value as 'es' | 'en')}
+                                className="appearance-none pl-8 pr-6 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-white/80 text-xs font-bold uppercase tracking-wider border-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-white/20"
+                            >
+                                <option value="es" className="text-gray-900 bg-white">ES</option>
+                                <option value="en" className="text-gray-900 bg-white">EN</option>
+                            </select>
+                        </div>
                         <button
                             onClick={() => signOut("/admin/login")}
                             className="text-xs font-black uppercase tracking-widest bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg flex items-center gap-2 transition-all"
@@ -70,6 +81,17 @@ export default function AdminHeader() {
                             {item.label}
                         </Link>
                     ))}
+                    <div className="flex items-center gap-2 pt-2 border-t border-white/10">
+                        <Globe size={14} className="text-white/60" />
+                        <select
+                            value={language}
+                            onChange={(e) => setLanguage(e.target.value as 'es' | 'en')}
+                            className="appearance-none bg-white/10 text-white/80 text-sm font-bold px-3 py-1.5 rounded-lg border-none cursor-pointer focus:outline-none"
+                        >
+                            <option value="es" className="text-gray-900 bg-white">Español</option>
+                            <option value="en" className="text-gray-900 bg-white">English</option>
+                        </select>
+                    </div>
                     <button
                         onClick={() => signOut("/admin/login")}
                         className="w-full text-left text-sm font-bold text-red-400"
