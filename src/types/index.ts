@@ -36,3 +36,18 @@ export interface AppointmentLog {
     description: string;
     created_at: string;
 }
+
+export interface Service {
+    id: number;
+    name: string;
+    name_en: string | null;
+    price: number;
+    description: string | null;
+    description_en: string | null;
+    features: string[];
+    features_en: string[];
+    icon: string;
+    is_active: boolean;
+    sort_order: number;
+    created_at: string;
+}

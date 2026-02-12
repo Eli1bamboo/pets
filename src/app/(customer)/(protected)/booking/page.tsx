@@ -1,36 +1,31 @@
 "use client";
 
-import { useState } from "react";
-import { useCustomerAuth } from "@/hooks/useCustomerAuth";
+import { useState, useEffect } from "react";
+import { useCustomerContext } from "@/providers/CustomerProvider";
 import { DateSelector } from "@/components/molecules/DateSelector";
 import { TimeSelector } from "@/components/molecules/TimeSelector";
 import { useAvailability } from "@/hooks/useAvailability";
 import { useBooking } from "@/hooks/useBooking";
+import { useServices } from "@/hooks/useServices";
 import { Loader2, CheckCircle2, Dog } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { Card } from "@/components/atoms/Card";
 import { FormField } from "@/components/molecules/FormField";
-import { SERVICES_PRICE_MAP } from "@/config/appointments";
 import Modal from "@/components/molecules/Modal";
 import { useTranslation } from "@/i18n/LanguageContext";
 
-const SERVICES = [
-    { title: 'Baño y Secado', price: '$4500' },
-    { title: 'Corte Completo', price: '$6500' },
-    { title: 'Spa de Deslanado', price: '$8000' }
-];
-
 export default function BookingPage() {
-    const { user, loading: authLoading } = useCustomerAuth({ redirectToLogin: true });
+    const { user, loading: authLoading } = useCustomerContext();
     const { createBooking, submitting, error: bookingError } = useBooking();
+    const { services, loading: servicesLoading } = useServices();
     const [step, setStep] = useState(1);
     const [formError, setFormError] = useState<string | null>(null);
     const [modal, setModal] = useState({ open: false, title: "", message: "", type: "error" as const });
-    const { t } = useTranslation();
+    const { t, language } = useTranslation();
 
     const [formData, setFormData] = useState({
         petName: "",
-        service: "Baño y Secado",
+        service: "",
         notes: ""
     });
 
@@ -38,10 +33,19 @@ export default function BookingPage() {
     const [time, setTime] = useState("");
     const { busySlots, availableHours, loading: availabilityLoading } = useAvailability(date);
 
-    if (authLoading) return <div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin text-brand-600" /></div>;
+    // Set default service when services load
+    useEffect(() => {
+        if (services.length > 0 && !formData.service) {
+            setFormData(prev => ({ ...prev, service: services[0].name }));
+        }
+    }, [services]);
+
+    if (authLoading || servicesLoading) return <div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin text-brand-600" /></div>;
 
     const handleBooking = async () => {
         if (!user) return;
+
+        const selectedService = services.find(s => s.name === formData.service);
 
         const result = await createBooking({
             userId: user.id,
@@ -49,7 +53,7 @@ export default function BookingPage() {
             service: formData.service,
             date,
             time,
-            price: SERVICES_PRICE_MAP[formData.service] || 0,
+            price: selectedService ? Number(selectedService.price) : 0,
         });
 
         if (result && !result.success) {
@@ -84,26 +88,29 @@ export default function BookingPage() {
                                 <div>
                                     <label className="block text-sm font-bold leading-6 text-brand-900 mb-3">{t.booking.serviceLabel}</label>
                                     <div className="grid grid-cols-1 gap-4">
-                                        {SERVICES.map((s) => (
-                                            <div
-                                                key={s.title}
-                                                onClick={() => setFormData({ ...formData, service: s.title })}
-                                                className={`cursor-pointer rounded-2xl border-2 p-5 flex items-center justify-between transition-all duration-200 ${formData.service === s.title
-                                                    ? 'border-brand-500 bg-brand-50/50 ring-1 ring-brand-500 shadow-md'
-                                                    : 'border-brand-900/5 hover:border-brand-200 bg-white'
-                                                    }`}
-                                            >
-                                                <div className="flex flex-col">
-                                                    <span className={`text-base font-bold ${formData.service === s.title ? 'text-brand-500' : 'text-brand-900'}`}>{s.title}</span>
-                                                    <span className={`text-sm font-medium ${formData.service === s.title ? 'text-brand-400' : 'text-brand-500'}`}>{s.price}</span>
-                                                </div>
-                                                {formData.service === s.title && (
-                                                    <div className="bg-brand-500 rounded-full p-1">
-                                                        <CheckCircle2 size={24} className="text-white" />
+                                        {services.map((s) => {
+                                            const displayName = language === "en" && s.name_en ? s.name_en : s.name;
+                                            return (
+                                                <div
+                                                    key={s.name}
+                                                    onClick={() => setFormData({ ...formData, service: s.name })}
+                                                    className={`cursor-pointer rounded-2xl border-2 p-5 flex items-center justify-between transition-all duration-200 ${formData.service === s.name
+                                                        ? 'border-brand-500 bg-brand-50/50 ring-1 ring-brand-500 shadow-md'
+                                                        : 'border-brand-900/5 hover:border-brand-200 bg-white'
+                                                        }`}
+                                                >
+                                                    <div className="flex flex-col">
+                                                        <span className={`text-base font-bold ${formData.service === s.name ? 'text-brand-500' : 'text-brand-900'}`}>{displayName}</span>
+                                                        <span className={`text-sm font-medium ${formData.service === s.name ? 'text-brand-400' : 'text-brand-500'}`}>${Number(s.price).toLocaleString()}</span>
                                                     </div>
-                                                )}
-                                            </div>
-                                        ))}
+                                                    {formData.service === s.name && (
+                                                        <div className="bg-brand-500 rounded-full p-1">
+                                                            <CheckCircle2 size={24} className="text-white" />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
 
