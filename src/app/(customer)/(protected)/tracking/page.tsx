@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 import StatusTracker from "@/components/organisms/StatusTracker";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
@@ -11,7 +10,6 @@ import { useTranslation } from "@/i18n/LanguageContext";
 
 
 export default function TrackingPage() {
-    useCustomerAuth({ redirectToLogin: true });
     const [inputId, setInputId] = useState("");
     const [appointmentId, setAppointmentId] = useState<string | null>(null);
     const { t } = useTranslation();

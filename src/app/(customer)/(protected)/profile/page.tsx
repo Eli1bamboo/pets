@@ -7,6 +7,7 @@ import { Calendar, Clock, Scissors, XCircle } from "lucide-react";
 import Modal from "@/components/molecules/Modal";
 import { Appointment } from "@/types";
 import { useTranslation } from "@/i18n/LanguageContext";
+import { getStatusColor } from "@/config/appointments";
 
 export default function ProfilePage() {
     const { appointments, loading, refetch } = useAppointments();
@@ -41,18 +42,6 @@ export default function ProfilePage() {
     const getStatusLabel = (status: string) => {
         const s = t.status as Record<string, string>;
         return s[status] || status;
-    };
-
-    const getStatusColor = (status: string) => {
-        const colors: Record<string, string> = {
-            pending: "bg-gray-100 text-gray-800 ring-gray-600/20",
-            washing: "bg-blue-100 text-blue-800 ring-blue-600/20",
-            drying: "bg-orange-100 text-orange-800 ring-orange-600/20",
-            ready: "bg-green-100 text-green-800 ring-green-600/20",
-            completed: "bg-brand-100 text-brand-800 ring-brand-600/20",
-            cancelled: "bg-red-50 text-red-700 ring-red-600/10",
-        };
-        return colors[status] || "bg-gray-100 text-gray-800 ring-gray-600/20";
     };
 
     return (

@@ -1,28 +1,18 @@
 "use client";
 
-import { useCustomerAuth } from "@/hooks/useCustomerAuth";
+import { useCustomerContext } from "@/providers/CustomerProvider";
 
 import { Calendar, Clock, Dog, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useCustomerHistory } from "@/hooks/useCustomerHistory";
 import { useTranslation } from "@/i18n/LanguageContext";
+import { getStatusColor } from "@/config/appointments";
 
 
 export default function HistoryPage() {
-    const { user, loading: authLoading } = useCustomerAuth({ redirectToLogin: true });
+    const { user, loading: authLoading } = useCustomerContext();
     const { appointments, loading } = useCustomerHistory(user);
     const { t } = useTranslation();
-
-    const getStatusStyles = (status: string) => {
-        switch (status) {
-            case "ready": return "bg-green-100 text-green-700 border-green-200";
-            case "washing":
-            case "drying": return "bg-blue-100 text-blue-700 border-blue-200 animate-pulse";
-            case "pending": return "bg-orange-100 text-orange-700 border-orange-200";
-            case "completed": return "bg-gray-100 text-gray-600 border-gray-200";
-            default: return "bg-gray-100 text-gray-600 border-gray-200";
-        }
-    };
 
     if (authLoading || loading) {
         return (
@@ -82,7 +72,7 @@ export default function HistoryPage() {
                                 </div>
 
                                 <div className="flex items-center justify-between md:flex-col md:items-end gap-3">
-                                    <span className={`rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-wider ${getStatusStyles(app.status)}`}>
+                                    <span className={`rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-wider ${getStatusColor(app.status)}`}>
                                         {(t.statusHistory as Record<string, string>)[app.status] || app.status}
                                     </span>
                                     <Link
