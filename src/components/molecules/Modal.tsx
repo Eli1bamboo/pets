@@ -4,6 +4,7 @@ import { Fragment } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, AlertTriangle, CheckCircle, Info } from 'lucide-react';
 import { Button } from '@/components/atoms/Button';
+import { useTranslation } from '@/i18n/LanguageContext';
 
 export interface ModalProps {
     open: boolean;
@@ -17,7 +18,11 @@ export interface ModalProps {
     details?: string;
 }
 
-export default function Modal({ open, onClose, title, message, type = 'info', details, onConfirm, confirmText = "Confirmar", cancelText = "Cancelar" }: ModalProps) {
+export function Modal({ open, onClose, title, message, type = 'info', details, onConfirm, confirmText, cancelText }: ModalProps) {
+    const { t } = useTranslation();
+    const displayConfirmText = confirmText || t.common.confirm;
+    const displayCancelText = cancelText || t.common.cancel;
+    const displayUnderstoodText = t.common.understood;
     const getIcon = () => {
         switch (type) {
             case 'success': return <CheckCircle className="h-6 w-6 text-green-600" />;
@@ -88,18 +93,18 @@ export default function Modal({ open, onClose, title, message, type = 'info', de
                                 {onConfirm ? (
                                     <>
                                         <Button onClick={onClose} variant="outline" className="w-full sm:w-auto">
-                                            {cancelText}
+                                            {displayCancelText}
                                         </Button>
                                         <Button
                                             onClick={() => { onConfirm(); onClose(); }}
                                             className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white border-transparent"
                                         >
-                                            {confirmText}
+                                            {displayConfirmText}
                                         </Button>
                                     </>
                                 ) : (
                                     <Button onClick={onClose} variant="outline" className="w-full sm:w-auto">
-                                        Entendido
+                                        {displayUnderstoodText}
                                     </Button>
                                 )}
                             </div>

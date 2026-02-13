@@ -22,7 +22,7 @@ const DAYS_NAMES = [
     "Sábado"
 ];
 
-export default function SettingsSidebar() {
+export function SettingsSidebar() {
     const { closeSidebar } = useAdminUI();
     const { businessHours, loading: settingsLoading, saveSettings } = useBusinessHours();
     const [localHours, setLocalHours] = useState<BusinessHours[]>([]);

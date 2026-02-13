@@ -7,7 +7,7 @@ import { Button } from "@/components/atoms/Button";
 import { AppointmentsTable } from "@/components/organisms/AppointmentsTable";
 import { TablePagination } from "@/components/molecules/TablePagination";
 import { usePagination } from "@/hooks/usePagination";
-import Modal, { ModalProps } from "@/components/molecules/Modal";
+import { Modal, ModalProps } from "@/components/molecules/Modal";
 import { Calendar, Settings } from "lucide-react";
 import { getWeekRange, formatWeekRange } from "@/utils/dateUtils";
 import { useAdminUI } from "@/providers/AdminUIProvider";

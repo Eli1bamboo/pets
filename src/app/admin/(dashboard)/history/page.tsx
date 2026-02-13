@@ -5,7 +5,7 @@ import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useAppointments } from "@/hooks/useAppointments";
 import { Search, Eye, Filter, CheckCircle2 } from "lucide-react";
 import { redirect } from "next/navigation";
-import { AdminLoader } from "@/components/molecules/AdminLoader";
+import { AdminLoader } from "@/components/atoms/AdminLoader";
 import { AppointmentsTable } from "@/components/organisms/AppointmentsTable";
 import { TablePagination } from "@/components/molecules/TablePagination";
 import { usePagination } from "@/hooks/usePagination";

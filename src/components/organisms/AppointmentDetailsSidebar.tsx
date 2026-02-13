@@ -6,7 +6,7 @@ import {
 import { Appointment, AppointmentStatus } from "@/types";
 import { User, Dog, Save, Activity } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
-import Modal from "@/components/molecules/Modal";
+import { Modal } from "@/components/molecules/Modal";
 import { useState, useEffect } from "react";
 import { useAppointments } from "@/hooks/useAppointments";
 import { useAdminUI } from "@/providers/AdminUIProvider";

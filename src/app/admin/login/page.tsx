@@ -8,7 +8,7 @@ import { Button } from "@/components/atoms/Button";
 import { motion } from "framer-motion";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useAdminLogin } from "@/hooks/useAdminLogin";
-import { AdminLoader } from "@/components/molecules/AdminLoader";
+import { AdminLoader } from "@/components/atoms/AdminLoader";
 import { useTranslation } from "@/i18n/LanguageContext";
 
 

@@ -111,6 +111,9 @@ export const es = {
         loginButton: 'Ingresar',
         accessRestricted: 'Acceso restringido a personal autorizado.',
         loading: 'Cargando...',
+        confirm: 'Confirmar',
+        cancel: 'Cancelar',
+        understood: 'Entendido',
     },
     footer: {
         explore: 'Explorar',
@@ -152,6 +155,10 @@ export const es = {
             cancelMsg: 'Vas a cancelar el turno de {petName} (Cliente: {clientName}). Esta acción no se puede deshacer.',
             cancelConfirm: 'Sí, cancelar turno',
             cancelBack: 'Volver atrás',
+            viewDetails: 'Ver detalles',
+            cancelAppointment: 'Cancelar Turno',
+            cannotCancel: 'No se puede cancelar',
+            cancelled: 'Cancelado',
         },
         history: {
             title: 'Historial Global',

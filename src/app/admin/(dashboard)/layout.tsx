@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
-import AdminHeader from "@/components/organisms/AdminHeader";
-import { AdminLoader } from "@/components/molecules/AdminLoader";
+import { AdminHeader } from "@/components/organisms/AdminHeader";
+import { AdminLoader } from "@/components/atoms/AdminLoader";
 import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function AdminLayout({

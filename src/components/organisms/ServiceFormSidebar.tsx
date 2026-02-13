@@ -30,7 +30,7 @@ const EMPTY_FORM = {
     sort_order: 0,
 };
 
-export default function ServiceFormSidebar({ service }: ServiceFormSidebarProps) {
+export function ServiceFormSidebar({ service }: ServiceFormSidebarProps) {
     const { closeSidebar, triggerRefresh } = useAdminUI();
     const { createService, updateService, deleteService } = useServices({ includeInactive: true });
     const [form, setForm] = useState(EMPTY_FORM);

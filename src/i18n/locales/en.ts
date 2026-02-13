@@ -113,6 +113,9 @@ export const en: Translations = {
         loginButton: 'Login',
         accessRestricted: 'Restricted access for authorized personnel.',
         loading: 'Loading...',
+        confirm: 'Confirm',
+        cancel: 'Cancel',
+        understood: 'Understood',
     },
     footer: {
         explore: 'Explore',
@@ -154,6 +157,10 @@ export const en: Translations = {
             cancelMsg: 'You are about to cancel the appointment for {petName} (Client: {clientName}). This cannot be undone.',
             cancelConfirm: 'Yes, cancel it',
             cancelBack: 'Go back',
+            viewDetails: 'View details',
+            cancelAppointment: 'Cancel Appointment',
+            cannotCancel: 'Cannot cancel',
+            cancelled: 'Cancelled',
         },
         history: {
             title: 'Global History',

@@ -11,7 +11,7 @@ import { Loader2, CheckCircle2, Dog } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { Card } from "@/components/atoms/Card";
 import { FormField } from "@/components/molecules/FormField";
-import Modal from "@/components/molecules/Modal";
+import { Modal } from "@/components/molecules/Modal";
 import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function BookingPage() {

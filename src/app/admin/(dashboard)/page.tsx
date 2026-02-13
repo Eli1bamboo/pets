@@ -10,7 +10,7 @@ import {
     Users
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { AdminLoader } from "@/components/molecules/AdminLoader";
+import { AdminLoader } from "@/components/atoms/AdminLoader";
 import { useTranslation } from "@/i18n/LanguageContext";
 import Link from "next/link";
 

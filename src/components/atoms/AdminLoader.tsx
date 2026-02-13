@@ -5,7 +5,11 @@ interface AdminLoaderProps {
     fullScreen?: boolean;
 }
 
-export function AdminLoader({ message = "Cargando...", fullScreen = false }: AdminLoaderProps) {
+import { useTranslation } from "@/i18n/LanguageContext";
+
+export function AdminLoader({ message, fullScreen = false }: AdminLoaderProps) {
+    const { t } = useTranslation();
+    const displayMessage = message || t.common.loading;
     const content = (
         <div className="flex flex-col items-center justify-center gap-4">
             <div className="relative">
@@ -16,7 +20,7 @@ export function AdminLoader({ message = "Cargando...", fullScreen = false }: Adm
             </div>
             {message && (
                 <p className="text-admin-text-secondary text-sm font-medium animate-pulse">
-                    {message}
+                    {displayMessage}
                 </p>
             )}
         </div>

@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/atoms/Skeleton";
 import { StatusBadge } from "@/components/atoms/StatusBadge";
 import { cn } from "@/lib/utils";
 import { APPOINTMENT_STATUSES } from "@/config/appointments";
+import { useTranslation } from "@/i18n/LanguageContext";
 
 interface AppointmentRowProps {
     appointment?: Appointment;
@@ -25,6 +26,7 @@ export function AppointmentRow({
     onCancel,
     actionRenderer
 }: AppointmentRowProps) {
+    const { t } = useTranslation();
 
     if (isLoading) {
         return (
@@ -101,7 +103,7 @@ export function AppointmentRow({
                                             {option.label}
                                         </option>
                                     ))}
-                                    <option value="cancelled" disabled hidden>Cancelado</option>
+                                    <option value="cancelled" disabled hidden>{t.admin.appointments.cancelled}</option>
                                 </select>
                                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                     <ChevronDown size={14} />
@@ -111,7 +113,7 @@ export function AppointmentRow({
                             <button
                                 onClick={(e) => { e.stopPropagation(); onViewDetails?.(appointment); }}
                                 className="text-slate-400 hover:text-admin-primary p-2 rounded-full hover:bg-slate-100 transition-colors"
-                                title="Ver detalles"
+                                title={t.admin.appointments.viewDetails}
                             >
                                 <Eye size={18} />
                             </button>
@@ -131,8 +133,8 @@ export function AppointmentRow({
                                         : "text-red-400 hover:text-red-700 hover:bg-red-50"
                                 )}
                                 title={appointment.status === 'cancelled' || appointment.status === 'completed'
-                                    ? "No se puede cancelar"
-                                    : "Cancelar Turno"
+                                    ? t.admin.appointments.cannotCancel
+                                    : t.admin.appointments.cancelAppointment
                                 }
                             >
                                 <Trash2 size={18} />

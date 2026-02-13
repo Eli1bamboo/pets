@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 import { useCustomerLogin } from "@/hooks/useCustomerLogin";
-import Modal from "@/components/molecules/Modal";
+import { Modal } from "@/components/molecules/Modal";
 import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function LoginPage() {

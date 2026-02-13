@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import StatusTracker from "@/components/organisms/StatusTracker";
+import { StatusTracker } from "@/components/organisms/StatusTracker";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/atoms/Button";

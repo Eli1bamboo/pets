@@ -6,7 +6,7 @@ import { LayoutDashboard, Calendar, History, LogOut, Scissors, Menu, X, Package,
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useTranslation } from "@/i18n/LanguageContext";
 
-export default function AdminHeader() {
+export function AdminHeader() {
     const { signOut } = useAdminAuth();
     const [isOpen, setIsOpen] = useState(false);
     const { t, language, setLanguage } = useTranslation();

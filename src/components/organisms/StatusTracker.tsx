@@ -16,7 +16,7 @@ interface StatusTrackerProps {
     appointmentId: number | string;
 }
 
-export default function StatusTracker({ appointmentId }: StatusTrackerProps) {
+export function StatusTracker({ appointmentId }: StatusTrackerProps) {
     const { status, loading } = useAppointmentStatus(appointmentId);
 
     if (loading) {
