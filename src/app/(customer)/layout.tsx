@@ -1,8 +1,8 @@
 "use client";
 
-import Header from "@/components/organisms/Header";
-import Footer from "@/components/organisms/Footer";
-import CustomerBottomNav from "@/components/organisms/CustomerBottomNav";
+import { CustomerHeader } from "@/components/organisms/CustomerHeader";
+import { CustomerFooter } from "@/components/organisms/CustomerFooter";
+import { CustomerBottomNav } from "@/components/organisms/CustomerBottomNav";
 import { CustomerProvider } from "@/providers/CustomerProvider";
 
 export default function CustomerLayout({
@@ -12,11 +12,11 @@ export default function CustomerLayout({
 }) {
     return (
         <CustomerProvider>
-            <Header />
+            <CustomerHeader />
             <main className="min-h-screen theme-customer bg-brand-50 pb-24 md:pb-0">{children}</main>
             <CustomerBottomNav />
             <div className="hidden md:block">
-                <Footer />
+                <CustomerFooter />
             </div>
         </CustomerProvider>
     );

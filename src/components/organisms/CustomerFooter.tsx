@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useTranslation } from "@/i18n/LanguageContext";
 import { Instagram, Facebook, MapPin, Phone, Globe } from "lucide-react";
 
-export default function Footer() {
+export function CustomerFooter() {
     const { t, language, setLanguage } = useTranslation();
 
     return (

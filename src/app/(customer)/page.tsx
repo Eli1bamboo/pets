@@ -1,7 +1,7 @@
 "use client";
 
-import Hero from "@/components/organisms/Hero";
-import ServiceCard from "@/components/organisms/ServiceCard";
+import { HomeHero } from "@/components/organisms/HomeHero";
+import { ServiceCard } from "@/components/molecules/ServiceCard";
 import { Bath, Scissors, Wind, Sparkles, Heart, Star, LucideIcon } from "lucide-react";
 import { useTranslation } from "@/i18n/LanguageContext";
 import { useServices } from "@/hooks/useServices";
@@ -21,7 +21,7 @@ export default function Home() {
 
   return (
     <div className="bg-background-cream">
-      <Hero />
+      <HomeHero />
 
       <div className="mx-auto max-w-7xl px-6 lg:px-8 py-24 sm:py-32" id="services">
         <div className="mx-auto max-max-2xl lg:text-center">

@@ -12,7 +12,7 @@ interface ServiceCardProps {
     delay?: number;
 }
 
-export default function ServiceCard({ title, price, features, icon: Icon, delay = 0 }: ServiceCardProps) {
+export function ServiceCard({ title, price, features, icon: Icon, delay = 0 }: ServiceCardProps) {
     const { t } = useTranslation();
 
     return (

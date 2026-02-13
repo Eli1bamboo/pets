@@ -4,7 +4,7 @@ import { CalendarCheck, Search } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/LanguageContext";
 
-export default function Hero() {
+export function HomeHero() {
     const { t } = useTranslation();
 
     return (

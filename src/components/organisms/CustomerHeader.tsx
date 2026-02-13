@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Menu, X, Scissors, LogOut } from "lucide-react";
 import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 
-export default function Header() {
+export function CustomerHeader() {
     const [isOpen, setIsOpen] = useState(false);
     const { user, loading, signOut } = useCustomerAuth();
 

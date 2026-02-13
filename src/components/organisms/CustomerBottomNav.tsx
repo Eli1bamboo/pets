@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Home, Clock, User, Plus, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function CustomerBottomNav() {
+export function CustomerBottomNav() {
     const pathname = usePathname();
 
     const navItems = [
