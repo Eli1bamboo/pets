@@ -8,6 +8,7 @@
 - **State Management**: React Context (`AdminProvider`, `AdminUIProvider`) + Custom Hooks
 - **Date Handling**: `date-fns` (Locale: `es`)
 - **Internationalization**: Custom lightweight i18n (`src/i18n`).
+- **Testing**: Vitest + React Testing Library.
 - **Icons**: `lucide-react` (Equivalent to Feather Icons)
 
 ## 🌍 Internationalization (i18n)

@@ -6,6 +6,7 @@
 - **Build & Verify**: `npm run build` (Run this **ALWAYS** before finishing a task involving code changes).
 - **Lint**: `npm run lint`
 - **Type Check**: `npm run type-check` (Faster than build for checking types).
+- **Test**: `npm run test` (Run unit/component tests).
 
 ### Version Control (GitHub Flow)
 1.  **Main Branches**:
