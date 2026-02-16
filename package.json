@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit",
     "dbenv": "bash ./scripts/dbenv.sh"
   },
   "dependencies": {
@@ -28,6 +30,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
