@@ -115,7 +115,6 @@ Organize components in `src/components/`:
 Global state is managed via Providers in `src/providers/`:
 - **`AdminProvider`**: Manages auth session (`user`, `profile`) and prevents race conditions.
 - **`AdminUIProvider`**: Manages global UI state like the Generic Sidebar (`isOpen`, `view`, `data`).
-- **Supabase Client**: Must be a **Singleton** on the client side to ensure `onAuthStateChange` events are caught by all listeners (Providers, Hooks). Do NOT create new client instances.
 
 ### 3. Sidebar System
 Do **NOT** use local state for global sidebars. Use the generic system:
