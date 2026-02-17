@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { StatusTracker } from "@/features/customer/components/organisms/StatusTracker";
+import { DogStatusAnimation } from "@/features/customer/components/atoms/DogStatusAnimation";
 import { Search, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/features/customer/components/atoms/Button";
@@ -98,6 +99,9 @@ export default function TrackingPage() {
                                                 appointment.status === 'drying' ? 'Secando' :
                                                     appointment.status === 'ready' ? 'Listo' : 'Finalizado'}
                                     </span>
+                                </div>
+                                <div className="mb-4">
+                                    <DogStatusAnimation status={appointment.status} />
                                 </div>
                                 <StatusTracker status={appointment.status} />
                             </>
