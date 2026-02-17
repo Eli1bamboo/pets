@@ -56,6 +56,9 @@ export const en: Translations = {
         confirm: 'Confirm Appointment',
         errorTitle: 'Booking error',
         errorFallback: 'An unexpected error occurred.',
+        summaryTitle: 'Booking Summary',
+        dateLabel: 'Date',
+        timeLabel: 'Time',
     },
     profile: {
         title: 'My Appointments',

@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { Appointment, AppointmentStatus } from '@/types'
-import { useRefresh } from '@/providers/AdminUIProvider'
 
 
 interface UseAppointmentsOptions {
@@ -12,15 +11,15 @@ interface UseAppointmentsOptions {
     statuses?: AppointmentStatus[];
     page?: number;
     limit?: number;
+    refreshTrigger?: number; // Optional prop to trigger refresh from outside
 }
 
-export function useAppointments({ isAdmin = false, startDate, endDate, searchQuery, statuses, page = 1, limit = 50 }: UseAppointmentsOptions = {}) {
+export function useAppointments({ isAdmin = false, startDate, endDate, searchQuery, statuses, page = 1, limit = 50, refreshTrigger = 0 }: UseAppointmentsOptions = {}) {
     const [appointments, setAppointments] = useState<Appointment[]>([])
     const [count, setCount] = useState<number>(0)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [supabase] = useState(() => createClient())
-    const { refreshTrigger } = useRefresh();
 
     const statusesKey = statuses?.join(",") ?? "";
     const startDateKey = startDate?.toISOString() ?? "";

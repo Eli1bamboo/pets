@@ -17,13 +17,14 @@ const ITEMS_PER_PAGE = 8;
 
 export default function AdminPage() {
     const { start: startDate, end: endDate } = getWeekRange();
-    const { openSidebar, closeSidebar } = useAdminUI();
+    const { openSidebar, closeSidebar, refreshTrigger } = useAdminUI();
     const { t } = useTranslation();
 
     const { appointments, loading: fetching, updateStatus } = useAppointments({
         isAdmin: true,
         startDate,
-        endDate
+        endDate,
+        refreshTrigger
     });
 
     const {

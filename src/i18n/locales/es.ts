@@ -54,6 +54,9 @@ export const es = {
         confirm: 'Confirmar Turno',
         errorTitle: 'Error al reservar',
         errorFallback: 'Ocurrió un error inesperado.',
+        summaryTitle: 'Resumen del Turno',
+        dateLabel: 'Fecha',
+        timeLabel: 'Hora',
     },
     profile: {
         title: 'Mis Turnos',

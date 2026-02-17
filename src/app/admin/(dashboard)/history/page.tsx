@@ -26,7 +26,7 @@ export default function AdminHistoryPage() {
     const [endDate, setEndDate] = useState<Date | undefined>(undefined);
     const [selectedStatuses, setSelectedStatuses] = useState<AppointmentStatus[]>([]);
 
-    const { openSidebar } = useAdminUI();
+    const { openSidebar, refreshTrigger } = useAdminUI();
     const { t } = useTranslation();
 
     const STATUS_FILTERS: { value: AppointmentStatus; label: string }[] = [
@@ -51,7 +51,8 @@ export default function AdminHistoryPage() {
         searchQuery: searchTerm,
         statuses: selectedStatuses.length > 0 ? selectedStatuses : undefined,
         page: currentPage,
-        limit: ITEMS_PER_PAGE
+        limit: ITEMS_PER_PAGE,
+        refreshTrigger
     });
 
     const totalPages = Math.ceil((count || 0) / ITEMS_PER_PAGE);

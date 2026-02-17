@@ -7,12 +7,13 @@ import { TimeSelector } from "@/components/molecules/TimeSelector";
 import { useAvailability } from "@/hooks/useAvailability";
 import { useBooking } from "@/hooks/useBooking";
 import { useServices } from "@/hooks/useServices";
-import { Loader2, CheckCircle2, Dog } from "lucide-react";
+import { Loader2, Dog, CheckCircle2, ChevronRight } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
-import { Card } from "@/components/atoms/Card";
 import { FormField } from "@/components/molecules/FormField";
 import { Modal } from "@/components/molecules/Modal";
 import { useTranslation } from "@/i18n/LanguageContext";
+import { BookingSummary } from "@/components/organisms/BookingSummary";
+import { motion } from "framer-motion";
 
 export default function BookingPage() {
     const { user, loading: authLoading } = useCustomerContext();
@@ -61,124 +62,169 @@ export default function BookingPage() {
         }
     };
 
+    const selectedServiceData = services.find(s => s.name === formData.service);
+
     return (
-        <div className="py-8 md:py-16">
-            <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
-                <Card variant="standard" padding="none" className="overflow-hidden ring-1 ring-brand-900/5">
-                    <div className="px-6 py-10 sm:p-12">
-                        <div className="flex justify-between items-center mb-10">
-                            <h2 className="text-3xl font-extrabold tracking-tight text-brand-900">{t.booking.title}</h2>
-                            <div className="flex gap-2.5">
-                                <span className={`h-2.5 w-10 rounded-full transition-all duration-300 ${step >= 1 ? 'bg-brand-500' : 'bg-brand-200'}`} />
-                                <span className={`h-2.5 w-10 rounded-full transition-all duration-300 ${step >= 2 ? 'bg-brand-500' : 'bg-brand-200'}`} />
-                            </div>
+        <div className="py-8 md:py-12 lg:py-16 bg-brand-50 min-h-screen">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div className="lg:grid lg:grid-cols-12 lg:gap-12">
+                    {/* Main Content */}
+                    <div className="lg:col-span-7 xl:col-span-8">
+                        <div className="mb-8">
+                            <h1 className="text-3xl font-extrabold tracking-tight text-brand-900 sm:text-4xl mb-4">{t.booking.title}</h1>
+                            <p className="text-lg text-brand-600">Completá los pasos para reservar el turno de tu mascota.</p>
                         </div>
 
-                        {step === 1 && (
-                            <div className="space-y-8">
-                                <FormField
-                                    id="petName"
-                                    label={t.booking.petNameLabel}
-                                    placeholder={t.booking.petNamePlaceholder}
-                                    leftIcon={Dog}
-                                    value={formData.petName}
-                                    onChange={(e) => setFormData({ ...formData, petName: e.target.value })}
-                                />
+                        {/* Stepper */}
+                        <div className="flex items-center gap-4 mb-10 overflow-x-auto pb-2">
+                            {[1, 2].map((s) => (
+                                <div key={s} className="flex items-center gap-3">
+                                    <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition-colors ${step === s
+                                            ? 'bg-primary-orange text-white ring-4 ring-orange-100'
+                                            : step > s
+                                                ? 'bg-green-500 text-white'
+                                                : 'bg-brand-200 text-brand-700'
+                                        }`}>
+                                        {step > s ? <CheckCircle2 size={18} /> : s}
+                                    </div>
+                                    <span className={`text-sm font-bold whitespace-nowrap ${step === s ? 'text-brand-900' : 'text-brand-400'}`}>
+                                        {s === 1 ? 'Datos & Servicio' : 'Fecha & Hora'}
+                                    </span>
+                                    {s < 2 && <ChevronRight className="text-brand-300" size={16} />}
+                                </div>
+                            ))}
+                        </div>
 
-                                <div>
-                                    <label className="block text-sm font-bold leading-6 text-brand-900 mb-3">{t.booking.serviceLabel}</label>
-                                    <div className="grid grid-cols-1 gap-4">
-                                        {services.map((s) => {
-                                            const displayName = language === "en" && s.name_en ? s.name_en : s.name;
-                                            return (
-                                                <div
-                                                    key={s.name}
-                                                    onClick={() => setFormData({ ...formData, service: s.name })}
-                                                    className={`cursor-pointer rounded-2xl border-2 p-5 flex items-center justify-between transition-all duration-200 ${formData.service === s.name
-                                                        ? 'border-brand-500 bg-brand-50/50 ring-1 ring-brand-500 shadow-md'
-                                                        : 'border-brand-900/5 hover:border-brand-200 bg-white'
-                                                        }`}
-                                                >
-                                                    <div className="flex flex-col">
-                                                        <span className={`text-base font-bold ${formData.service === s.name ? 'text-brand-500' : 'text-brand-900'}`}>{displayName}</span>
-                                                        <span className={`text-sm font-medium ${formData.service === s.name ? 'text-brand-400' : 'text-brand-500'}`}>${Number(s.price).toLocaleString()}</span>
-                                                    </div>
-                                                    {formData.service === s.name && (
-                                                        <div className="bg-brand-500 rounded-full p-1">
-                                                            <CheckCircle2 size={24} className="text-white" />
+                        <div className="bg-white rounded-[2rem] shadow-xl shadow-brand-900/5 ring-1 ring-brand-900/5 p-6 sm:p-10 relative overflow-hidden">
+                            {/* Content */}
+                            {step === 1 && (
+                                <motion.div
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    className="space-y-10"
+                                >
+                                    <FormField
+                                        id="petName"
+                                        label={t.booking.petNameLabel}
+                                        placeholder={t.booking.petNamePlaceholder}
+                                        leftIcon={Dog}
+                                        value={formData.petName}
+                                        onChange={(e) => setFormData({ ...formData, petName: e.target.value })}
+                                        className="text-lg"
+                                    />
+
+                                    <div>
+                                        <label className="block text-sm font-bold uppercase tracking-wider text-brand-900 mb-4">{t.booking.serviceLabel}</label>
+                                        <div className="grid grid-cols-1 gap-4">
+                                            {services.map((s) => {
+                                                const displayName = language === "en" && s.name_en ? s.name_en : s.name;
+                                                const isSelected = formData.service === s.name;
+                                                return (
+                                                    <div
+                                                        key={s.name}
+                                                        onClick={() => setFormData({ ...formData, service: s.name })}
+                                                        className={`cursor-pointer rounded-2xl border-2 p-5 flex items-center justify-between transition-all duration-200 group ${isSelected
+                                                            ? 'border-brand-500 bg-brand-50/50 ring-1 ring-brand-500 shadow-md transform scale-[1.01]'
+                                                            : 'border-brand-100/50 hover:border-brand-300 bg-white hover:bg-brand-50/30'
+                                                            }`}
+                                                    >
+                                                        <div className="flex flex-col">
+                                                            <span className={`text-lg font-bold mb-1 ${isSelected ? 'text-brand-900' : 'text-brand-700'}`}>{displayName}</span>
+                                                            <span className={`text-sm font-medium ${isSelected ? 'text-brand-500' : 'text-brand-400'}`}>${Number(s.price).toLocaleString()}</span>
                                                         </div>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
+                                                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isSelected ? 'border-brand-500 bg-brand-500' : 'border-brand-200 group-hover:border-brand-400'}`}>
+                                                            {isSelected && <CheckCircle2 size={16} className="text-white" />}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
-                                </div>
 
-                                {formError && (
-                                    <p className="text-sm text-red-600 font-medium bg-red-50 p-3 rounded-xl border border-red-100">
-                                        {formError}
-                                    </p>
-                                )}
+                                    {formError && (
+                                        <p className="text-sm text-red-600 font-medium bg-red-50 p-4 rounded-xl border border-red-100 flex items-center gap-2">
+                                            <span className="text-lg">⚠️</span> {formError}
+                                        </p>
+                                    )}
 
-                                <div className="pt-6">
-                                    <Button
-                                        onClick={() => {
-                                            if (!formData.petName) {
-                                                setFormError(t.booking.petNameRequired);
-                                                return;
-                                            }
-                                            setFormError(null);
-                                            setStep(2);
-                                        }}
-                                        className="h-14 text-lg"
-                                        variant="primary"
-                                    >
-                                        {t.booking.nextStep}
-                                    </Button>
-                                </div>
-                            </div>
-                        )}
-
-                        {step === 2 && (
-                            <div className="space-y-10">
-                                <div className="bg-brand-50/50 p-6 rounded-3xl border border-brand-100">
-                                    <DateSelector selectedDate={date} onSelect={setDate} />
-                                </div>
-
-                                {date && (
-                                    <div className="px-2">
-                                        <TimeSelector
-                                            selectedTime={time}
-                                            onSelect={setTime}
-                                            busySlots={busySlots}
-                                            availableHours={availableHours}
-                                            loading={availabilityLoading}
-                                        />
+                                    <div className="pt-4">
+                                        <Button
+                                            onClick={() => {
+                                                if (!formData.petName) {
+                                                    setFormError(t.booking.petNameRequired);
+                                                    return;
+                                                }
+                                                setFormError(null);
+                                                setStep(2);
+                                            }}
+                                            className="w-full sm:w-auto px-10 h-14 text-lg"
+                                            variant="primary"
+                                        >
+                                            {t.booking.nextStep}
+                                        </Button>
                                     </div>
-                                )}
+                                </motion.div>
+                            )}
 
-                                <div className="pt-6 flex gap-4">
-                                    <Button
-                                        variant="outline"
-                                        onClick={() => setStep(1)}
-                                        className="h-14"
-                                    >
-                                        {t.booking.back}
-                                    </Button>
-                                    <Button
-                                        onClick={handleBooking}
-                                        isLoading={submitting}
-                                        disabled={!date || !time}
-                                        className="h-14 text-lg"
-                                    >
-                                        {t.booking.confirm}
-                                    </Button>
-                                </div>
-                            </div>
-                        )}
+                            {step === 2 && (
+                                <motion.div
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    className="space-y-12"
+                                >
+                                    <div className="bg-brand-50/50 p-6 md:p-8 rounded-[2rem] border border-brand-100/50">
+                                        <DateSelector selectedDate={date} onSelect={setDate} />
+                                    </div>
+
+                                    {date && (
+                                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                            <TimeSelector
+                                                selectedTime={time}
+                                                onSelect={setTime}
+                                                busySlots={busySlots}
+                                                availableHours={availableHours}
+                                                loading={availabilityLoading}
+                                            />
+                                        </div>
+                                    )}
+
+                                    <div className="pt-6 flex gap-4">
+                                        <Button
+                                            variant="outline"
+                                            onClick={() => setStep(1)}
+                                            className="h-14 px-8 border-2 border-brand-200 hover:border-brand-400 text-brand-600"
+                                        >
+                                            {t.booking.back}
+                                        </Button>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </div>
                     </div>
-                </Card>
+
+                    {/* Summary Sidebar */}
+                    <div className="hidden lg:block lg:col-span-5 xl:col-span-4 mt-8 lg:mt-0">
+                        <BookingSummary
+                            petName={formData.petName}
+                            serviceName={selectedServiceData ? (language === "en" && selectedServiceData.name_en ? selectedServiceData.name_en : selectedServiceData.name) : ""}
+                            servicePrice={selectedServiceData ? String(selectedServiceData.price) : "0"}
+                            date={date}
+                            time={time}
+                            onConfirm={handleBooking}
+                            isSubmitting={submitting}
+                            canConfirm={Boolean(formData.petName && formData.service && date && time)}
+                        />
+                    </div>
+
+                    {/* Mobile Floating Action Button / Bottom Sheet substitute (simplified) */}
+                    {/* For mobile, we might rely on the main "Next" / "Confirm" buttons inside step, 
+                         but adding a sticky bottom summary could be good. 
+                         For now, the summary inside layout handles desktop. 
+                         Mobile users will use flow buttons. 
+                      */}
+                </div>
             </div>
+
             <Modal
                 open={modal.open}
                 onClose={() => setModal(prev => ({ ...prev, open: false }))}
