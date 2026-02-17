@@ -11,5 +11,17 @@ export default defineConfig({
         alias: {
             '@': resolve(__dirname, './src'),
         },
+        coverage: {
+            provider: 'v8',
+            reporter: ['text', 'json', 'html'],
+            exclude: [
+                'node_modules/',
+                'src/app/layout.tsx',
+                'src/app/**/layout.tsx',
+                'src/**/*.d.ts',
+                'src/**/types.ts',
+                'src/types/**'
+            ],
+        },
     },
 })

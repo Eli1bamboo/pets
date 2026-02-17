@@ -112,8 +112,9 @@ export function SettingsSidebar() {
                                     {bh.is_active && (
                                         <div className="grid grid-cols-2 gap-3 pl-1">
                                             <div className="space-y-1">
-                                                <label className="text-xs text-admin-text-secondary font-bold uppercase">Abre</label>
+                                                <label htmlFor={`open-${bh.id}`} className="text-xs text-admin-text-secondary font-bold uppercase">Abre</label>
                                                 <input
+                                                    id={`open-${bh.id}`}
                                                     type="time"
                                                     value={bh.open_time.substring(0, 5)}
                                                     onChange={(e) => handleTimeChange(bh.id, 'open_time', e.target.value)}
@@ -121,8 +122,9 @@ export function SettingsSidebar() {
                                                 />
                                             </div>
                                             <div className="space-y-1">
-                                                <label className="text-xs text-admin-text-secondary font-bold uppercase">Cierra</label>
+                                                <label htmlFor={`close-${bh.id}`} className="text-xs text-admin-text-secondary font-bold uppercase">Cierra</label>
                                                 <input
+                                                    id={`close-${bh.id}`}
                                                     type="time"
                                                     value={bh.close_time.substring(0, 5)}
                                                     onChange={(e) => handleTimeChange(bh.id, 'close_time', e.target.value)}

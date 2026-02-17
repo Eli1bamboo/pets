@@ -168,10 +168,11 @@ export function ServiceFormSidebar({ service }: ServiceFormSidebarProps) {
 
                 {/* Name (language-dependent) */}
                 <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">
+                    <label htmlFor="service-name" className="text-xs font-bold text-gray-600 uppercase tracking-wider">
                         {t.admin.services.nameLabel}
                     </label>
                     <input
+                        id="service-name"
                         type="text"
                         value={nameValue}
                         onChange={e => setName(e.target.value)}
@@ -182,8 +183,9 @@ export function ServiceFormSidebar({ service }: ServiceFormSidebarProps) {
 
                 {/* Price (shared) */}
                 <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">{t.admin.services.price}</label>
+                    <label htmlFor="service-price" className="text-xs font-bold text-gray-600 uppercase tracking-wider">{t.admin.services.price}</label>
                     <input
+                        id="service-price"
                         type="number"
                         value={form.price}
                         onChange={e => setForm({ ...form, price: Number(e.target.value) })}
@@ -193,10 +195,11 @@ export function ServiceFormSidebar({ service }: ServiceFormSidebarProps) {
 
                 {/* Description (language-dependent) */}
                 <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">
+                    <label htmlFor="service-description" className="text-xs font-bold text-gray-600 uppercase tracking-wider">
                         {t.admin.services.descriptionLabel}
                     </label>
                     <textarea
+                        id="service-description"
                         value={descValue}
                         onChange={e => setDesc(e.target.value)}
                         rows={2}
@@ -206,11 +209,12 @@ export function ServiceFormSidebar({ service }: ServiceFormSidebarProps) {
 
                 {/* Features (language-dependent) */}
                 <div className="space-y-2">
-                    <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">
+                    <label htmlFor="service-feature-input" className="text-xs font-bold text-gray-600 uppercase tracking-wider">
                         {t.admin.services.featuresLabel}
                     </label>
                     <div className="flex gap-2">
                         <input
+                            id="service-feature-input"
                             type="text"
                             value={featureInput}
                             onChange={e => setFeatureInput(e.target.value)}
@@ -218,13 +222,13 @@ export function ServiceFormSidebar({ service }: ServiceFormSidebarProps) {
                             className="flex-1 rounded-xl border border-gray-200 px-4 py-2 text-sm focus:border-admin-accent focus:ring-admin-accent"
                             placeholder={t.admin.services.addFeaturePlaceholder}
                         />
-                        <Button variant="admin-outline" onClick={addFeature} className="px-3 py-2 text-xs">+</Button>
+                        <Button variant="admin-outline" onClick={addFeature} className="px-3 py-2 text-xs" aria-label="Add Feature">+</Button>
                     </div>
                     <div className="flex flex-wrap gap-2">
                         {featuresValue.map((f, i) => (
                             <span key={i} className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium ${lang === "es" ? "bg-gray-100 text-gray-700" : "bg-blue-50 text-blue-700"}`}>
                                 {f}
-                                <button onClick={() => removeFeature(i)} className="hover:text-red-500 ml-1">&times;</button>
+                                <button onClick={() => removeFeature(i)} className="hover:text-red-500 ml-1" aria-label={`Remove Feature ${f}`}>&times;</button>
                             </span>
                         ))}
                     </div>
@@ -232,8 +236,9 @@ export function ServiceFormSidebar({ service }: ServiceFormSidebarProps) {
 
                 {/* Icon (shared) */}
                 <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">{t.admin.services.iconLabel}</label>
+                    <label htmlFor="service-icon" className="text-xs font-bold text-gray-600 uppercase tracking-wider">{t.admin.services.iconLabel}</label>
                     <select
+                        id="service-icon"
                         value={form.icon}
                         onChange={e => setForm({ ...form, icon: e.target.value })}
                         className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:border-admin-accent focus:ring-admin-accent"
@@ -249,8 +254,9 @@ export function ServiceFormSidebar({ service }: ServiceFormSidebarProps) {
 
                 {/* Sort order (shared) */}
                 <div className="space-y-1">
-                    <label className="text-xs font-bold text-gray-600 uppercase tracking-wider">{t.admin.services.sortOrderLabel}</label>
+                    <label htmlFor="service-sort-order" className="text-xs font-bold text-gray-600 uppercase tracking-wider">{t.admin.services.sortOrderLabel}</label>
                     <input
+                        id="service-sort-order"
                         type="number"
                         value={form.sort_order}
                         onChange={e => setForm({ ...form, sort_order: Number(e.target.value) })}
@@ -276,6 +282,7 @@ export function ServiceFormSidebar({ service }: ServiceFormSidebarProps) {
                         variant="admin-outline"
                         onClick={handleDelete}
                         className="flex items-center gap-2 text-red-600 border-red-200 hover:bg-red-50"
+                        aria-label="Delete Service"
                     >
                         <Trash2 size={14} />
                     </Button>
