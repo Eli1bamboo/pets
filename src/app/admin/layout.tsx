@@ -2,7 +2,7 @@
 
 import { AdminProvider } from "@/providers/AdminProvider";
 import { AdminUIProvider } from "@/providers/AdminUIProvider";
-import { SidebarContainer } from "@/components/organisms/SidebarContainer";
+import { SidebarContainer } from "@/features/admin/components/organisms/SidebarContainer";
 
 export default function RootAdminLayout({
     children,

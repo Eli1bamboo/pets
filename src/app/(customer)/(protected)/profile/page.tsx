@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useAppointments } from "@/hooks/useAppointments";
+import { useAppointments } from "@/features/customer/hooks/useAppointments";
 import { useCancelAppointment } from "@/hooks/useCancelAppointment";
 import { Calendar, Clock, Scissors, XCircle } from "lucide-react";
-import { Modal } from "@/components/molecules/Modal";
+import { Modal } from "@/features/customer/components/molecules/Modal";
 import { Appointment } from "@/types";
 import { useTranslation } from "@/i18n/LanguageContext";
 import { getStatusColor } from "@/config/appointments";

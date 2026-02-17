@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
-import { AdminHeader } from "@/components/organisms/AdminHeader";
+import { AdminHeader } from "@/features/admin/components/organisms/AdminHeader";
 import { AdminLoader } from "@/components/atoms/AdminLoader";
 import { useTranslation } from "@/i18n/LanguageContext";
 

@@ -1,25 +1,27 @@
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { Appointment, AppointmentStatus } from '@/types'
-
+import { useRefresh } from '@/providers/AdminUIProvider'
 
 interface UseAppointmentsOptions {
-    isAdmin?: boolean;
     startDate?: Date;
     endDate?: Date;
     searchQuery?: string;
     statuses?: AppointmentStatus[];
     page?: number;
     limit?: number;
-    refreshTrigger?: number; // Optional prop to trigger refresh from outside
+    refreshTrigger?: number;
 }
 
-export function useAppointments({ isAdmin = false, startDate, endDate, searchQuery, statuses, page = 1, limit = 50, refreshTrigger = 0 }: UseAppointmentsOptions = {}) {
+export function useAppointments({ startDate, endDate, searchQuery, statuses, page = 1, limit = 50 }: UseAppointmentsOptions = {}) {
     const [appointments, setAppointments] = useState<Appointment[]>([])
     const [count, setCount] = useState<number>(0)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [supabase] = useState(() => createClient())
+
+    // Admin context integration for automatic refreshing
+    const { refreshTrigger } = useRefresh();
 
     const statusesKey = statuses?.join(",") ?? "";
     const startDateKey = startDate?.toISOString() ?? "";
@@ -32,15 +34,6 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
                 .from("appointments")
                 .select("*, profiles(full_name)", { count: 'exact' })
                 .order("date", { ascending: true })
-
-            if (!isAdmin) {
-                const { data: { user } } = await supabase.auth.getUser()
-                if (!user) {
-                    setLoading(false)
-                    return
-                }
-                query = query.eq("user_id", user.id).order("created_at", { ascending: false })
-            }
 
             if (startDate) {
                 query = query.gte("date", startDate.toISOString());
@@ -73,11 +66,11 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
             }
         } catch (err) {
             console.error(err)
-            setError("Error al cargar los turnos")
+            setError("Error loading appointments")
         } finally {
             setLoading(false)
         }
-    }, [supabase, isAdmin, startDateKey, endDateKey, searchQuery, statusesKey, page, limit, refreshTrigger])
+    }, [supabase, startDateKey, endDateKey, searchQuery, statusesKey, page, limit, refreshTrigger])
 
     const updateStatus = async (id: number, newStatus: AppointmentStatus) => {
         setAppointments(prev => prev.map(app =>
@@ -98,7 +91,7 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
         const { error: logError } = await supabase.from("appointment_logs").insert([
             {
                 appointment_id: id,
-                description: `Estado cambiado a ${newStatus}`
+                description: `Status changed to ${newStatus}`
             }
         ]);
 
@@ -111,9 +104,10 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
         fetchAppointments()
     }, [fetchAppointments])
 
+    // Real-time updates for Admin
     useEffect(() => {
         const channel = supabase
-            .channel('appointments-changes')
+            .channel('admin-appointments-changes')
             .on(
                 'postgres_changes',
                 {
@@ -123,14 +117,11 @@ export function useAppointments({ isAdmin = false, startDate, endDate, searchQue
                 },
                 (payload) => {
                     const updatedAppointment = payload.new as Appointment;
-                    if (!updatedAppointment || updatedAppointment.id === undefined || updatedAppointment.id === null) {
-                        console.warn('Realtime update received without a valid appointment ID:', payload);
-                        return;
-                    }
+                    if (!updatedAppointment?.id) return;
 
                     setAppointments((prev) => {
                         return prev.map((app) =>
-                            app.id == updatedAppointment.id
+                            app.id === updatedAppointment.id
                                 ? { ...app, ...updatedAppointment }
                                 : app
                         )

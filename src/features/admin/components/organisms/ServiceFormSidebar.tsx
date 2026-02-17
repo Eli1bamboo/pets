@@ -1,11 +1,10 @@
-"use client";
 
 import { useState, useEffect } from "react";
 import { Service } from "@/types";
 import { useAdminUI } from "@/providers/AdminUIProvider";
-import { useServices } from "@/hooks/useServices";
+import { useServices } from "@/features/admin/hooks/useServices";
 import { Save, Trash2 } from "lucide-react";
-import { Button } from "@/components/atoms/Button";
+import { Button } from "@/features/admin/components/atoms/Button";
 import { useTranslation } from "@/i18n/LanguageContext";
 import {
     SheetHeader,
@@ -88,7 +87,10 @@ export function ServiceFormSidebar({ service }: ServiceFormSidebarProps) {
             triggerRefresh();
             setTimeout(() => closeSidebar(), 800);
         } else {
-            setMessage({ type: "error", text: result.error || t.admin.services.saveError });
+            const errorMsg = typeof result.error === 'object' && result.error !== null
+                ? (result.error as any).message || JSON.stringify(result.error)
+                : String(result.error || t.admin.services.saveError);
+            setMessage({ type: "error", text: errorMsg });
         }
     };
 
@@ -101,7 +103,10 @@ export function ServiceFormSidebar({ service }: ServiceFormSidebarProps) {
             triggerRefresh();
             closeSidebar();
         } else {
-            setMessage({ type: "error", text: t.admin.services.deleteError });
+            const errorMsg = typeof result.error === 'object' && result.error !== null
+                ? (result.error as any).message || JSON.stringify(result.error)
+                : String(result.error || t.admin.services.deleteError);
+            setMessage({ type: "error", text: errorMsg });
         }
     };
 
@@ -222,7 +227,7 @@ export function ServiceFormSidebar({ service }: ServiceFormSidebarProps) {
                             className="flex-1 rounded-xl border border-gray-200 px-4 py-2 text-sm focus:border-admin-accent focus:ring-admin-accent"
                             placeholder={t.admin.services.addFeaturePlaceholder}
                         />
-                        <Button variant="admin-outline" onClick={addFeature} className="px-3 py-2 text-xs" aria-label="Add Feature">+</Button>
+                        <Button variant="outline" onClick={addFeature} className="px-3 py-2 text-xs" aria-label="Add Feature">+</Button>
                     </div>
                     <div className="flex flex-wrap gap-2">
                         {featuresValue.map((f, i) => (
@@ -279,7 +284,7 @@ export function ServiceFormSidebar({ service }: ServiceFormSidebarProps) {
             <div className="mt-auto pt-6 border-t border-gray-100 flex gap-3">
                 {isEditing && (
                     <Button
-                        variant="admin-outline"
+                        variant="outline"
                         onClick={handleDelete}
                         className="flex items-center gap-2 text-red-600 border-red-200 hover:bg-red-50"
                         aria-label="Delete Service"
@@ -287,11 +292,11 @@ export function ServiceFormSidebar({ service }: ServiceFormSidebarProps) {
                         <Trash2 size={14} />
                     </Button>
                 )}
-                <Button variant="admin-outline" onClick={() => closeSidebar()} className="flex-1">
+                <Button variant="outline" onClick={() => closeSidebar()} className="flex-1">
                     {t.admin.services.close}
                 </Button>
                 <Button
-                    variant="admin-primary"
+                    variant="primary"
                     onClick={handleSave}
                     isLoading={saving}
                     className="flex-1 flex items-center justify-center gap-2"

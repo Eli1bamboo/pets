@@ -31,4 +31,5 @@ Before finishing a task:
 1.  **Build Check**: Does `npm run build` pass?
 2.  **Lint Check**: Are there new lint errors?
 3.  **Visual Check**: Did you verify the UI changes?
-4.  **Consistency**: Did you follow the `useSidebar` pattern?
+4.  **Isolation Check**: Did you ensure NO Admin code is imported into Customer features (and vice versa)?
+5.  **Consistency**: Did you follow the `useSidebar` pattern?

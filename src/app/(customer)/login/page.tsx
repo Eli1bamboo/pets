@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { FormField } from "@/components/molecules/FormField";
-import { Button } from "@/components/atoms/Button";
+import { FormField } from "@/features/customer/components/molecules/FormField";
+import { Button } from "@/features/customer/components/atoms/Button";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 import { useCustomerLogin } from "@/hooks/useCustomerLogin";
-import { Modal } from "@/components/molecules/Modal";
+import { Modal } from "@/features/customer/components/molecules/Modal";
 import { useTranslation } from "@/i18n/LanguageContext";
 
 export default function LoginPage() {

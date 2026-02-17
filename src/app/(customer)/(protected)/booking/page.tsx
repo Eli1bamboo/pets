@@ -4,15 +4,15 @@ import { useState, useEffect } from "react";
 import { useCustomerContext } from "@/providers/CustomerProvider";
 import { DateSelector } from "@/components/molecules/DateSelector";
 import { TimeSelector } from "@/components/molecules/TimeSelector";
-import { useAvailability } from "@/hooks/useAvailability";
-import { useBooking } from "@/hooks/useBooking";
-import { useServices } from "@/hooks/useServices";
+import { useAvailability } from "@/features/customer/hooks/useAvailability";
+import { useBooking } from "@/features/customer/hooks/useBooking";
+import { useServices } from "@/features/customer/hooks/useServices";
 import { Loader2, Dog, CheckCircle2, ChevronRight } from "lucide-react";
-import { Button } from "@/components/atoms/Button";
-import { FormField } from "@/components/molecules/FormField";
-import { Modal } from "@/components/molecules/Modal";
+import { Button } from "@/features/customer/components/atoms/Button";
+import { FormField } from "@/features/customer/components/molecules/FormField";
+import { Modal } from "@/features/customer/components/molecules/Modal";
 import { useTranslation } from "@/i18n/LanguageContext";
-import { BookingSummary } from "@/components/organisms/BookingSummary";
+import { BookingSummary } from "@/features/customer/components/organisms/BookingSummary";
 import { motion } from "framer-motion";
 
 export default function BookingPage() {
@@ -80,10 +80,10 @@ export default function BookingPage() {
                             {[1, 2].map((s) => (
                                 <div key={s} className="flex items-center gap-3">
                                     <div className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition-colors ${step === s
-                                            ? 'bg-primary-orange text-white ring-4 ring-orange-100'
-                                            : step > s
-                                                ? 'bg-green-500 text-white'
-                                                : 'bg-brand-200 text-brand-700'
+                                        ? 'bg-primary-orange text-white ring-4 ring-orange-100'
+                                        : step > s
+                                            ? 'bg-green-500 text-white'
+                                            : 'bg-brand-200 text-brand-700'
                                         }`}>
                                         {step > s ? <CheckCircle2 size={18} /> : s}
                                     </div>

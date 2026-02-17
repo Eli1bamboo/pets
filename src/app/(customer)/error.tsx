@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Button } from "@/components/atoms/Button";
+import { Button } from "@/features/customer/components/atoms/Button";
 import { AlertTriangle } from "lucide-react";
 
 export default function CustomerError({

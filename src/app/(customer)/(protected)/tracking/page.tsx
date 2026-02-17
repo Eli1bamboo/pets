@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { StatusTracker } from "@/components/organisms/StatusTracker";
+import { StatusTracker } from "@/features/customer/components/organisms/StatusTracker";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/atoms/Button";
-import { Input } from "@/components/atoms/Input";
+import { Button } from "@/features/customer/components/atoms/Button";
+import { Input } from "@/features/customer/components/atoms/Input";
 import { useTranslation } from "@/i18n/LanguageContext";
 
 

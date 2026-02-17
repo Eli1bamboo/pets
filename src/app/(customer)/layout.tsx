@@ -1,8 +1,8 @@
 "use client";
 
-import { CustomerHeader } from "@/components/organisms/CustomerHeader";
-import { CustomerFooter } from "@/components/organisms/CustomerFooter";
-import { CustomerBottomNav } from "@/components/organisms/CustomerBottomNav";
+import { CustomerHeader } from "@/features/customer/components/organisms/CustomerHeader";
+import { CustomerFooter } from "@/features/customer/components/organisms/CustomerFooter";
+import { CustomerBottomNav } from "@/features/customer/components/organisms/CustomerBottomNav";
 import { CustomerProvider } from "@/providers/CustomerProvider";
 
 export default function CustomerLayout({

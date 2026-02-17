@@ -54,11 +54,17 @@
   - Buttons: `rounded-xl` or `rounded-full`.
 - **Shadows**: Soft, diffused shadows on white cards (`shadow-lg` or `shadow-xl`).
 
-## Component Patterns
+## Component Patterns (Isolated)
+**IMPORTANT**: UI components are **NOT** shared. They exist separately in `features/customer` and `features/admin` to enforce their distinct visual languages.
+
 - **Buttons**:
-  - **Primary**: `bg-brand-500` text-white. Hover: `bg-brand-800` (Dark Brown/Orange).
-  - **Disabled**: `bg-brand-100` (Peach) text-brand-300.
-  - **Shape**: Pill-shaped or highly rounded rectangles.
+  - **Customer** (`features/customer/components/atoms/Button`): `bg-brand-500`, rounded-xl, warm interactions.
+  - **Admin** (`features/admin/components/atoms/Button`): `bg-slate-900`, rounded-md, dense, professional.
+  - **Interaction**: Customer = Bouncy/Springy; Admin = Fast/Linear.
+
+- **Inputs**:
+  - **Customer**: Large touch targets, `brand-500` focus ring.
+  - **Admin**: Compact, `slate-500` focus ring.
 - **Navigation (Mobile)**:
   - Bottom Tab Bar with icons.
   - **Active**: Icon & Text in `brand-500`.

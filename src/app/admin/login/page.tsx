@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { LayoutDashboard, Lock, User, Eye, EyeOff } from "lucide-react";
-import { FormField } from "@/components/molecules/FormField";
-import { Button } from "@/components/atoms/Button";
+import { FormField } from "@/features/admin/components/molecules/FormField";
+import { Button } from "@/features/admin/components/atoms/Button";
 import { motion } from "framer-motion";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useAdminLogin } from "@/hooks/useAdminLogin";
@@ -70,7 +70,6 @@ export default function AdminLoginPage() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         leftIcon={User}
-                        variant="admin"
                     />
 
                     <FormField
@@ -84,7 +83,6 @@ export default function AdminLoginPage() {
                         leftIcon={Lock}
                         rightIcon={showPassword ? EyeOff : Eye}
                         onRightIconClick={() => setShowPassword(!showPassword)}
-                        variant="admin"
                     />
 
                     {error && (
@@ -102,7 +100,7 @@ export default function AdminLoginPage() {
                         type="submit"
                         isLoading={loading}
                         className="w-full h-12 text-base font-semibold"
-                        variant="admin-primary"
+                        variant="primary"
                     >
                         {t.admin.login.submit}
                     </Button>

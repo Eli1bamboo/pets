@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useAppointments } from "@/hooks/useAppointments";
+import { useAppointments } from "@/features/admin/hooks/useAppointments";
 import { Appointment, AppointmentStatus } from "@/types";
-import { Button } from "@/components/atoms/Button";
-import { AppointmentsTable } from "@/components/organisms/AppointmentsTable";
-import { TablePagination } from "@/components/molecules/TablePagination";
+import { Button } from "@/features/admin/components/atoms/Button";
+import { AppointmentsTable } from "@/features/admin/components/organisms/AppointmentsTable";
+import { TablePagination } from "@/features/admin/components/molecules/TablePagination";
+import { Modal, ModalProps } from "@/features/admin/components/molecules/Modal";
 import { usePagination } from "@/hooks/usePagination";
-import { Modal, ModalProps } from "@/components/molecules/Modal";
 import { Calendar, Settings } from "lucide-react";
 import { getWeekRange, formatWeekRange } from "@/utils/dateUtils";
 import { useAdminUI } from "@/providers/AdminUIProvider";
@@ -21,7 +21,6 @@ export default function AdminPage() {
     const { t } = useTranslation();
 
     const { appointments, loading: fetching, updateStatus } = useAppointments({
-        isAdmin: true,
         startDate,
         endDate,
         refreshTrigger
@@ -129,7 +128,6 @@ export default function AdminPage() {
                     startIndex={startIndex}
                     endIndex={endIndex}
                     onPageChange={goToPage}
-                    variant="admin"
                 />
             </div>
 

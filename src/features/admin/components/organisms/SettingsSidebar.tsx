@@ -1,9 +1,8 @@
-"use client";
 
 import { useState, useEffect } from "react";
 import { useBusinessHours } from "@/hooks/useBusinessHours";
 import { Save, Calendar } from "lucide-react";
-import { Button } from "@/components/atoms/Button";
+import { Button } from "@/features/admin/components/atoms/Button";
 import { BusinessHours } from "@/types";
 import { useAdminUI } from "@/providers/AdminUIProvider";
 import {
@@ -142,14 +141,14 @@ export function SettingsSidebar() {
 
             <div className="mt-auto pt-6 border-t border-gray-100 flex gap-3">
                 <Button
-                    variant="admin-outline"
+                    variant="outline"
                     onClick={handleClose}
                     className="flex-1"
                 >
                     Cerrar
                 </Button>
                 <Button
-                    variant="admin-primary"
+                    variant="primary"
                     onClick={handleSave}
                     isLoading={saving}
                     className="flex-1 flex items-center justify-center gap-2"

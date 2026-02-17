@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Calendar, Clock, Dog, Scissors } from "lucide-react";
-import { Button } from "@/components/atoms/Button";
+import { Button } from "../atoms/Button";
 import { useTranslation } from "@/i18n/LanguageContext";
 
 interface BookingSummaryProps {
@@ -77,6 +77,7 @@ export function BookingSummary({
                     </div>
                 </div>
 
+                {/* Time */}
                 <div className="flex items-start gap-4">
                     <div className={`p-2 rounded-xl transition-colors ${time ? 'bg-brand-100 text-primary-orange' : 'bg-gray-50 text-gray-300'}`}>
                         <Clock size={20} />

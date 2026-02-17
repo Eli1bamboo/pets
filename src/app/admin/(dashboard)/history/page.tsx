@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
-import { useAppointments } from "@/hooks/useAppointments";
+import { useAppointments } from "@/features/admin/hooks/useAppointments";
 import { Search, Eye, Filter, CheckCircle2 } from "lucide-react";
 import { redirect } from "next/navigation";
 import { AdminLoader } from "@/components/atoms/AdminLoader";
-import { AppointmentsTable } from "@/components/organisms/AppointmentsTable";
-import { TablePagination } from "@/components/molecules/TablePagination";
+import { AppointmentsTable } from "@/features/admin/components/organisms/AppointmentsTable";
+import { TablePagination } from "@/features/admin/components/molecules/TablePagination";
 import { usePagination } from "@/hooks/usePagination";
 import { Appointment, AppointmentStatus } from "@/types";
 import { useAdminUI } from "@/providers/AdminUIProvider";
@@ -45,7 +45,6 @@ export default function AdminHistoryPage() {
     const ITEMS_PER_PAGE = 8;
 
     const { appointments, count, loading: dataLoading, updateStatus } = useAppointments({
-        isAdmin: true,
         startDate,
         endDate,
         searchQuery: searchTerm,
@@ -184,7 +183,6 @@ export default function AdminHistoryPage() {
                 startIndex={(currentPage - 1) * ITEMS_PER_PAGE}
                 endIndex={(currentPage - 1) * ITEMS_PER_PAGE + appointments.length}
                 onPageChange={handlePageChange}
-                variant="admin"
             />
         </main>
     );

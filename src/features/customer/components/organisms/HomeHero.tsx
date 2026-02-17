@@ -3,7 +3,7 @@ import Image from "next/image";
 import { CalendarCheck, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/LanguageContext";
-import { Button } from "@/components/atoms/Button";
+import { Button } from "../atoms/Button";
 
 export function HomeHero() {
     const { t } = useTranslation();

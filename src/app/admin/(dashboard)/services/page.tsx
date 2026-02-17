@@ -1,10 +1,10 @@
 "use client";
 
-import { useServices } from "@/hooks/useServices";
+import { useServices } from "@/features/admin/hooks/useServices";
 import { useAdminUI, useRefresh } from "@/providers/AdminUIProvider";
 import { Service } from "@/types";
 import { Plus, Package, Pencil, DollarSign } from "lucide-react";
-import { Button } from "@/components/atoms/Button";
+import { Button } from "@/features/admin/components/atoms/Button";
 import { useEffect } from "react";
 import { useTranslation } from "@/i18n/LanguageContext";
 
@@ -40,7 +40,7 @@ export default function ServicesPage() {
                     </div>
                     <div className="mt-4 sm:flex-none">
                         <Button
-                            variant="admin-primary"
+                            variant="primary"
                             onClick={handleCreate}
                             className="flex items-center gap-2 bg-admin-primary hover:bg-slate-800 text-white border-none shadow-sm"
                         >
@@ -88,7 +88,7 @@ export default function ServicesPage() {
                         <Package size={48} className="mx-auto text-gray-300 mb-4" />
                         <h3 className="text-xl font-bold text-gray-500">{t.admin.services.noServices}</h3>
                         <p className="text-gray-400 mt-1 mb-6">{t.admin.services.noServicesMsg}</p>
-                        <Button variant="admin-primary" onClick={handleCreate} className="inline-flex items-center gap-2">
+                        <Button variant="primary" onClick={handleCreate} className="inline-flex items-center gap-2">
                             <Plus size={18} />
                             {t.admin.services.createService}
                         </Button>

@@ -1,3 +1,4 @@
+
 import {
     SheetHeader,
     SheetTitle,
@@ -5,14 +6,13 @@ import {
 } from "@/components/molecules/SidebarSheet";
 import { Appointment, AppointmentStatus } from "@/types";
 import { User, Dog, Save, Activity } from "lucide-react";
-import { Button } from "@/components/atoms/Button";
-import { Modal } from "@/components/molecules/Modal";
+import { Button } from "@/features/admin/components/atoms/Button";
+import { Modal } from "@/features/admin/components/molecules/Modal";
 import { useState, useEffect } from "react";
-import { useAppointments } from "@/hooks/useAppointments";
-import { useAdminUI } from "@/providers/AdminUIProvider";
-import { useRefresh } from "@/providers/AdminUIProvider";
-import { useAppointmentLogs } from "@/hooks/useAppointmentLogs";
-import { useAppointment } from "@/hooks/useAppointment";
+import { useAppointments } from "@/features/admin/hooks/useAppointments";
+import { useAdminUI, useRefresh } from "@/providers/AdminUIProvider";
+import { useAppointmentLogs } from "@/features/admin/hooks/useAppointmentLogs";
+import { useAppointment } from "@/features/admin/hooks/useAppointment";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Skeleton } from "@/components/atoms/Skeleton";
@@ -81,8 +81,6 @@ export function AppointmentDetailsSidebar({ appointment: initialAppointment }: A
                             <p className="text-sm font-medium text-slate-900">{appointment.profiles?.full_name || "Sin nombre"}</p>
                         </div>
                     </div>
-
-
 
                     <div className="border-b border-gray-100 pb-6">
                         <h3 className="text-base font-semibold text-admin-primary mb-4 flex items-center gap-2">
@@ -176,14 +174,14 @@ export function AppointmentDetailsSidebar({ appointment: initialAppointment }: A
 
                 <div className="border-t border-gray-100 pt-6 mt-4 flex gap-3 bg-white sticky bottom-0 z-10">
                     <Button
-                        variant="admin-outline"
+                        variant="outline"
                         onClick={closeSidebar}
                         className="flex-1"
                     >
                         Cerrar
                     </Button>
                     <Button
-                        variant="admin-primary"
+                        variant="primary"
                         onClick={handleSave}
                         isLoading={saving}
                         className="flex-1 flex items-center justify-center gap-2"

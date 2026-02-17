@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppointmentStatus } from "@/hooks/useAppointmentStatus";
+import { useAppointmentStatus } from "@/features/customer/hooks/useAppointmentStatus";
 import { CheckCircle2, Clock, Loader2, Sparkles, Wind, Bath } from "lucide-react";
 import { motion } from "framer-motion";
 

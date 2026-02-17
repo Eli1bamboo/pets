@@ -1,6 +1,6 @@
 
 import { Appointment, AppointmentStatus } from "@/types";
-import { AppointmentRow } from "@/components/organisms/AppointmentRow";
+import { AppointmentRow } from "./AppointmentRow";
 
 interface AppointmentsTableProps {
     appointments: Appointment[];

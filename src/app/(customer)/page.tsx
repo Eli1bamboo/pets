@@ -1,10 +1,10 @@
 "use client";
 
-import { HomeHero } from "@/components/organisms/HomeHero";
-import { ServiceCard } from "@/components/molecules/ServiceCard";
+import { HomeHero } from "@/features/customer/components/organisms/HomeHero";
+import { ServiceCard } from "@/features/customer/components/molecules/ServiceCard";
 import { Bath, Scissors, Wind, Sparkles, Heart, Star, LucideIcon } from "lucide-react";
 import { useTranslation } from "@/i18n/LanguageContext";
-import { useServices } from "@/hooks/useServices";
+import { useServices } from "@/features/customer/hooks/useServices";
 
 const ICON_MAP: Record<string, LucideIcon> = {
   bath: Bath,
