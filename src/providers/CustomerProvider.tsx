@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, useRef } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Profile } from "@/types";
@@ -19,11 +19,7 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
     const [profile, setProfile] = useState<Profile | null>(null);
     const [loading, setLoading] = useState(true);
     const [supabase] = useState(() => createClient());
-    const initialized = useRef(false);
-
     useEffect(() => {
-        if (initialized.current) return;
-        initialized.current = true;
 
         const syncCustomer = async () => {
             try {
