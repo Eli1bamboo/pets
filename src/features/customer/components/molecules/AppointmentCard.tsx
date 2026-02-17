@@ -30,8 +30,9 @@ export function AppointmentCard({ appointment, onCancel }: AppointmentCardProps)
                         <Scissors size={20} />
                     </div>
                     <div>
-                        <h3 className="text-lg font-black text-brand-900 leading-tight">
+                        <h3 className="text-lg font-black text-brand-900 leading-tight flex items-center gap-2">
                             {appointment.pet_name}
+                            <span className="text-xs font-bold text-brand-400 bg-brand-50 px-2 py-0.5 rounded-md">#{appointment.id}</span>
                         </h3>
                         <p className="text-sm font-medium text-brand-500">{appointment.service}</p>
                     </div>

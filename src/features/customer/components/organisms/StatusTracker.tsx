@@ -1,6 +1,5 @@
 "use client";
 
-import { useAppointmentStatus } from "@/features/customer/hooks/useAppointmentStatus";
 import { CheckCircle2, Clock, Loader2, Sparkles, Wind, Bath } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -13,16 +12,10 @@ const STEPS = [
 ];
 
 interface StatusTrackerProps {
-    appointmentId: number | string;
+    status: string;
 }
 
-export function StatusTracker({ appointmentId }: StatusTrackerProps) {
-    const { status, loading } = useAppointmentStatus(appointmentId);
-
-    if (loading) {
-        return <div className="flex justify-center p-8"><Loader2 className="animate-spin text-brand-600" /></div>;
-    }
-
+export function StatusTracker({ status }: StatusTrackerProps) {
     const currentStepIndex = STEPS.findIndex((s) => s.id === status);
 
     return (

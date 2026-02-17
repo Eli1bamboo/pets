@@ -33,7 +33,7 @@ export function useAppointments({ startDate, endDate, statuses, page = 1, limit 
                 .from("appointments")
                 .select("*, profiles(full_name)")
                 .eq("user_id", user.id)
-                .order("date", { ascending: true })
+                .order("date", { ascending: false })
 
             if (startDate) {
                 query = query.gte("date", startDate.toISOString());

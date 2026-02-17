@@ -53,7 +53,7 @@ export function AppointmentTabs({ appointments, onCancel }: AppointmentTabsProps
     const upcoming = useMemo(() => appointments.filter(apt => {
         const aptDate = new Date(apt.date);
         return aptDate >= today && apt.status !== 'cancelled' && apt.status !== 'completed';
-    }), [appointments, today]);
+    }).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()), [appointments, today]);
 
     const history = useMemo(() => appointments.filter(apt => {
         const aptDate = new Date(apt.date);
