@@ -32,6 +32,18 @@ vi.mock('framer-motion', () => ({
     },
 }));
 
+// Mock next/navigation
+const mockSearchParams = new URLSearchParams();
+const mockReplace = vi.fn();
+
+vi.mock('next/navigation', () => ({
+    useSearchParams: () => mockSearchParams,
+    useRouter: () => ({
+        replace: mockReplace,
+    }),
+    usePathname: () => '/tracking',
+}));
+
 // Mock StatusTracker to avoid testing its internal logic here (unit test for page)
 vi.mock('@/features/customer/components/organisms/StatusTracker', () => ({
     StatusTracker: ({ status }: any) => <div data-testid="status-tracker">Status: {status}</div>,
@@ -40,6 +52,9 @@ vi.mock('@/features/customer/components/organisms/StatusTracker', () => ({
 describe('TrackingPage', () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        // Reset search params
+        mockSearchParams.delete('id');
+
         // Default mock return
         mockUseAppointmentStatus.mockReturnValue({
             appointment: null,
@@ -53,6 +68,13 @@ describe('TrackingPage', () => {
         render(<TrackingPage />);
         expect(screen.getByPlaceholderText('ID del turno')).toBeInTheDocument();
         expect(screen.getByText('Buscar')).toBeInTheDocument();
+    });
+
+    it('initializes from URL search params', () => {
+        mockSearchParams.set('id', '555');
+        render(<TrackingPage />);
+        expect(screen.getByDisplayValue('555')).toBeInTheDocument();
+        expect(mockUseAppointmentStatus).toHaveBeenCalledWith('555');
     });
 
     it('handles search submission', async () => {

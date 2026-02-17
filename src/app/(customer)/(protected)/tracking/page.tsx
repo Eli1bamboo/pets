@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StatusTracker } from "@/features/customer/components/organisms/StatusTracker";
 import { Search, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -8,13 +8,24 @@ import { Button } from "@/features/customer/components/atoms/Button";
 import { Input } from "@/features/customer/components/atoms/Input";
 import { useTranslation } from "@/i18n/LanguageContext";
 import { useAppointmentStatus } from "@/features/customer/hooks/useAppointmentStatus";
+import { useSearchParams } from "next/navigation";
 
 
 export default function TrackingPage() {
-    const [inputId, setInputId] = useState("");
-    const [appointmentId, setAppointmentId] = useState<string | null>(null);
+    const searchParams = useSearchParams();
+    const initialId = searchParams.get("id");
+    const [inputId, setInputId] = useState(initialId || "");
+    const [appointmentId, setAppointmentId] = useState<string | null>(initialId);
     const { t } = useTranslation();
     const { appointment, status, loading, error } = useAppointmentStatus(appointmentId || "");
+
+    useEffect(() => {
+        const idFromUrl = searchParams.get("id");
+        if (idFromUrl && idFromUrl !== appointmentId) {
+            setAppointmentId(idFromUrl);
+            setInputId(idFromUrl);
+        }
+    }, [searchParams, appointmentId]);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();

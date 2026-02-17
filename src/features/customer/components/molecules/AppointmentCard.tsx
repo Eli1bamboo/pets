@@ -9,12 +9,15 @@ import { useTranslation } from "@/i18n/LanguageContext";
 interface AppointmentCardProps {
     appointment: Appointment;
     onCancel: (appointment: Appointment) => void;
+    onTrack?: (appointment: Appointment) => void;
+    disableCancel?: boolean;
 }
 
-export function AppointmentCard({ appointment, onCancel }: AppointmentCardProps) {
+export function AppointmentCard({ appointment, onCancel, onTrack, disableCancel }: AppointmentCardProps) {
     const { t } = useTranslation();
-    const canCancel = appointment.status === 'pending';
+    const canCancel = !disableCancel && appointment.status === 'pending';
     const isCompleted = appointment.status === 'completed' || appointment.status === 'cancelled';
+    const showTracking = !!onTrack;
 
     // Status translation helper
     const getStatusLabel = (status: string) => {
@@ -57,8 +60,19 @@ export function AppointmentCard({ appointment, onCancel }: AppointmentCardProps)
                 </div>
             </div>
 
-            {canCancel && (
-                <div className="pt-2">
+            <div className="pt-2 space-y-3">
+                {showTracking && (
+                    <Button
+                        onClick={() => onTrack!(appointment)}
+                        className="w-full flex items-center justify-center gap-2 py-3 text-sm font-bold shadow-brand-200 shadow-lg relative overflow-hidden group"
+                    >
+                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                        <span className="relative flex items-center gap-2">
+                            🔍 Seguimiento en vivo
+                        </span>
+                    </Button>
+                )}
+                {canCancel && (
                     <button
                         onClick={() => onCancel(appointment)}
                         className="w-full flex items-center justify-center gap-2 py-3 text-sm font-bold text-red-500 hover:text-red-700 hover:bg-red-50 rounded-xl transition-colors"
@@ -66,8 +80,8 @@ export function AppointmentCard({ appointment, onCancel }: AppointmentCardProps)
                         <XCircle size={16} />
                         {t.profile.cancelButton}
                     </button>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 }
