@@ -3,7 +3,7 @@ import { Appointment, AppointmentStatus } from "@/types";
 import { Eye, Trash2, ChevronDown } from "lucide-react";
 import { Skeleton } from "@/components/atoms/Skeleton";
 import { StatusBadge } from "@/components/atoms/StatusBadge";
-import { cn } from "@/lib/utils";
+import { cn } from '@/utils/cn';
 import { APPOINTMENT_STATUSES } from "@/config/appointments";
 import { useTranslation } from "@/i18n/LanguageContext";
 
