@@ -3,11 +3,14 @@
 import { useState } from "react";
 import { useAppointments } from "@/features/customer/hooks/useAppointments";
 import { useCancelAppointment } from "@/hooks/useCancelAppointment";
-import { Calendar, Clock, Scissors, XCircle } from "lucide-react";
+import { Scissors } from "lucide-react";
 import { Modal } from "@/features/customer/components/molecules/Modal";
 import { Appointment } from "@/types";
 import { useTranslation } from "@/i18n/LanguageContext";
-import { getStatusColor } from "@/config/appointments";
+import { ProfileHeader } from "@/features/customer/components/organisms/ProfileHeader";
+import { AppointmentTabs } from "@/features/customer/components/organisms/AppointmentTabs";
+import Link from "next/link";
+import { Button } from "@/features/customer/components/atoms/Button";
 
 export default function ProfilePage() {
     const { appointments, loading, refetch } = useAppointments();
@@ -39,76 +42,36 @@ export default function ProfilePage() {
         });
     };
 
-    const getStatusLabel = (status: string) => {
-        const s = t.status as Record<string, string>;
-        return s[status] || status;
-    };
-
     return (
-        <div className="bg-brand-50 min-h-screen py-24 sm:py-32">
-            <div className="mx-auto max-w-7xl px-6 lg:px-8">
-                <div className="mx-auto max-w-2xl lg:mx-0">
-                    <h2 className="text-3xl font-bold tracking-tight text-brand-900 sm:text-4xl">{t.profile.title}</h2>
-                    <p className="mt-2 text-lg leading-8 text-brand-700">
-                        {t.profile.subtitle}
-                    </p>
-                </div>
+        <div className="bg-brand-50 min-h-screen">
+            <ProfileHeader />
 
-                <div className="mx-auto mt-10 max-w-2xl border-t border-brand-200 pt-10 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none">
-                    {loading ? (
-                        <div className="animate-pulse space-y-4">
-                            {[1, 2, 3].map(i => <div key={i} className="h-32 bg-white rounded-2xl shadow-sm"></div>)}
+            <div className="mx-auto max-w-3xl px-6 lg:px-8 -mt-10 pb-24">
+                {loading ? (
+                    <div className="space-y-4">
+                        {[1, 2].map(i => <div key={i} className="h-48 bg-white/50 rounded-[2.5rem] animate-pulse"></div>)}
+                    </div>
+                ) : appointments.length === 0 ? (
+                    <div className="bg-white rounded-[2.5rem] p-12 text-center shadow-sm ring-1 ring-brand-100/50">
+                        <div className="mx-auto h-20 w-20 bg-brand-50 rounded-full flex items-center justify-center mb-6">
+                            <Scissors className="h-10 w-10 text-brand-400" />
                         </div>
-                    ) : appointments.length === 0 ? (
-                        <div className="text-center py-12 bg-white rounded-2xl shadow-sm ring-1 ring-brand-900/5">
-                            <Scissors className="mx-auto h-12 w-12 text-brand-300" />
-                            <h3 className="mt-2 text-sm font-semibold text-brand-900">{t.profile.emptyTitle}</h3>
-                            <p className="mt-1 text-sm text-brand-500">{t.profile.emptySubtitle}</p>
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                            {appointments.map((apt) => (
-                                <div key={apt.id} className={`bg-white p-6 rounded-2xl shadow-sm ring-1 ring-brand-900/5 ${apt.status === 'cancelled' ? 'opacity-75 grayscale-[0.5]' : ''}`}>
-                                    <div className="flex items-center justify-between mb-4">
-                                        <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${getStatusColor(apt.status)}`}>
-                                            {getStatusLabel(apt.status)}
-                                        </span>
-                                        <span className="text-xs text-brand-400 font-mono">#{apt.id}</span>
-                                    </div>
-
-                                    <h3 className="text-lg font-semibold text-brand-900 flex items-center gap-2">
-                                        <Scissors size={18} className="text-brand-600" />
-                                        {apt.pet_name}
-                                    </h3>
-
-                                    <div className="mt-4 space-y-2 text-sm text-brand-600">
-                                        <div className="flex items-center gap-2">
-                                            <Calendar size={16} className="text-brand-400" />
-                                            {new Date(apt.date).toLocaleDateString()}
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Clock size={16} className="text-brand-400" />
-                                            {new Date(apt.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                        </div>
-                                    </div>
-
-                                    {apt.status === 'pending' && (
-                                        <div className="mt-6 border-t border-brand-100 pt-4">
-                                            <button
-                                                onClick={() => handleCancelClick(apt)}
-                                                className="flex items-center gap-1 text-xs font-medium text-red-600 hover:text-red-800 transition-colors"
-                                            >
-                                                <XCircle size={14} />
-                                                {t.profile.cancelButton}
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
+                        <h3 className="text-2xl font-black text-brand-900 mb-3">{t.profile.emptyTitle}</h3>
+                        <p className="text-brand-600 mb-8 max-w-sm mx-auto font-medium">{t.profile.emptySubtitle}</p>
+                        <Link href="/booking">
+                            <Button className="px-8 h-12 text-lg">
+                                Reservar Turno
+                            </Button>
+                        </Link>
+                    </div>
+                ) : (
+                    <AppointmentTabs
+                        appointments={appointments}
+                        onCancel={handleCancelClick}
+                    />
+                )}
             </div>
+
             <Modal
                 open={modal.open}
                 onClose={() => setModal(prev => ({ ...prev, open: false }))}
@@ -122,3 +85,4 @@ export default function ProfilePage() {
         </div>
     );
 }
+

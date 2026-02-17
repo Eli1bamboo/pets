@@ -1,21 +1,33 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Home, Clock, User, Plus, Activity } from "lucide-react";
 import { cn } from "@/utils/cn";
 
 export function CustomerBottomNav() {
     const pathname = usePathname();
+    const searchParams = useSearchParams();
 
     const navItems = [
         { name: "Inicio", href: "/", icon: Home },
         { name: "Seguimiento", href: "/tracking", icon: Activity },
-        { name: "Historial", href: "/history", icon: Clock },
+        { name: "Historial", href: "/profile?tab=history", icon: Clock },
         { name: "Perfil", href: "/profile", icon: User },
     ];
 
-    const isActive = (path: string) => pathname === path;
+    const isActive = (path: string) => {
+        if (path === "/" || path === "/tracking") {
+            return pathname === path;
+        }
+        if (path.includes("tab=history")) {
+            return pathname === "/profile" && searchParams.get("tab") === "history";
+        }
+        if (path === "/profile") {
+            return pathname === "/profile" && searchParams.get("tab") !== "history";
+        }
+        return pathname === path;
+    };
 
     return (
         <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden pb-safe">
@@ -53,13 +65,13 @@ export function CustomerBottomNav() {
                 </div>
 
                 <Link
-                    href="/history"
+                    href="/profile?tab=history"
                     className={cn(
                         "flex flex-col items-center justify-center w-14 gap-1 transition-colors",
-                        isActive("/history") ? "text-brand-500" : "text-gray-400"
+                        isActive("/profile?tab=history") ? "text-brand-500" : "text-gray-400"
                     )}
                 >
-                    <Clock size={24} strokeWidth={isActive("/history") ? 2.5 : 2} />
+                    <Clock size={24} strokeWidth={isActive("/profile?tab=history") ? 2.5 : 2} />
                     <span className="text-[10px] font-bold">Historial</span>
                 </Link>
 

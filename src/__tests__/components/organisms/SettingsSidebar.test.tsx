@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import { SettingsSidebar } from '@/components/organisms/SettingsSidebar';
+import { SettingsSidebar } from '@/features/admin/components/organisms/SettingsSidebar';
 
 // Mocks
 const mockCloseSidebar = vi.fn();

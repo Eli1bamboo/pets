@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { AppointmentsTable } from '@/components/organisms/AppointmentsTable';
+import { AppointmentsTable } from '@/features/admin/components/organisms/AppointmentsTable';
 import { Appointment } from '@/types';
 
 // Mock Translation

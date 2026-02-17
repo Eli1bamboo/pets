@@ -13,7 +13,7 @@ vi.mock('@/providers/CustomerProvider', () => ({
     }),
 }));
 
-vi.mock('@/hooks/useBooking', () => ({
+vi.mock('@/features/customer/hooks/useBooking', () => ({
     useBooking: () => ({
         createBooking: mockCreateBooking,
         submitting: false,
@@ -21,7 +21,7 @@ vi.mock('@/hooks/useBooking', () => ({
     }),
 }));
 
-vi.mock('@/hooks/useServices', () => ({
+vi.mock('@/features/customer/hooks/useServices', () => ({
     useServices: () => ({
         services: [
             { id: '1', name: 'Bath', price: 50, icon: 'bath' },
@@ -31,7 +31,7 @@ vi.mock('@/hooks/useServices', () => ({
     }),
 }));
 
-vi.mock('@/hooks/useAvailability', () => ({
+vi.mock('@/features/customer/hooks/useAvailability', () => ({
     useAvailability: (date: string) => ({
         busySlots: [],
         availableHours: ['10:00', '11:00'],

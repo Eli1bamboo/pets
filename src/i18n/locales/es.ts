@@ -70,6 +70,13 @@ export const es = {
         cancelBack: 'Volver atrás',
         cancelErrorTitle: 'Error',
         cancelErrorFallback: 'No se pudo cancelar el turno.',
+        welcome: 'Hola',
+        tabs: {
+            upcoming: 'Próximos Turnos',
+            history: 'Historial',
+        },
+        emptyHistoryTitle: 'No tienes historial',
+        emptyHistorySubtitle: 'Tus turnos pasados aparecerán aquí una vez que los completes.',
     },
     tracking: {
         badge: 'Seguimiento en Vivo',

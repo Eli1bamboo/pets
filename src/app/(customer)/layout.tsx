@@ -4,6 +4,7 @@ import { CustomerHeader } from "@/features/customer/components/organisms/Custome
 import { CustomerFooter } from "@/features/customer/components/organisms/CustomerFooter";
 import { CustomerBottomNav } from "@/features/customer/components/organisms/CustomerBottomNav";
 import { CustomerProvider } from "@/providers/CustomerProvider";
+import { Suspense } from "react";
 
 export default function CustomerLayout({
     children,
@@ -14,7 +15,9 @@ export default function CustomerLayout({
         <CustomerProvider>
             <CustomerHeader />
             <main className="min-h-screen theme-customer bg-brand-50 pb-24 md:pb-0">{children}</main>
-            <CustomerBottomNav />
+            <Suspense fallback={null}>
+                <CustomerBottomNav />
+            </Suspense>
             <div className="hidden md:block">
                 <CustomerFooter />
             </div>

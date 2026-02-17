@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import { ServiceFormSidebar } from '@/components/organisms/ServiceFormSidebar';
+import { ServiceFormSidebar } from '@/features/admin/components/organisms/ServiceFormSidebar';
 
 // Mocks
 const mockCloseSidebar = vi.fn();

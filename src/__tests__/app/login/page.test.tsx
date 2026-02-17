@@ -61,7 +61,7 @@ vi.mock('@/i18n/LanguageContext', () => ({
     }),
 }));
 
-vi.mock('@/components/molecules/Modal', () => ({
+vi.mock('@/features/customer/components/molecules/Modal', () => ({
     Modal: ({ open, title }: any) => open ? <div data-testid="modal">{title}</div> : null,
 }));
 

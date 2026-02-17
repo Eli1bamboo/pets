@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { SidebarContainer } from '@/components/organisms/SidebarContainer';
+import { SidebarContainer } from '@/features/admin/components/organisms/SidebarContainer';
 
 // Mocks
 const mockCloseSidebar = vi.fn();

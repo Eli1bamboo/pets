@@ -26,7 +26,7 @@ export function CustomerHeader() {
                         Inicio
                     </Link>
                     {user && (
-                        <Link href="/history" className="text-sm font-bold text-brand-700 hover:text-primary-orange transition-colors">
+                        <Link href="/profile?tab=history" className="text-sm font-bold text-brand-700 hover:text-primary-orange transition-colors">
                             Mi Historial
                         </Link>
                     )}
@@ -102,7 +102,7 @@ export function CustomerHeader() {
                         {user ? (
                             <>
                                 <Link
-                                    href="/history"
+                                    href="/profile?tab=history"
                                     className="block rounded-xl px-4 py-3 text-base font-bold text-brand-900 hover:bg-primary-orange/10 hover:text-primary-orange transition-all"
                                     onClick={() => setIsOpen(false)}
                                 >

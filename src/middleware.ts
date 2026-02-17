@@ -38,7 +38,7 @@ export async function middleware(request: NextRequest) {
     const isLoginPage = request.nextUrl.pathname === '/login'
     const isAdminLoginPage = request.nextUrl.pathname === '/admin/login'
     const isAdminRoute = request.nextUrl.pathname.startsWith('/admin')
-    const isProtectedCustomerRoute = ['/profile', '/booking', '/history', '/tracking'].some(path => request.nextUrl.pathname.startsWith(path))
+    const isProtectedCustomerRoute = ['/profile', '/booking', '/tracking'].some(path => request.nextUrl.pathname.startsWith(path))
 
     if (!user) {
         if (isAdminRoute && !isAdminLoginPage) {

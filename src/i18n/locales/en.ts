@@ -72,6 +72,13 @@ export const en: Translations = {
         cancelBack: 'Go back',
         cancelErrorTitle: 'Error',
         cancelErrorFallback: 'Could not cancel the appointment.',
+        welcome: 'Hello',
+        tabs: {
+            upcoming: 'Upcoming',
+            history: 'History',
+        },
+        emptyHistoryTitle: 'No history',
+        emptyHistorySubtitle: 'Your past appointments will appear here once completed.',
     },
     tracking: {
         badge: 'Live Tracking',
