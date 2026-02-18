@@ -204,7 +204,7 @@ export function AppointmentTabs({ appointments, onCancel }: AppointmentTabsProps
                                         appointment={apt}
                                         onCancel={onCancel}
                                         onTrack={activeTab === 'current' ? handleTrack : undefined}
-                                        disableCancel={activeTab === 'current'}
+                                        disableCancel={activeTab === 'current' || activeTab === 'history'}
                                     />
                                 ))}
                             </div>
