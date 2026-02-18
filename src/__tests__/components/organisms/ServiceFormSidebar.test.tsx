@@ -22,9 +22,10 @@ const servicesObj = {
 
 vi.mock('@/providers/AdminUIProvider', () => ({
     useAdminUI: () => adminUIObj,
+    useRefresh: () => ({ refreshTrigger: 0, triggerRefresh: mockTriggerRefresh }),
 }));
 
-vi.mock('@/hooks/useServices', () => ({
+vi.mock('@/features/admin/hooks/useServices', () => ({
     useServices: () => servicesObj,
 }));
 

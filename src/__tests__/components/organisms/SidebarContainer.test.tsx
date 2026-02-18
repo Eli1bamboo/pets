@@ -7,22 +7,26 @@ const mockCloseSidebar = vi.fn();
 
 vi.mock('@/providers/AdminUIProvider', () => ({
     useAdminUI: vi.fn(),
+    useRefresh: () => ({ refreshTrigger: 0, triggerRefresh: vi.fn() }),
 }));
 
 vi.mock('@/components/molecules/SidebarSheet', () => ({
     SidebarSheet: ({ children, open }: any) => open ? <div data-testid="sidebar-sheet">{children}</div> : null,
     SheetContent: ({ children }: any) => <div data-testid="sidebar-content">{children}</div>,
+    SheetHeader: ({ children }: any) => <div data-testid="sheet-header">{children}</div>,
+    SheetTitle: ({ children }: any) => <div data-testid="sheet-title">{children}</div>,
+    SheetDescription: ({ children }: any) => <div data-testid="sheet-description">{children}</div>,
 }));
 
-vi.mock('@/components/organisms/AppointmentDetailsSidebar', () => ({
+vi.mock('@/features/admin/components/organisms/AppointmentDetailsSidebar', () => ({
     AppointmentDetailsSidebar: () => <div data-testid="appointment-details-view">Appointment Details</div>,
 }));
 
-vi.mock('@/components/organisms/SettingsSidebar', () => ({
+vi.mock('@/features/admin/components/organisms/SettingsSidebar', () => ({
     SettingsSidebar: () => <div data-testid="settings-view">Settings</div>,
 }));
 
-vi.mock('@/components/organisms/ServiceFormSidebar', () => ({
+vi.mock('@/features/admin/components/organisms/ServiceFormSidebar', () => ({
     ServiceFormSidebar: () => <div data-testid="service-form-view">Service Form</div>,
 }));
 

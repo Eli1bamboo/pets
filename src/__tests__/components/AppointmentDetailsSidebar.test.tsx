@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { AppointmentDetailsSidebar } from '../../components/organisms/AppointmentDetailsSidebar';
+import { AppointmentDetailsSidebar } from '@/features/admin/components/organisms/AppointmentDetailsSidebar';
 import { Appointment } from '@/types';
 
 // Mocks
@@ -13,11 +13,12 @@ vi.mock('@/providers/AdminUIProvider', () => ({
         closeSidebar: mockCloseSidebar,
     }),
     useRefresh: () => ({
+        refreshTrigger: 0,
         triggerRefresh: mockTriggerRefresh,
     }),
 }));
 
-vi.mock('@/hooks/useAppointments', () => ({
+vi.mock('@/features/admin/hooks/useAppointments', () => ({
     useAppointments: () => ({
         updateStatus: mockUpdateStatus,
     }),
@@ -37,14 +38,14 @@ const mockAppointmentData: Appointment = {
     },
 };
 
-vi.mock('@/hooks/useAppointment', () => ({
+vi.mock('@/features/admin/hooks/useAppointment', () => ({
     useAppointment: () => ({
         appointment: mockAppointmentData,
         loading: false,
     }),
 }));
 
-vi.mock('@/hooks/useAppointmentLogs', () => ({
+vi.mock('@/features/admin/hooks/useAppointmentLogs', () => ({
     useAppointmentLogs: () => ({
         logs: [
             { id: '1', appointment_id: 123, description: 'Log 1', created_at: '2024-02-14T10:05:00Z' },
@@ -60,7 +61,7 @@ vi.mock('@/components/molecules/SidebarSheet', () => ({
     SheetDescription: ({ children }: any) => <p>{children}</p>,
 }));
 
-vi.mock('@/components/molecules/Modal', () => ({
+vi.mock('@/features/admin/components/molecules/Modal', () => ({
     Modal: ({ open, onConfirm, title }: any) => open ? (
         <div data-testid="modal">
             <h2>{title}</h2>

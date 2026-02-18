@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
-import { useAppointments } from '@/hooks/useAppointments';
+import { useAppointments } from '@/features/admin/hooks/useAppointments';
 
 // Mock refresh
 vi.mock('@/providers/AdminUIProvider', () => ({
@@ -59,31 +59,16 @@ describe('useAppointments', () => {
         return { mockSelect, mockChain };
     };
 
-    it('fetches appointments for admin', async () => {
+    it('fetches appointments', async () => {
         const { mockSelect, mockChain } = setupFetchMock();
 
-        const { result } = renderHook(() => useAppointments({ isAdmin: true }));
+        const { result } = renderHook(() => useAppointments({}));
 
         await waitFor(() => expect(result.current.loading).toBe(false));
 
         expect(result.current.appointments).toEqual(mockAppointments);
-        // Should not query user
-        expect(mockGetUser).not.toHaveBeenCalled();
         // Should order by date asc
         expect(mockChain.order).toHaveBeenCalledWith('date', { ascending: true });
-    });
-
-    it('fetches appointments for customer', async () => {
-        const { mockSelect, mockChain } = setupFetchMock();
-        mockGetUser.mockResolvedValue({ data: { user: { id: 'user-123' } } });
-
-        const { result } = renderHook(() => useAppointments({ isAdmin: false }));
-
-        await waitFor(() => expect(result.current.loading).toBe(false));
-
-        expect(result.current.appointments).toEqual(mockAppointments);
-        expect(mockGetUser).toHaveBeenCalled();
-        expect(mockChain.eq).toHaveBeenCalledWith('user_id', 'user-123');
     });
 
     it('applies filters', async () => {
@@ -91,7 +76,6 @@ describe('useAppointments', () => {
         const date = new Date('2023-10-27');
 
         const { result } = renderHook(() => useAppointments({
-            isAdmin: true,
             startDate: date,
             searchQuery: 'Rex',
             statuses: ['pending']
@@ -128,7 +112,7 @@ describe('useAppointments', () => {
             insert: mockInsert // For logging
         });
 
-        const { result } = renderHook(() => useAppointments({ isAdmin: true }));
+        const { result } = renderHook(() => useAppointments({}));
         await waitFor(() => expect(result.current.loading).toBe(false));
 
         let response: any;
@@ -148,7 +132,7 @@ describe('useAppointments', () => {
         // Verify logging
         expect(mockInsert).toHaveBeenCalledWith([expect.objectContaining({
             appointment_id: 1,
-            description: 'Estado cambiado a completed'
+            description: 'Status changed to completed'
         })]);
     });
 
@@ -170,7 +154,7 @@ describe('useAppointments', () => {
             return { insert: vi.fn().mockResolvedValue({ error: null }) };
         });
 
-        const { result } = renderHook(() => useAppointments({ isAdmin: true }));
+        const { result } = renderHook(() => useAppointments({}));
         await waitFor(() => expect(result.current.loading).toBe(false));
 
         let response: any;
@@ -193,7 +177,7 @@ describe('useAppointments', () => {
         });
 
         setupFetchMock();
-        const { result } = renderHook(() => useAppointments({ isAdmin: true }));
+        const { result } = renderHook(() => useAppointments({}));
         await waitFor(() => expect(result.current.loading).toBe(false));
 
         const updatedAppointment = { ...mockAppointments[0], status: 'washing' };

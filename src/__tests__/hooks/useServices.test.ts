@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
-import { useServices } from '@/hooks/useServices';
+import { useServices } from '@/features/admin/hooks/useServices';
 
 // Mock Supabase
 const mockFrom = vi.fn();
@@ -16,12 +16,18 @@ const mockServices = [
     { id: 2, name: 'Service 2', is_active: false, sort_order: 2 },
 ];
 
+// Mock AdminUIProvider
+vi.mock('@/providers/AdminUIProvider', () => ({
+    useAdminUI: vi.fn(),
+    useRefresh: () => ({ refreshTrigger: 0, triggerRefresh: vi.fn() }),
+}));
+
 describe('useServices', () => {
     beforeEach(() => {
         vi.clearAllMocks();
     });
 
-    it('fetches active services by default', async () => {
+    it('fetches active services when includeInactive is false', async () => {
         const mockSelect = vi.fn();
         mockFrom.mockReturnValue({ select: mockSelect });
 
@@ -30,7 +36,7 @@ describe('useServices', () => {
         const mockOrder = vi.fn().mockReturnValue({ eq: mockEq });
         mockSelect.mockReturnValue({ order: mockOrder });
 
-        const { result } = renderHook(() => useServices());
+        const { result } = renderHook(() => useServices({ includeInactive: false }));
 
         await waitFor(() => expect(result.current.loading).toBe(false));
 
@@ -64,11 +70,11 @@ describe('useServices', () => {
         });
         mockSelect.mockReturnValue({ order: mockOrder });
 
-        const { result } = renderHook(() => useServices());
+        const { result } = renderHook(() => useServices({ includeInactive: false }));
 
         await waitFor(() => expect(result.current.loading).toBe(false));
 
-        expect(result.current.error).toBe("Error loading services");
+        expect(result.current.error).toBe("Error al cargar servicios");
         expect(result.current.services).toEqual([]);
     });
 
@@ -134,23 +140,23 @@ describe('useServices', () => {
         expect(mockSelect).toHaveBeenCalledTimes(2); // Initial + Refetch
     });
 
-    it('soft deletes a service', async () => {
+    it('deletes a service', async () => {
         // Setup initial fetch
         const mockSelect = vi.fn();
         const mockOrder = vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue({ data: [], error: null }) });
         mockSelect.mockReturnValue({ order: mockOrder });
-        mockFrom.mockReturnValue({ select: mockSelect });
+
+        // Mock delete
+        const mockEqDelete = vi.fn().mockResolvedValue({ error: null });
+        const mockDelete = vi.fn().mockReturnValue({ eq: mockEqDelete });
+
+        mockFrom.mockReturnValue({
+            select: mockSelect,
+            delete: mockDelete
+        });
 
         const { result } = renderHook(() => useServices());
         await waitFor(() => expect(result.current.loading).toBe(false));
-
-        // Mock update (soft delete)
-        const mockEq = vi.fn().mockResolvedValue({ error: null });
-        const mockUpdate = vi.fn().mockReturnValue({ eq: mockEq });
-        mockFrom.mockReturnValue({
-            select: mockSelect,
-            update: mockUpdate
-        });
 
         let success;
         await act(async () => {
@@ -159,8 +165,8 @@ describe('useServices', () => {
         });
 
         expect(success).toBe(true);
-        expect(mockUpdate).toHaveBeenCalledWith({ is_active: false }); // Soft delete check
-        expect(mockEq).toHaveBeenCalledWith('id', 1);
+        expect(mockDelete).toHaveBeenCalled();
+        expect(mockEqDelete).toHaveBeenCalledWith('id', 1);
         expect(mockSelect).toHaveBeenCalledTimes(2);
     });
 
@@ -213,7 +219,7 @@ describe('useServices', () => {
 
         mockFrom.mockReturnValue({
             select: mockSelect,
-            update: vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue({ error: { message: 'Delete failed' } }) })
+            delete: vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue({ error: { message: 'Delete failed' } }) })
         });
 
         let response: any;

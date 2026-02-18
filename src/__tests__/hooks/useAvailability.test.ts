@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
-import { useAvailability } from '../../hooks/useAvailability';
+import { useAvailability } from '@/features/customer/hooks/useAvailability';
 
 // Mock specific chains - Defined externally to allowing mocking return values
 const mockBusinessHoursChain: any = {

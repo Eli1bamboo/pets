@@ -19,54 +19,52 @@ export function CustomerProvider({ children }: { children: React.ReactNode }) {
     const [profile, setProfile] = useState<Profile | null>(null);
     const [loading, setLoading] = useState(true);
     const [supabase] = useState(() => createClient());
+
     useEffect(() => {
+        let mounted = true;
 
-        const syncCustomer = async () => {
+        const fetchProfile = async (userId: string, retries = 3, delay = 1000) => {
             try {
-                const { data: { session } } = await supabase.auth.getSession();
-                const currentUser = session?.user ?? null;
-                setUser(currentUser);
+                // Timeout increased to 10s
+                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Profile fetch timeout")), 10000));
+                const fetchPromise = supabase
+                    .from("profiles")
+                    .select("*")
+                    .eq("id", userId)
+                    .single();
 
-                if (currentUser) {
-                    const { data } = await supabase
-                        .from("profiles")
-                        .select("*")
-                        .eq("id", currentUser.id)
-                        .single();
-                    setProfile(data);
+                const { data, error } = await Promise.race([fetchPromise, timeoutPromise]) as any;
+
+                if (error) throw error;
+                if (mounted) setProfile(data);
+
+            } catch (error) {
+                console.error(`[CustomerProvider] Profile fetch attempt failed. Retries left: ${retries}`, error);
+                if (retries > 0 && mounted) {
+                    setTimeout(() => fetchProfile(userId, retries - 1, delay * 2), delay);
                 }
-            } catch (err: unknown) {
-                const isAbort = err instanceof Error && (err.name === 'AbortError' || err.message?.includes('signal is aborted'));
-                if (!isAbort) {
-                    console.error("[CustomerProvider] Sync error:", err);
-                }
-            } finally {
-                setLoading(false);
             }
         };
 
-        syncCustomer();
-
         const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-            if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-                const newUser = session?.user ?? null;
-                setUser(newUser);
-                if (newUser) {
-                    const { data } = await supabase
-                        .from("profiles")
-                        .select("*")
-                        .eq("id", newUser.id)
-                        .single();
-                    setProfile(data);
-                }
+            if (!mounted) return;
+
+            const newUser = session?.user ?? null;
+            setUser(newUser);
+
+            if (newUser) {
+                await fetchProfile(newUser.id);
             } else if (event === 'SIGNED_OUT') {
                 setUser(null);
                 setProfile(null);
             }
-            setLoading(false);
+
+            // Always ensure loading is false
+            if (mounted) setLoading(false);
         });
 
         return () => {
+            mounted = false;
             subscription.unsubscribe();
         };
     }, []);

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
-import { useBooking } from '../../hooks/useBooking';
+import { useBooking } from '@/features/customer/hooks/useBooking';
 import { useRouter } from 'next/navigation';
 
 // Mock Router

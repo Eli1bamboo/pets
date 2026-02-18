@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import { AdminHeader } from '@/components/organisms/AdminHeader';
+import { AdminHeader } from '@/features/admin/components/organisms/AdminHeader';
 
 // Mocks
 const mockSignOut = vi.fn();

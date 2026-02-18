@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { Appointment, AppointmentStatus } from '@/types'
+import { useCustomerContext } from '@/providers/CustomerProvider'
 
 interface UseAppointmentsOptions {
     startDate?: Date;
@@ -11,6 +12,7 @@ interface UseAppointmentsOptions {
 }
 
 export function useAppointments({ startDate, endDate, statuses, page = 1, limit = 50 }: UseAppointmentsOptions = {}) {
+    const { user } = useCustomerContext();
     const [appointments, setAppointments] = useState<Appointment[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -21,14 +23,13 @@ export function useAppointments({ startDate, endDate, statuses, page = 1, limit 
     const endDateKey = endDate?.toISOString() ?? "";
 
     const fetchAppointments = useCallback(async () => {
+        if (!user) {
+            setLoading(false)
+            return
+        }
+
         setLoading(true);
         try {
-            const { data: { user } } = await supabase.auth.getUser()
-            if (!user) {
-                setLoading(false)
-                return
-            }
-
             let query = supabase
                 .from("appointments")
                 .select("*, profiles(full_name)")
@@ -65,7 +66,7 @@ export function useAppointments({ startDate, endDate, statuses, page = 1, limit 
         } finally {
             setLoading(false)
         }
-    }, [supabase, startDateKey, endDateKey, statusesKey, page, limit])
+    }, [supabase, user, startDateKey, endDateKey, statusesKey, page, limit])
 
     useEffect(() => {
         fetchAppointments()
