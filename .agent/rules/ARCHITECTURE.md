@@ -3,10 +3,11 @@
 ## 🏗 Architecture Patterns
 
 ### 1. Feature Isolation (Critical)
-Code is strictly separated into two domains to prevent logic leaks and regression:
-- **`src/features/customer/`**: Public-facing app validation, booking flow, brand UI.
-- **`src/features/admin/`**: Internal dashboard, CRUD operations, slate UI.
-**Rule**: Customer code MUST NOT import from Admin, and vice-versa. Shared logic (types, utilities) goes in `src/types` or `src/utils`.
+Code is strictly separated into domains to prevent logic leaks and regression:
+- **`src/features/customer/`**: Public-facing app: booking flow, profile, shop browsing, brand UI.
+- **`src/features/admin/`**: Internal dashboard: CRUD operations, inventory management, order fulfillment, slate UI.
+- **`src/features/shop/`**: Shared e-commerce logic: product hooks, cart hooks, reusable product components.
+**Rule**: Customer code MUST NOT import from Admin, and vice-versa. Shared logic (types, utilities) goes in `src/types`, `src/utils`, or `src/features/shop/`.
 
 ### 2. Atomic Design (Per-Feature)
 Components are organized **within** their respective feature directories:

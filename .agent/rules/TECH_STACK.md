@@ -10,6 +10,8 @@
 - **Internationalization**: Custom lightweight i18n (`src/i18n`).
 - **Testing**: Vitest + React Testing Library.
 - **Icons**: `lucide-react` (Equivalent to Feather Icons)
+- **Payments**: MercadoPago Checkout Pro (`mercadopago` SDK).
+- **File Storage**: Supabase Storage (product images).
 
 ## 🌍 Internationalization (i18n)
 - **Status**: Implemented with custom Context + LocalStorage.

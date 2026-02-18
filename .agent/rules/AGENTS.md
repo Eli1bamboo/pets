@@ -17,7 +17,10 @@ This project uses modular documentation to keep context focused. Please refer to
 - **[Workflow](./WORKFLOW.md)**
   *Git conventions, build commands, verification checklist.*
 
+- **[Marketplace](../../MARKETPLACE.md)**
+  *E-commerce expansion plan: products, cart, MercadoPago, inventory, bundles.*
+
 ---
 
-> **Context**: Dog Grooming Appointment System ("Peluquería Canina").
-> **Goal**: Manage appointments, customers, and business settings.
+> **Context**: Dog Grooming & Pet Products Platform ("Peluquería Canina").
+> **Goal**: Manage appointments, sell pet products, and configure business settings.
