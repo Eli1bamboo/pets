@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { StatusTracker } from "@/features/customer/components/organisms/StatusTracker";
+import { GroomingStatusIllustration } from "@/features/customer/components/atoms/GroomingStatusIllustration";
 import { Search, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/features/customer/components/atoms/Button";
@@ -99,6 +100,9 @@ export default function TrackingPage() {
                                                     appointment.status === 'ready' ? 'Listo' : 'Finalizado'}
                                     </span>
                                 </div>
+
+                                <GroomingStatusIllustration status={appointment.status} />
+
                                 <StatusTracker status={appointment.status} />
                             </>
                         ) : null}
