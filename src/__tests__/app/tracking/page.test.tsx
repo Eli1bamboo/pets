@@ -153,7 +153,7 @@ describe('TrackingPage', () => {
 
         expect(screen.getByText('#123')).toBeInTheDocument();
         expect(screen.getByText('Rex')).toBeInTheDocument();
-        expect(screen.getByText('Baño')).toBeInTheDocument();
+        expect(screen.getByText(/Baño/)).toBeInTheDocument();
         expect(screen.getByTestId('status-tracker')).toHaveTextContent('Status: washing');
     });
 });

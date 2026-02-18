@@ -3,7 +3,14 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { useAvailability } from '@/features/customer/hooks/useAvailability';
 
 // Mock specific chains - Defined externally to allowing mocking return values
-const mockBusinessHoursChain: any = {
+// Mock specific chains
+interface BusinessHoursChain {
+    select: ReturnType<typeof vi.fn>;
+    eq: ReturnType<typeof vi.fn>;
+    single: ReturnType<typeof vi.fn>;
+}
+
+const mockBusinessHoursChain: BusinessHoursChain = {
     select: vi.fn(),
     eq: vi.fn(),
     single: vi.fn(),
@@ -11,7 +18,14 @@ const mockBusinessHoursChain: any = {
 mockBusinessHoursChain.select.mockReturnValue(mockBusinessHoursChain);
 mockBusinessHoursChain.eq.mockReturnValue(mockBusinessHoursChain);
 
-const mockAppointmentsChain: any = {
+interface AppointmentsChain {
+    select: ReturnType<typeof vi.fn>;
+    gte: ReturnType<typeof vi.fn>;
+    lte: ReturnType<typeof vi.fn>;
+    neq: ReturnType<typeof vi.fn>;
+}
+
+const mockAppointmentsChain: AppointmentsChain = {
     select: vi.fn(),
     gte: vi.fn(),
     lte: vi.fn(),

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { SidebarContainer } from '@/features/admin/components/organisms/SidebarContainer';
+import { useAdminUI, AdminUIContextType } from '@/providers/AdminUIProvider';
 
 // Mocks
 const mockCloseSidebar = vi.fn();
@@ -11,11 +12,11 @@ vi.mock('@/providers/AdminUIProvider', () => ({
 }));
 
 vi.mock('@/components/molecules/SidebarSheet', () => ({
-    SidebarSheet: ({ children, open }: any) => open ? <div data-testid="sidebar-sheet">{children}</div> : null,
-    SheetContent: ({ children }: any) => <div data-testid="sidebar-content">{children}</div>,
-    SheetHeader: ({ children }: any) => <div data-testid="sheet-header">{children}</div>,
-    SheetTitle: ({ children }: any) => <div data-testid="sheet-title">{children}</div>,
-    SheetDescription: ({ children }: any) => <div data-testid="sheet-description">{children}</div>,
+    SidebarSheet: ({ children, open }: { children: React.ReactNode, open: boolean }) => open ? <div data-testid="sidebar-sheet">{children}</div> : null,
+    SheetContent: ({ children }: { children: React.ReactNode }) => <div data-testid="sidebar-content">{children}</div>,
+    SheetHeader: ({ children }: { children: React.ReactNode }) => <div data-testid="sheet-header">{children}</div>,
+    SheetTitle: ({ children }: { children: React.ReactNode }) => <div data-testid="sheet-title">{children}</div>,
+    SheetDescription: ({ children }: { children: React.ReactNode }) => <div data-testid="sheet-description">{children}</div>,
 }));
 
 vi.mock('@/features/admin/components/organisms/AppointmentDetailsSidebar', () => ({
@@ -30,15 +31,13 @@ vi.mock('@/features/admin/components/organisms/ServiceFormSidebar', () => ({
     ServiceFormSidebar: () => <div data-testid="service-form-view">Service Form</div>,
 }));
 
-import { useAdminUI } from '@/providers/AdminUIProvider';
-
 describe('SidebarContainer', () => {
     it('renders nothing when closed', () => {
         vi.mocked(useAdminUI).mockReturnValue({
             sidebar: { isOpen: false, view: null },
             closeSidebar: mockCloseSidebar,
             triggerRefresh: vi.fn(),
-        } as any);
+        } as unknown as AdminUIContextType);
 
         render(<SidebarContainer />);
         expect(screen.queryByTestId('sidebar-sheet')).toBeNull();
@@ -46,10 +45,10 @@ describe('SidebarContainer', () => {
 
     it('renders appointment details view', () => {
         vi.mocked(useAdminUI).mockReturnValue({
-            sidebar: { isOpen: true, view: 'appointment_details', data: { appointment: { id: 1 } } },
+            sidebar: { isOpen: true, view: 'appointment_details', data: { appointment: { id: 1 } as any } },
             closeSidebar: mockCloseSidebar,
             triggerRefresh: vi.fn(),
-        } as any);
+        } as unknown as AdminUIContextType);
 
         render(<SidebarContainer />);
         expect(screen.getByTestId('appointment-details-view')).toBeDefined();
@@ -60,7 +59,7 @@ describe('SidebarContainer', () => {
             sidebar: { isOpen: true, view: 'settings' },
             closeSidebar: mockCloseSidebar,
             triggerRefresh: vi.fn(),
-        } as any);
+        } as unknown as AdminUIContextType);
 
         render(<SidebarContainer />);
         expect(screen.getByTestId('settings-view')).toBeDefined();
@@ -68,10 +67,10 @@ describe('SidebarContainer', () => {
 
     it('renders service form view', () => {
         vi.mocked(useAdminUI).mockReturnValue({
-            sidebar: { isOpen: true, view: 'service_form', data: { service: { id: 1 } } },
+            sidebar: { isOpen: true, view: 'service_form', data: { service: { id: 1 } as any } },
             closeSidebar: mockCloseSidebar,
             triggerRefresh: vi.fn(),
-        } as any);
+        } as unknown as AdminUIContextType);
 
         render(<SidebarContainer />);
         expect(screen.getByTestId('service-form-view')).toBeDefined();

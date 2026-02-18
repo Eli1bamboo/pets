@@ -1,6 +1,8 @@
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { useAppointments } from '@/features/admin/hooks/useAppointments';
+import { PostgrestError } from '@supabase/supabase-js';
 
 // Mock refresh
 vi.mock('@/providers/AdminUIProvider', () => ({
@@ -26,6 +28,18 @@ const mockAppointments = [
     { id: 2, date: '2023-10-27T11:00:00Z', status: 'completed', pet_name: 'Fido' },
 ];
 
+// Types for Mock Chain
+interface MockPostgrestBuilder {
+    order: ReturnType<typeof vi.fn>;
+    eq: ReturnType<typeof vi.fn>;
+    gte: ReturnType<typeof vi.fn>;
+    lte: ReturnType<typeof vi.fn>;
+    in: ReturnType<typeof vi.fn>;
+    ilike: ReturnType<typeof vi.fn>;
+    range: ReturnType<typeof vi.fn>;
+    then: (onfulfilled?: ((value: { data: typeof mockAppointments | null; error: PostgrestError | null; count: number | null }) => any) | null) => Promise<any>;
+}
+
 describe('useAppointments', () => {
     beforeEach(() => {
         vi.clearAllMocks();
@@ -37,12 +51,12 @@ describe('useAppointments', () => {
         });
     });
 
-    const setupFetchMock = (data = mockAppointments, error = null) => {
+    const setupFetchMock = (data = mockAppointments, error: PostgrestError | null = null) => {
         const mockSelect = vi.fn();
         mockFrom.mockReturnValue({ select: mockSelect, update: vi.fn(), insert: vi.fn() });
 
         // Mock chain
-        const mockChain = {
+        const mockChain: MockPostgrestBuilder = {
             order: vi.fn().mockReturnThis(),
             eq: vi.fn().mockReturnThis(),
             gte: vi.fn().mockReturnThis(),
@@ -50,7 +64,7 @@ describe('useAppointments', () => {
             in: vi.fn().mockReturnThis(),
             ilike: vi.fn().mockReturnThis(),
             range: vi.fn().mockReturnThis(),
-            then: (cb: any) => Promise.resolve({ data, error, count: data?.length ?? 0 }).then(cb),
+            then: (cb) => Promise.resolve({ data, error, count: data?.length ?? 0 }).then(cb as any),
         };
 
         mockSelect.mockReturnValue(mockChain);
@@ -60,7 +74,7 @@ describe('useAppointments', () => {
     };
 
     it('fetches appointments', async () => {
-        const { mockSelect, mockChain } = setupFetchMock();
+        const { mockChain } = setupFetchMock();
 
         const { result } = renderHook(() => useAppointments({}));
 
@@ -91,10 +105,15 @@ describe('useAppointments', () => {
     it('updates status and logs it', async () => {
         // Setup fetch
         const mockSelect = vi.fn();
-        const mockChain = {
+        const mockChain: MockPostgrestBuilder = {
             order: vi.fn().mockReturnThis(),
+            eq: vi.fn().mockReturnThis(),
+            gte: vi.fn().mockReturnThis(),
+            lte: vi.fn().mockReturnThis(),
+            in: vi.fn().mockReturnThis(),
+            ilike: vi.fn().mockReturnThis(),
             range: vi.fn().mockReturnThis(),
-            then: (cb: any) => Promise.resolve({ data: mockAppointments, error: null, count: 2 }).then(cb),
+            then: (cb) => Promise.resolve({ data: mockAppointments, error: null, count: 2 }).then(cb as any),
         };
         mockSelect.mockReturnValue(mockChain);
 
@@ -115,12 +134,12 @@ describe('useAppointments', () => {
         const { result } = renderHook(() => useAppointments({}));
         await waitFor(() => expect(result.current.loading).toBe(false));
 
-        let response: any;
+        let response: { success: boolean; error?: any };
         await act(async () => {
             response = await result.current.updateStatus(1, 'completed');
         });
 
-        expect(response.success).toBe(true);
+        expect(response!.success).toBe(true);
         // Verify update
         expect(mockUpdate).toHaveBeenCalledWith({ status: 'completed' });
         expect(mockEq).toHaveBeenCalledWith('id', 1);
@@ -157,17 +176,17 @@ describe('useAppointments', () => {
         const { result } = renderHook(() => useAppointments({}));
         await waitFor(() => expect(result.current.loading).toBe(false));
 
-        let response: any;
+        let response: { success: boolean; error?: any };
         await act(async () => {
             response = await result.current.updateStatus(1, 'completed');
         });
 
-        expect(response.success).toBe(false);
-        expect(response.error).toBeDefined();
+        expect(response!.success).toBe(false);
+        expect(response!.error).toBeDefined();
     });
 
     it('handles real-time updates', async () => {
-        let realtimeCallback: any;
+        let realtimeCallback: ((payload: any) => void) | undefined;
         mockChannel.mockReturnValue({
             on: vi.fn().mockImplementation((event, filter, callback) => {
                 realtimeCallback = callback;
@@ -183,10 +202,13 @@ describe('useAppointments', () => {
         const updatedAppointment = { ...mockAppointments[0], status: 'washing' };
 
         await act(async () => {
-            realtimeCallback({ new: updatedAppointment });
+            if (realtimeCallback) {
+                realtimeCallback({ new: updatedAppointment });
+            }
         });
 
         const app = result.current.appointments.find(a => a.id === 1);
         expect(app?.status).toBe('washing');
     });
 });
+

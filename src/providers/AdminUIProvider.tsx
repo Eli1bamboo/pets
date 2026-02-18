@@ -3,18 +3,18 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Appointment, Service } from "@/types";
 
-interface SidebarData {
+export interface SidebarData {
     appointment?: Appointment;
     service?: Service;
 }
 
-interface SidebarState {
+export interface SidebarState {
     view: "settings" | "appointment_details" | "service_form" | null;
     data?: SidebarData | null;
     isOpen: boolean;
 }
 
-interface AdminUIContextType {
+export interface AdminUIContextType {
     sidebar: SidebarState;
     openSidebar: (view: SidebarState["view"], data?: SidebarData | null) => void;
     closeSidebar: () => void;

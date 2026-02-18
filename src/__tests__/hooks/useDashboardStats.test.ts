@@ -35,35 +35,12 @@ describe('useDashboardStats', () => {
         // 3. Pending Count
         // 4. Next Appointment
 
-        const createMockChain = (returnData: any) => {
-            const chain = {
-                select: vi.fn().mockReturnThis(),
-                eq: vi.fn().mockReturnThis(),
-                gte: vi.fn().mockReturnThis(),
-                in: vi.fn().mockReturnThis(),
-                order: vi.fn().mockReturnThis(),
-                limit: vi.fn().mockReturnThis(),
-                single: vi.fn().mockResolvedValue(returnData),
-                then: (callback: any) => Promise.resolve(returnData).then(callback),
-            };
-            // For calls that don't end in single() but are awaited directly as promises
-            // We can make the chain awaitable by adding a then method or just returning the promise from the last method called.
-            // However, `await supabase...` works if the object is thenable.
-
-            return chain;
-        };
-
-        // This is getting complex to mock positionally. 
-        // Let's implement a more robust mock based on the .from(table) call, 
-        // but since they all call 'appointments', we need to check the query parameters or just mock simplified return values in order.
-
         // Simpler approach: Mock `from` to return a mock object that can handle all chains
         // and using `mockImplementationOnce` on the final execution methods if possible.
         // But the hook awaits the chain. checking the hook code:
         // await supabase.from(...).select(...).eq(...)...
 
-        // Let's try mocking `from` to return a chain builder where `from` is called 4 times.
-
+        // Define specific return types
         const mockSelect = vi.fn();
         mockFrom.mockReturnValue({ select: mockSelect });
 
@@ -207,13 +184,9 @@ describe('useDashboardStats', () => {
                         })
                     })
                 }),
-                then: (cb: any) => Promise.resolve({ count: 2, error: null }).then(cb) // for simple .in() await
+                then: (cb: (value: any) => Promise<any>) => Promise.resolve({ count: 2, error: null }).then(cb) // for simple .in() await
             })
         });
-
-        // We need to be careful with the mock return values adhering to the exact call order or structure.
-        // Simpler strategy for refetch: just ensure the 4th call structure exists for all calls to avoid crash.
-        // The test checks if refetch runs without error.
 
         const setupSafeMock = () => ({
             eq: vi.fn().mockReturnThis(),
@@ -222,7 +195,7 @@ describe('useDashboardStats', () => {
             order: vi.fn().mockReturnThis(),
             limit: vi.fn().mockReturnThis(),
             single: vi.fn().mockResolvedValue({ data: null, error: null }),
-            then: (cb: any) => Promise.resolve({ count: 0, data: [], error: null }).then(cb)
+            then: (cb: (value: any) => Promise<any>) => Promise.resolve({ count: 0, data: [], error: null }).then(cb)
         });
 
         mockSelect.mockReturnValue(setupSafeMock());

@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useBooking } from '@/features/customer/hooks/useBooking';
 import { useRouter } from 'next/navigation';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 // Mock Router
 vi.mock('next/navigation', () => ({
@@ -23,11 +24,11 @@ vi.mock('@/utils/supabase/client', () => ({
 }));
 
 describe('useBooking', () => {
-    const mockRouter = { push: vi.fn() };
+    const mockRouter = { push: vi.fn(), back: vi.fn(), forward: vi.fn(), refresh: vi.fn(), replace: vi.fn(), prefetch: vi.fn() } as unknown as AppRouterInstance;
 
     beforeEach(() => {
         vi.clearAllMocks();
-        (useRouter as any).mockReturnValue(mockRouter);
+        vi.mocked(useRouter).mockReturnValue(mockRouter);
     });
 
     it('initializes with default state', () => {

@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';
 import { useServices } from '@/features/admin/hooks/useServices';
+import { Service } from '@/types';
+import { PostgrestError } from '@supabase/supabase-js';
 
 // Mock Supabase
 const mockFrom = vi.fn();
@@ -11,9 +13,9 @@ vi.mock('@/utils/supabase/client', () => ({
     }),
 }));
 
-const mockServices = [
-    { id: 1, name: 'Service 1', is_active: true, sort_order: 1 },
-    { id: 2, name: 'Service 2', is_active: false, sort_order: 2 },
+const mockServices: Service[] = [
+    { id: 1, name: 'Service 1', name_en: null, is_active: true, sort_order: 1, price: 50, description: 'Desc 1', description_en: null, features: [], features_en: [], icon: 'icon1', created_at: '2023-01-01' },
+    { id: 2, name: 'Service 2', name_en: null, is_active: false, sort_order: 2, price: 100, description: 'Desc 2', description_en: null, features: [], features_en: [], icon: 'icon2', created_at: '2023-01-01' },
 ];
 
 // Mock AdminUIProvider
@@ -21,6 +23,16 @@ vi.mock('@/providers/AdminUIProvider', () => ({
     useAdminUI: vi.fn(),
     useRefresh: () => ({ refreshTrigger: 0, triggerRefresh: vi.fn() }),
 }));
+
+// Typed Mock Builder
+interface MockPostgrestBuilder {
+    select: ReturnType<typeof vi.fn>;
+    order: ReturnType<typeof vi.fn>;
+    eq: ReturnType<typeof vi.fn>;
+    insert: ReturnType<typeof vi.fn>;
+    update: ReturnType<typeof vi.fn>;
+    delete: ReturnType<typeof vi.fn>;
+}
 
 describe('useServices', () => {
     beforeEach(() => {
@@ -95,7 +107,10 @@ describe('useServices', () => {
             insert: mockInsert
         });
 
-        const newService = { name: 'New Service', price: 100, is_active: true, sort_order: 3 } as any;
+        const newService: Omit<Service, "id" | "created_at" | "updated_at"> = {
+            name: 'New Service', name_en: null, price: 100, is_active: true, sort_order: 3, description: 'Test',
+            description_en: null, features: [], features_en: [], icon: 'icon-new'
+        };
 
         let success;
         await act(async () => {
@@ -182,12 +197,16 @@ describe('useServices', () => {
             insert: vi.fn().mockResolvedValue({ error: { message: 'Insert failed' } })
         });
 
-        let response: any;
+        let response: { success: boolean; error?: any };
         await act(async () => {
-            response = await result.current.createService({ name: 'New' } as any);
+            const newService: Omit<Service, "id" | "created_at" | "updated_at"> = {
+                name: 'New', name_en: null, price: 0, description: '', description_en: null,
+                features: [], features_en: [], icon: '', is_active: true, sort_order: 0
+            };
+            response = await result.current.createService(newService);
         });
 
-        expect(response.success).toBe(false);
+        expect(response!.success).toBe(false);
     });
 
     it('handles update service failure', async () => {
@@ -202,12 +221,12 @@ describe('useServices', () => {
             update: vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue({ error: { message: 'Update failed' } }) })
         });
 
-        let response: any;
+        let response: { success: boolean; error?: any };
         await act(async () => {
             response = await result.current.updateService(1, { name: 'New' });
         });
 
-        expect(response.success).toBe(false);
+        expect(response!.success).toBe(false);
     });
 
     it('handles delete service failure', async () => {
@@ -222,11 +241,11 @@ describe('useServices', () => {
             delete: vi.fn().mockReturnValue({ eq: vi.fn().mockResolvedValue({ error: { message: 'Delete failed' } }) })
         });
 
-        let response: any;
+        let response: { success: boolean; error?: any };
         await act(async () => {
             response = await result.current.deleteService(1);
         });
 
-        expect(response.success).toBe(false);
+        expect(response!.success).toBe(false);
     });
 });

@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { ServiceFormSidebar } from '@/features/admin/components/organisms/ServiceFormSidebar';
+import { Service } from '@/types';
+import { AdminUIContextType } from '@/providers/AdminUIProvider';
 
 // Mocks
 const mockCloseSidebar = vi.fn();
@@ -9,7 +11,7 @@ const mockCreateService = vi.fn();
 const mockUpdateService = vi.fn();
 const mockDeleteService = vi.fn();
 
-const adminUIObj = {
+const adminUIObj: Partial<AdminUIContextType> = {
     closeSidebar: mockCloseSidebar,
     triggerRefresh: mockTriggerRefresh,
 };
@@ -62,12 +64,12 @@ vi.mock('@/i18n/LanguageContext', () => ({
 
 // Mock SidebarSheet components
 vi.mock('@/components/molecules/SidebarSheet', () => ({
-    SheetHeader: ({ children }: any) => <div>{children}</div>,
-    SheetTitle: ({ children }: any) => <h2>{children}</h2>,
-    SheetDescription: ({ children }: any) => <p>{children}</p>,
+    SheetHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    SheetTitle: ({ children }: { children: React.ReactNode }) => <h2>{children}</h2>,
+    SheetDescription: ({ children }: { children: React.ReactNode }) => <p>{children}</p>,
 }));
 
-const mockService = {
+const mockService: Service = {
     id: 1,
     name: 'Corte',
     name_en: 'Haircut',
@@ -79,6 +81,7 @@ const mockService = {
     icon: 'scissors',
     is_active: true,
     sort_order: 1,
+    created_at: '2023-01-01T00:00:00Z',
 };
 
 describe('ServiceFormSidebar', () => {
@@ -94,7 +97,7 @@ describe('ServiceFormSidebar', () => {
     });
 
     it('renders for editing an existing service', () => {
-        render(<ServiceFormSidebar service={mockService as any} />);
+        render(<ServiceFormSidebar service={mockService} />);
         expect(screen.getByText('Edit Service')).toBeDefined();
         expect(screen.getByDisplayValue('Corte')).toBeDefined();
     });
@@ -112,7 +115,7 @@ describe('ServiceFormSidebar', () => {
     });
 
     it('switches languages', async () => {
-        render(<ServiceFormSidebar service={mockService as any} />);
+        render(<ServiceFormSidebar service={mockService} />);
 
         const enTab = screen.getByText(/English/i);
         await act(async () => {
@@ -194,7 +197,7 @@ describe('ServiceFormSidebar', () => {
 
     it('deletes a service', async () => {
         mockDeleteService.mockResolvedValue({ success: true });
-        render(<ServiceFormSidebar service={mockService as any} />);
+        render(<ServiceFormSidebar service={mockService} />);
 
         const deleteBtn = screen.getByLabelText('Delete Service');
         await act(async () => {
