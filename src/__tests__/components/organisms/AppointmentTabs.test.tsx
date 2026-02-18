@@ -41,12 +41,19 @@ vi.mock('@/i18n/LanguageContext', () => ({
     }),
 }));
 
+vi.mock('@/hooks/useBusinessSettings', () => ({
+    useBusinessSettings: () => ({
+        settings: { cancellation_window_hours: 24 },
+        loading: false,
+    }),
+}));
+
 const mockAppointments: Appointment[] = [
     {
         id: 1,
         pet_name: 'Buddy',
         service: 'Bath',
-        date: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
+        date: new Date(Date.now() + 86400000 + 3600000).toISOString(), // Tomorrow + 1h (25h from now)
         status: 'pending',
         created_at: '',
         user_id: '1',

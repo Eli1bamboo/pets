@@ -1,23 +1,41 @@
-"use client";
-
 import { Appointment } from "@/types";
-import { Calendar, Clock, Scissors, XCircle, CheckCircle2 } from "lucide-react";
+import { Calendar, Clock, Scissors, XCircle, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/features/customer/components/atoms/Button";
 import { getStatusColor } from "@/config/appointments";
 import { useTranslation } from "@/i18n/LanguageContext";
+import { Tooltip } from "@/components/atoms/Tooltip";
 
 interface AppointmentCardProps {
     appointment: Appointment;
     onCancel: (appointment: Appointment) => void;
     onTrack?: (appointment: Appointment) => void;
     disableCancel?: boolean;
+    cancellationWindow?: number; // hours
 }
 
-export function AppointmentCard({ appointment, onCancel, onTrack, disableCancel }: AppointmentCardProps) {
+export function AppointmentCard({ appointment, onCancel, onTrack, disableCancel, cancellationWindow = 24 }: AppointmentCardProps) {
     const { t } = useTranslation();
-    const canCancel = !disableCancel && appointment.status === 'pending';
     const isCompleted = appointment.status === 'completed' || appointment.status === 'cancelled';
     const showTracking = !!onTrack;
+
+    // Cancellation Logic
+    const appointmentDate = new Date(appointment.date);
+    const now = new Date();
+    const hoursValues = (appointmentDate.getTime() - now.getTime()) / (1000 * 60 * 60);
+    const hoursLeft = Math.max(0, hoursValues);
+
+    // Can cancel if:
+    // 1. Not globally disabled (e.g. historical tab)
+    // 2. Status is pending
+    // 3. Time left > cancellation window
+    const isWithinWindow = hoursLeft >= cancellationWindow;
+    const canCancel = !disableCancel && appointment.status === 'pending' && isWithinWindow;
+
+    // Reason for disabling
+    let disableReason = "";
+    if (!isWithinWindow && appointment.status === 'pending') {
+        disableReason = `Solo se puede cancelar con ${cancellationWindow} horas de anticipación.`;
+    }
 
     // Status translation helper
     const getStatusLabel = (status: string) => {
@@ -49,13 +67,13 @@ export function AppointmentCard({ appointment, onCancel, onTrack, disableCancel 
                 <div className="flex items-center gap-2.5 text-brand-700 bg-brand-50/50 p-3 rounded-xl">
                     <Calendar size={18} className="text-brand-400 shrink-0" />
                     <span className="text-sm font-semibold">
-                        {new Date(appointment.date).toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                        {appointmentDate.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                     </span>
                 </div>
                 <div className="flex items-center gap-2.5 text-brand-700 bg-brand-50/50 p-3 rounded-xl">
                     <Clock size={18} className="text-brand-400 shrink-0" />
                     <span className="text-sm font-semibold">
-                        {new Date(appointment.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {appointmentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                 </div>
             </div>
@@ -72,14 +90,34 @@ export function AppointmentCard({ appointment, onCancel, onTrack, disableCancel 
                         </span>
                     </Button>
                 )}
-                {canCancel && (
-                    <button
-                        onClick={() => onCancel(appointment)}
-                        className="w-full flex items-center justify-center gap-2 py-3 text-sm font-bold text-red-500 hover:text-red-700 hover:bg-red-50 rounded-xl transition-colors"
-                    >
-                        <XCircle size={16} />
-                        {t.profile.cancelButton}
-                    </button>
+
+                {appointment.status === 'pending' && !disableCancel && (
+                    <div className="w-full">
+                        {canCancel ? (
+                            <>
+                                <button
+                                    onClick={() => onCancel(appointment)}
+                                    className="w-full flex items-center justify-center gap-2 py-3 text-sm font-bold text-red-500 hover:text-red-700 hover:bg-red-50 rounded-xl transition-colors"
+                                >
+                                    <XCircle size={16} />
+                                    {t.profile.cancelButton}
+                                </button>
+                                <p className="text-xs text-center text-gray-400 mt-1">
+                                    Tenés hasta {Math.max(0, Math.floor(hoursValues - cancellationWindow))}h para cancelar
+                                </p>
+                            </>
+                        ) : (
+                            <Tooltip content={disableReason}>
+                                <button
+                                    disabled
+                                    className="w-full flex items-center justify-center gap-2 py-3 text-sm font-bold text-gray-400 bg-gray-50 rounded-xl cursor-not-allowed opacity-70"
+                                >
+                                    <AlertCircle size={16} />
+                                    No se puede cancelar
+                                </button>
+                            </Tooltip>
+                        )}
+                    </div>
                 )}
             </div>
         </div>

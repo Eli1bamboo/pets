@@ -51,3 +51,9 @@ export interface Service {
     sort_order: number;
     created_at: string;
 }
+
+export interface BusinessSettings {
+    key: string;
+    value: any;
+    updated_at: string;
+}

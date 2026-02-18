@@ -18,6 +18,7 @@ This is a modern and premium application for pet grooming management, designed t
 - **Live Tracking**: Real-time status tracker for pet owners to see their pet's progress (Washing, Drying, Ready, etc.).
 - **Admin Dashboard**: Full management system for appointments, business hours, and shop settings.
 - **Security**: Robust authentication and Row Level Security (RLS) implementation on Supabase.
+- **Cancellation Policy**: Flexible admin-configured cancellation window with automated customer-facing enforcement.
 
 ## �️ Project Structure & Routes
 

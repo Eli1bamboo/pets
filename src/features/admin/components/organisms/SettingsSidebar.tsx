@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from "react";
 import { useBusinessHours } from "@/hooks/useBusinessHours";
-import { Save, Calendar } from "lucide-react";
+import { useBusinessSettings } from "@/hooks/useBusinessSettings";
+import { Save, Calendar, Clock } from "lucide-react";
 import { Button } from "@/features/admin/components/atoms/Button";
 import { BusinessHours } from "@/types";
 import { useAdminUI } from "@/providers/AdminUIProvider";
@@ -24,7 +25,10 @@ const DAYS_NAMES = [
 export function SettingsSidebar() {
     const { closeSidebar } = useAdminUI();
     const { businessHours, loading: settingsLoading, saveSettings } = useBusinessHours();
+    const { settings, loading: configLoading, updateSetting } = useBusinessSettings();
+
     const [localHours, setLocalHours] = useState<BusinessHours[]>([]);
+    const [cancellationWindow, setCancellationWindow] = useState<string>("24");
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
@@ -33,6 +37,12 @@ export function SettingsSidebar() {
             setLocalHours(businessHours);
         }
     }, [businessHours]);
+
+    useEffect(() => {
+        if (settings.cancellation_window_hours) {
+            setCancellationWindow(String(settings.cancellation_window_hours));
+        }
+    }, [settings]);
 
     const handleClose = () => {
         if (businessHours.length > 0) {
@@ -56,13 +66,21 @@ export function SettingsSidebar() {
     const handleSave = async () => {
         setSaving(true);
         setMessage(null);
-        const { success, error } = await saveSettings(localHours);
-        setSaving(false);
 
-        if (success) {
+        try {
+            // Save business hours
+            const { success: hoursSuccess, error: hoursError } = await saveSettings(localHours);
+            if (!hoursSuccess) throw new Error((hoursError as any).message);
+
+            // Save cancellation settings
+            const { success: configSuccess, error: configError } = await updateSetting('cancellation_window_hours', parseInt(cancellationWindow));
+            if (!configSuccess) throw new Error(configError || 'Error updating settings');
+
             setMessage({ type: 'success', text: 'Configuración guardada correctamente.' });
-        } else {
-            setMessage({ type: 'error', text: 'Error al guardar: ' + (error as any).message });
+        } catch (err: any) {
+            setMessage({ type: 'error', text: 'Error al guardar: ' + err.message });
+        } finally {
+            setSaving(false);
         }
     };
 
@@ -71,7 +89,7 @@ export function SettingsSidebar() {
             <SheetHeader className="mb-6">
                 <SheetTitle>Configuración del Sitio</SheetTitle>
                 <SheetDescription>
-                    Define los días y horarios de atención.
+                    Define los días y horarios de atención, y políticas de cancelación.
                 </SheetDescription>
             </SheetHeader>
 
@@ -84,6 +102,39 @@ export function SettingsSidebar() {
                         {message.text}
                     </div>
                 )}
+
+                {/* Cancellation Policy Section */}
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div className="px-4 py-3 bg-gray-50/50 border-b border-gray-100 flex items-center gap-2 text-gray-900 font-bold text-sm">
+                        <Clock className="text-admin-accent" size={16} />
+                        Política de Cancelación
+                    </div>
+                    <div className="p-4">
+                        {configLoading ? (
+                            <div className="text-sm text-gray-500">Cargando configuración...</div>
+                        ) : (
+                            <div className="space-y-2">
+                                <label htmlFor="cancellation-window" className="block text-sm font-medium text-gray-700">
+                                    Tiempo mínimo para cancelar (horas)
+                                </label>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="number"
+                                        id="cancellation-window"
+                                        min="0"
+                                        value={cancellationWindow}
+                                        onChange={(e) => setCancellationWindow(e.target.value)}
+                                        className="block w-full max-w-[100px] rounded-lg border-gray-200 text-sm focus:border-admin-accent focus:ring-admin-accent"
+                                    />
+                                    <span className="text-sm text-gray-500">horas antes del turno</span>
+                                </div>
+                                <p className="text-xs text-gray-500">
+                                    Los clientes no podrán cancelar turnos si faltan menos de estas horas.
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                </div>
 
                 <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                     <div className="px-4 py-3 bg-gray-50/50 border-b border-gray-100 flex items-center gap-2 text-gray-900 font-bold text-sm">

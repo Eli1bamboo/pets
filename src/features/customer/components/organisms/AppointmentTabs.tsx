@@ -9,6 +9,7 @@ import { useTranslation } from "@/i18n/LanguageContext";
 import Link from "next/link";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Button } from "@/features/customer/components/atoms/Button";
+import { useBusinessSettings } from "@/hooks/useBusinessSettings";
 
 interface AppointmentTabsProps {
     appointments: Appointment[];
@@ -22,6 +23,8 @@ export function AppointmentTabs({ appointments, onCancel }: AppointmentTabsProps
     const router = useRouter();
     const pathname = usePathname();
     const { t } = useTranslation();
+    const { settings } = useBusinessSettings();
+    const cancellationWindow = settings.cancellation_window_hours ? Number(settings.cancellation_window_hours) : 24;
 
     // Initialize from URL
     const tabParam = searchParams.get('tab');
@@ -205,6 +208,7 @@ export function AppointmentTabs({ appointments, onCancel }: AppointmentTabsProps
                                         onCancel={onCancel}
                                         onTrack={activeTab === 'current' ? handleTrack : undefined}
                                         disableCancel={activeTab === 'current' || activeTab === 'history'}
+                                        cancellationWindow={cancellationWindow}
                                     />
                                 ))}
                             </div>
