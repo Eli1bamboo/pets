@@ -120,3 +120,61 @@ export interface InventoryLog {
     // Joined
     product?: Product;
 }
+
+// ============================================
+// Cart & Orders
+// ============================================
+
+export type OrderStatus =
+    | 'pending' | 'paid' | 'preparing' | 'ready_for_pickup'
+    | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
+
+export type FulfillmentType = 'pickup' | 'delivery';
+
+export interface Cart {
+    id: number;
+    user_id: string;
+    updated_at: string;
+    // Joined
+    items?: CartItem[];
+}
+
+export interface CartItem {
+    id: number;
+    cart_id: number;
+    product_id: number;
+    quantity: number;
+    created_at: string;
+    // Joined
+    product?: Product;
+}
+
+export interface Order {
+    id: number;
+    user_id: string;
+    status: OrderStatus;
+    subtotal: number;
+    shipping_fee: number;
+    total: number;
+    fulfillment: FulfillmentType;
+    shipping_address: Record<string, string> | null;
+    mp_payment_id: string | null;
+    mp_preference_id: string | null;
+    mp_status: string | null;
+    notes: string | null;
+    created_at: string;
+    updated_at: string;
+    // Joined
+    items?: OrderItem[];
+    profiles?: { full_name: string | null };
+}
+
+export interface OrderItem {
+    id: number;
+    order_id: number;
+    product_id: number | null;
+    product_name: string;
+    product_price: number;
+    quantity: number;
+    subtotal: number;
+}
