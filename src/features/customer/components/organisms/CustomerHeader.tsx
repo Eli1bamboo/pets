@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Scissors, LogOut } from "lucide-react";
+import { Menu, X, Scissors, LogOut, ShoppingBag } from "lucide-react";
 import { useCustomerAuth } from "@/hooks/useCustomerAuth";
 
 export function CustomerHeader() {
@@ -24,6 +24,9 @@ export function CustomerHeader() {
                 <nav className="hidden md:flex gap-10">
                     <Link href="/" className="text-sm font-bold text-brand-700 hover:text-primary-orange transition-colors">
                         Inicio
+                    </Link>
+                    <Link href="/shop" className="text-sm font-bold text-brand-700 hover:text-primary-orange transition-colors">
+                        Tienda
                     </Link>
                     {user && (
                         <Link href="/profile?tab=history" className="text-sm font-bold text-brand-700 hover:text-primary-orange transition-colors">
@@ -84,6 +87,13 @@ export function CustomerHeader() {
                             onClick={() => setIsOpen(false)}
                         >
                             Inicio
+                        </Link>
+                        <Link
+                            href="/shop"
+                            className="block rounded-xl px-4 py-3 text-base font-bold text-brand-900 hover:bg-primary-orange/10 hover:text-primary-orange transition-all"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Tienda
                         </Link>
                         <Link
                             href="/tracking"

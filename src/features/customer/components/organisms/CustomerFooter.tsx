@@ -27,6 +27,11 @@ export function CustomerFooter() {
                                 </Link>
                             </li>
                             <li>
+                                <Link href="/shop" className="text-sm font-bold leading-6 text-white/80 hover:text-primary-orange transition-colors">
+                                    {t.footer?.shop ?? "Tienda"}
+                                </Link>
+                            </li>
+                            <li>
                                 <Link href="/booking" className="text-sm font-bold leading-6 text-white/80 hover:text-primary-orange transition-colors">
                                     {t.footer?.booking}
                                 </Link>

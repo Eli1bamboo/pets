@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Home, Clock, User, Plus, Activity } from "lucide-react";
+import { Home, Clock, User, Plus, Activity, ShoppingBag } from "lucide-react";
 import { cn } from "@/utils/cn";
 
 export function CustomerBottomNav() {
@@ -17,8 +17,8 @@ export function CustomerBottomNav() {
     ];
 
     const isActive = (path: string) => {
-        if (path === "/" || path === "/tracking") {
-            return pathname === path;
+        if (path === "/" || path === "/tracking" || path === "/shop") {
+            return pathname === path || pathname?.startsWith(path + "/");
         }
         if (path.includes("tab=history")) {
             return pathname === "/profile" && searchParams.get("tab") === "history";
@@ -45,14 +45,14 @@ export function CustomerBottomNav() {
                 </Link>
 
                 <Link
-                    href="/tracking"
+                    href="/shop"
                     className={cn(
                         "flex flex-col items-center justify-center w-14 gap-1 transition-colors",
-                        isActive("/tracking") ? "text-brand-500" : "text-gray-400"
+                        isActive("/shop") ? "text-brand-500" : "text-gray-400"
                     )}
                 >
-                    <Activity size={24} strokeWidth={isActive("/tracking") ? 2.5 : 2} />
-                    <span className="text-[10px] font-bold">Seguimiento</span>
+                    <ShoppingBag size={24} strokeWidth={isActive("/shop") ? 2.5 : 2} />
+                    <span className="text-[10px] font-bold">Tienda</span>
                 </Link>
 
                 <div className="relative -top-8">
