@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { LayoutDashboard, Calendar, History, LogOut, Scissors, Menu, X, Package, Globe, ShoppingBag } from "lucide-react";
+import { LayoutDashboard, Calendar, History, LogOut, Scissors, Menu, X, Package, Globe, ShoppingBag, ClipboardList } from "lucide-react";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useTranslation } from "@/i18n/LanguageContext";
 
@@ -16,6 +16,7 @@ export function AdminHeader() {
         { label: t.admin.header.appointments, href: "/admin/appointments", icon: Calendar },
         { label: t.admin.header.services, href: "/admin/services", icon: Package },
         { label: t.admin.header.products, href: "/admin/products", icon: ShoppingBag },
+        { label: t.admin.header.orders ?? "Pedidos", href: "/admin/orders", icon: ClipboardList },
         { label: t.admin.header.history, href: "/admin/history", icon: History },
     ];
 
