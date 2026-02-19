@@ -1,15 +1,16 @@
 "use client";
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { Appointment, Service } from "@/types";
+import { Appointment, Service, Product } from "@/types";
 
 export interface SidebarData {
     appointment?: Appointment;
     service?: Service;
+    product?: Product;
 }
 
 export interface SidebarState {
-    view: "settings" | "appointment_details" | "service_form" | null;
+    view: "settings" | "appointment_details" | "service_form" | "product_form" | null;
     data?: SidebarData | null;
     isOpen: boolean;
 }

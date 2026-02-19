@@ -5,6 +5,7 @@ import { SidebarSheet, SheetContent } from "@/components/molecules/SidebarSheet"
 import { AppointmentDetailsSidebar } from "./AppointmentDetailsSidebar";
 import { SettingsSidebar } from "./SettingsSidebar";
 import { ServiceFormSidebar } from "./ServiceFormSidebar";
+import { ProductFormSidebar } from "./ProductFormSidebar";
 
 export function SidebarContainer() {
     const { sidebar, closeSidebar } = useAdminUI();
@@ -21,6 +22,9 @@ export function SidebarContainer() {
                 )}
                 {view === "service_form" && (
                     <ServiceFormSidebar service={data?.service} />
+                )}
+                {view === "product_form" && (
+                    <ProductFormSidebar product={data?.product} />
                 )}
             </SheetContent>
         </SidebarSheet>
