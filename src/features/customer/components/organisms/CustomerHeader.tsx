@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Scissors, LogOut, ShoppingBag } from "lucide-react";
+import { Menu, X, Scissors, LogOut, ShoppingBag, ShoppingCart } from "lucide-react";
 import { useCustomerAuth } from "@/hooks/useCustomerAuth";
+import { useCartContext } from "@/providers/CartProvider";
 
 export function CustomerHeader() {
     const [isOpen, setIsOpen] = useState(false);
     const { user, loading, signOut } = useCustomerAuth();
+    const { cartCount, openCart } = useCartContext();
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-brand-900/5 bg-background-cream/80 backdrop-blur-xl">
@@ -39,6 +41,20 @@ export function CustomerHeader() {
                 </nav>
 
                 <div className="hidden md:flex items-center gap-6">
+                    {/* Cart icon */}
+                    <button
+                        onClick={openCart}
+                        className="relative text-brand-700 hover:text-primary-orange transition-colors p-1"
+                        title="Carrito"
+                    >
+                        <ShoppingCart size={22} />
+                        {cartCount > 0 && (
+                            <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary-orange text-[10px] font-extrabold text-white shadow-sm">
+                                {cartCount > 9 ? '9+' : cartCount}
+                            </span>
+                        )}
+                    </button>
+
                     {loading ? (
                         <div className="h-5 w-24 bg-brand-900/5 animate-pulse rounded-full"></div>
                     ) : user ? (

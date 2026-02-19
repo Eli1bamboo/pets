@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ShoppingBag, Star } from "lucide-react";
+import { ShoppingBag, ShoppingCart, Star } from "lucide-react";
 import { Product } from "@/types";
 import { useTranslation } from "@/i18n/LanguageContext";
+import { useCartContext } from "@/providers/CartProvider";
+import { useState } from "react";
 
 interface ProductCardProps {
     product: Product;
@@ -13,10 +15,23 @@ interface ProductCardProps {
 
 export function ProductCard({ product, delay = 0 }: ProductCardProps) {
     const { language } = useTranslation();
+    const { addToCart, openCart } = useCartContext();
+    const [adding, setAdding] = useState(false);
 
     const name = language === "en" && product.name_en ? product.name_en : product.name;
     const primaryImage = product.images?.find((img) => img.is_primary) || product.images?.[0];
     const hasDiscount = product.compare_at_price && product.compare_at_price > product.price;
+    const inStock = product.stock_quantity > 0;
+
+    const handleAddToCart = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!inStock || adding) return;
+        setAdding(true);
+        await addToCart(product.id, 1);
+        setAdding(false);
+        openCart();
+    };
 
     return (
         <motion.div
@@ -41,6 +56,18 @@ export function ProductCard({ product, delay = 0 }: ProductCardProps) {
                         <div className="w-full h-full flex items-center justify-center text-brand-300">
                             <ShoppingBag size={48} strokeWidth={1} />
                         </div>
+                    )}
+
+                    {/* Quick add button */}
+                    {inStock && (
+                        <button
+                            onClick={handleAddToCart}
+                            disabled={adding}
+                            className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-brand-900 px-3.5 py-2 text-[11px] font-bold text-white shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 hover:bg-primary-orange active:scale-95 disabled:opacity-50"
+                        >
+                            <ShoppingCart size={14} />
+                            {adding ? "..." : "Agregar"}
+                        </button>
                     )}
 
                     {/* Badges */}

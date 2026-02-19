@@ -4,11 +4,12 @@ import { useState, useEffect, useMemo } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ShoppingBag, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ShoppingBag, ShoppingCart, Star, ChevronLeft, ChevronRight, Minus, Plus } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { Product } from "@/types";
 import { ProductCard } from "@/features/customer/components/molecules/ProductCard";
 import { useTranslation } from "@/i18n/LanguageContext";
+import { useCartContext } from "@/providers/CartProvider";
 
 export default function ProductDetailPage() {
     const params = useParams();
@@ -21,6 +22,9 @@ export default function ProductDetailPage() {
     const [loading, setLoading] = useState(true);
     const [activeImage, setActiveImage] = useState(0);
     const [supabase] = useState(() => createClient());
+    const [quantity, setQuantity] = useState(1);
+    const [adding, setAdding] = useState(false);
+    const { addToCart, openCart } = useCartContext();
 
     useEffect(() => {
         async function load() {
@@ -228,6 +232,43 @@ export default function ProductDetailPage() {
                                 </span>
                             )}
                         </div>
+
+                        {/* Add to cart */}
+                        {product.stock_quantity > 0 && (
+                            <div className="mt-6 flex items-center gap-4">
+                                <div className="inline-flex items-center rounded-2xl border border-brand-200 bg-white">
+                                    <button
+                                        onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                                        className="w-12 h-12 flex items-center justify-center text-brand-600 hover:text-brand-900 transition-colors rounded-l-2xl hover:bg-brand-50"
+                                    >
+                                        <Minus size={16} />
+                                    </button>
+                                    <span className="w-12 text-center text-base font-extrabold text-brand-900">
+                                        {quantity}
+                                    </span>
+                                    <button
+                                        onClick={() => setQuantity((q) => Math.min(product.stock_quantity, q + 1))}
+                                        disabled={quantity >= product.stock_quantity}
+                                        className="w-12 h-12 flex items-center justify-center text-brand-600 hover:text-brand-900 disabled:opacity-30 disabled:cursor-not-allowed transition-colors rounded-r-2xl hover:bg-brand-50"
+                                    >
+                                        <Plus size={16} />
+                                    </button>
+                                </div>
+                                <button
+                                    onClick={async () => {
+                                        setAdding(true);
+                                        await addToCart(product.id, quantity);
+                                        setAdding(false);
+                                        openCart();
+                                    }}
+                                    disabled={adding}
+                                    className="flex-1 flex items-center justify-center gap-2 rounded-2xl bg-brand-900 py-4 text-sm font-bold text-white hover:bg-primary-orange transition-all active:scale-[0.98] disabled:opacity-50 shadow-lg shadow-brand-900/20"
+                                >
+                                    <ShoppingCart size={18} />
+                                    {adding ? (shop?.adding ?? "Agregando...") : (shop?.addToCart ?? "Agregar al carrito")}
+                                </button>
+                            </div>
+                        )}
 
                         {/* Description */}
                         {description && (
