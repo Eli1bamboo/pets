@@ -6,11 +6,22 @@ create table if not exists public.business_settings (
 
 alter table public.business_settings enable row level security;
 
-create policy "Allow public read access" on public.business_settings
-    for select using (true);
+do $$
+begin
+    if not exists (
+        select 1 from pg_policies where tablename = 'business_settings' and policyname = 'Allow public read access'
+    ) then
+        create policy "Allow public read access" on public.business_settings
+            for select using (true);
+    end if;
 
-create policy "Admins can all business settings" on public.business_settings
-    for all using (public.is_admin());
+    if not exists (
+        select 1 from pg_policies where tablename = 'business_settings' and policyname = 'Admins can all business settings'
+    ) then
+        create policy "Admins can all business settings" on public.business_settings
+            for all using (public.is_admin());
+    end if;
+end $$;
 
 -- Insert default cancellation window (2 hours)
 insert into public.business_settings (key, value)

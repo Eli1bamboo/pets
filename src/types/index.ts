@@ -57,3 +57,66 @@ export interface BusinessSettings {
     value: any;
     updated_at: string;
 }
+
+// ============================================
+// Marketplace Types
+// ============================================
+
+export interface ProductCategory {
+    id: number;
+    name: string;
+    name_en: string | null;
+    slug: string;
+    icon: string;
+    sort_order: number;
+    is_active: boolean;
+    created_at: string;
+}
+
+export interface Product {
+    id: number;
+    category_id: number | null;
+    name: string;
+    name_en: string | null;
+    description: string | null;
+    description_en: string | null;
+    price: number;
+    compare_at_price: number | null;
+    sku: string | null;
+    stock_quantity: number;
+    low_stock_threshold: number;
+    is_active: boolean;
+    is_featured: boolean;
+    weight_grams: number | null;
+    sort_order: number;
+    created_at: string;
+    updated_at: string;
+    // Joined relations
+    category?: ProductCategory;
+    images?: ProductImage[];
+}
+
+export interface ProductImage {
+    id: number;
+    product_id: number;
+    url: string;
+    alt_text: string | null;
+    sort_order: number;
+    is_primary: boolean;
+    created_at: string;
+}
+
+export type InventoryReason = 'sale' | 'restock' | 'adjustment' | 'return' | 'damage';
+
+export interface InventoryLog {
+    id: number;
+    product_id: number;
+    change_quantity: number;
+    new_quantity: number;
+    reason: InventoryReason;
+    reference_id: string | null;
+    created_by: string | null;
+    created_at: string;
+    // Joined
+    product?: Product;
+}
