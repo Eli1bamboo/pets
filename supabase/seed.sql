@@ -115,7 +115,7 @@ VALUES
 INSERT INTO public.appointments (id, user_id, pet_name, service, date, status, price, mp_payment_id, payment_status, created_at)
 OVERRIDING SYSTEM VALUE
 VALUES 
-(5, '22222222-2222-2222-2222-222222222222', 'Luna', 'Corte de Pelo', (now() + interval '5 days')::date + time '16:00', 'confirmed', 25000, 'mp_88888', 'paid', now());
+(5, '22222222-2222-2222-2222-222222222222', 'Luna', 'Corte de Pelo', (now() + interval '5 days')::date + time '16:00', 'pending', 25000, 'mp_88888', 'paid', now());
 
 
 -- Restart ID sequence
