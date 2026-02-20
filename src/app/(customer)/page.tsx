@@ -43,6 +43,7 @@ export default function Home() {
               <ServiceCard
                 key={service.id}
                 title={language === "en" && service.name_en ? service.name_en : service.name}
+                description={(language === "en" && service.description_en ? service.description_en : service.description) || undefined}
                 price={Number(service.price).toLocaleString()}
                 icon={ICON_MAP[service.icon] || Scissors}
                 features={language === "en" && service.features_en?.length ? service.features_en : service.features}

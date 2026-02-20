@@ -7,12 +7,13 @@ import { useTranslation } from "@/i18n/LanguageContext";
 interface ServiceCardProps {
     title: string;
     price: string;
+    description?: string;
     features: string[];
     icon: LucideIcon;
     delay?: number;
 }
 
-export function ServiceCard({ title, price, features, icon: Icon, delay = 0 }: ServiceCardProps) {
+export function ServiceCard({ title, price, description, features, icon: Icon, delay = 0 }: ServiceCardProps) {
     const { t } = useTranslation();
 
     return (
@@ -37,7 +38,7 @@ export function ServiceCard({ title, price, features, icon: Icon, delay = 0 }: S
                     <span className="text-sm font-semibold leading-6 text-brand-500">{t.services.perSession}</span>
                 </div>
                 <p className="mt-4 text-base leading-7 text-brand-700">
-                    {t.services.cardDescription}
+                    {description || t.services.cardDescription}
                 </p>
                 <div className="my-8 h-px bg-brand-100" />
                 <ul role="list" className="space-y-4 text-sm leading-6 text-brand-700">
