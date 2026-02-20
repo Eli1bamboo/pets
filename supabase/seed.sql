@@ -58,11 +58,11 @@ VALUES (
 -- Trigger created them, we just update them
 
 UPDATE public.profiles 
-SET full_name = 'Admin Usuario', phone = '+123456789', is_admin = true
+SET full_name = 'Admin Usuario', role = 'admin'
 WHERE id = '11111111-1111-1111-1111-111111111111';
 
 UPDATE public.profiles 
-SET full_name = 'Cliente Frecuente', phone = '+987654321', is_admin = false
+SET full_name = 'Cliente Frecuente', role = 'client'
 WHERE id = '22222222-2222-2222-2222-222222222222';
 
 
