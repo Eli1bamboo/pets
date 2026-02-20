@@ -13,12 +13,14 @@ export default function CheckoutSuccessPage() {
     const orderId = searchParams.get("order_id");
     const isPending = searchParams.get("pending") === "true";
     const checkout = ((useTranslation().t) as any).checkout;
-    const { refetch } = useCartContext();
+    const { clearCart, cartId } = useCartContext();
 
-    // Refresh cart to reflect cleared state
+    // Forcefully clear the cart on the final success page to prevent UI race conditions with webhooks
     useEffect(() => {
-        refetch();
-    }, [refetch]);
+        if (cartId) {
+            clearCart().catch(console.error);
+        }
+    }, [cartId, clearCart]);
 
     // Simulate webhook locally since MercadoPago can't reach localhost
     useEffect(() => {

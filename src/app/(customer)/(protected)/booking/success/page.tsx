@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { CheckCircle, Clock, Calendar, ArrowRight, Home } from "lucide-react";
 import { useTranslation } from "@/i18n/LanguageContext";
+import { useCartContext } from "@/providers/CartProvider";
 
 export default function BookingSuccessPage() {
     const searchParams = useSearchParams();
@@ -13,6 +14,14 @@ export default function BookingSuccessPage() {
     const isPending = searchParams.get("pending") === "true";
     const { t } = useTranslation();
     const bk = (t as any).bookingPayment;
+    const { clearCart, cartId } = useCartContext();
+
+    // Forcefully clear the cart on the final success page to prevent UI race conditions with webhooks
+    useEffect(() => {
+        if (cartId) {
+            clearCart().catch(console.error);
+        }
+    }, [cartId, clearCart]);
 
     // Simulate webhook locally since MercadoPago can't reach localhost
     useEffect(() => {
