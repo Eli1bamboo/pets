@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
         }
 
         const body = await request.json();
-        const { fulfillment_type = "pickup", notes } = body;
+        const { fulfillment_type = "pickup", notes, shipping_address } = body;
 
         // 1. Get user's cart with items + product details
         const { data: cart } = await supabase
@@ -57,7 +57,32 @@ export async function POST(request: NextRequest) {
 
         // 3. Calculate totals
         const subtotal = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-        const shippingFee = 0; // Phase 2: pickup only
+
+        let shippingFee = 0;
+
+        if (fulfillment_type === "delivery" && shipping_address?.zip_code) {
+            // Look up shipping zone by zip code
+            const { data: zones } = await supabase
+                .from("shipping_zones")
+                .select("*")
+                .eq("is_active", true);
+
+            if (zones) {
+                const matchedZone = zones.find((z: any) =>
+                    z.zip_codes && z.zip_codes.includes(shipping_address.zip_code)
+                );
+
+                if (matchedZone) {
+                    // Free shipping above threshold
+                    if (matchedZone.free_shipping_min && subtotal >= matchedZone.free_shipping_min) {
+                        shippingFee = 0;
+                    } else {
+                        shippingFee = matchedZone.flat_fee;
+                    }
+                }
+            }
+        }
+
         const total = subtotal + shippingFee;
 
         // 4. Create the order
@@ -70,6 +95,7 @@ export async function POST(request: NextRequest) {
                 shipping_fee: shippingFee,
                 total,
                 fulfillment: fulfillment_type,
+                shipping_address: fulfillment_type === "delivery" ? shipping_address : null,
                 notes,
             })
             .select("id")
@@ -93,7 +119,6 @@ export async function POST(request: NextRequest) {
         const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
         if (itemsError) {
             console.error("Order items error:", itemsError);
-            // Clean up the order
             await supabase.from("orders").delete().eq("id", order.id);
             return NextResponse.json({ error: "Error al crear los items de la orden" }, { status: 500 });
         }
@@ -107,18 +132,30 @@ export async function POST(request: NextRequest) {
 
         const preference = new Preference(mpClient);
 
-        const preferenceBody: any = {
-            items: cartItems.map((item) => ({
-                id: String(item.product.id),
-                title: item.product.name,
-                quantity: item.quantity,
-                unit_price: Number(item.product.price),
+        const mpItems: any[] = cartItems.map((item) => ({
+            id: String(item.product.id),
+            title: item.product.name,
+            quantity: item.quantity,
+            unit_price: Number(item.product.price),
+            currency_id: "ARS",
+        }));
+
+        // Add shipping as a line item if applicable
+        if (shippingFee > 0) {
+            mpItems.push({
+                id: "shipping",
+                title: "Envío a domicilio",
+                quantity: 1,
+                unit_price: shippingFee,
                 currency_id: "ARS",
-            })),
+            });
+        }
+
+        const preferenceBody: any = {
+            items: mpItems,
             external_reference: String(order.id),
         };
 
-        // MercadoPago rejects localhost URLs for back_urls/auto_return
         if (!isLocalhost) {
             preferenceBody.back_urls = {
                 success: `${baseUrl}/checkout/success?order_id=${order.id}`,

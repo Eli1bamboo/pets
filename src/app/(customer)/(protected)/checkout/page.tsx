@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { ArrowLeft, MapPin, ShoppingBag, CreditCard, AlertCircle, Loader2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, MapPin, ShoppingBag, CreditCard, AlertCircle, Loader2, Store, Truck } from "lucide-react";
 import { useCartContext } from "@/providers/CartProvider";
 import { useTranslation } from "@/i18n/LanguageContext";
+import { useShippingZones } from "@/features/customer/hooks/useShippingZones";
+import { AddressSelector } from "@/features/customer/components/organisms/AddressSelector";
+import { FulfillmentType, UserAddress } from "@/types";
 
 export default function CheckoutPage() {
     const router = useRouter();
@@ -17,9 +20,34 @@ export default function CheckoutPage() {
     const [notes, setNotes] = useState("");
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [fulfillment, setFulfillment] = useState<FulfillmentType>("pickup");
+    const [selectedAddress, setSelectedAddress] = useState<UserAddress | null>(null);
+
+    const { zones, calculateShipping } = useShippingZones();
+
+    // Calculate shipping fee based on selected address
+    const shippingResult = useMemo(() => {
+        if (fulfillment === "pickup" || !selectedAddress) return null;
+        return calculateShipping(selectedAddress.zip_code, cartTotal);
+    }, [fulfillment, selectedAddress, cartTotal, calculateShipping]);
+
+    const shippingFee = fulfillment === "delivery" ? (shippingResult?.fee ?? 0) : 0;
+    const total = cartTotal + shippingFee;
+    const noZoneMatch = fulfillment === "delivery" && selectedAddress?.zip_code && !shippingResult;
 
     const handleCheckout = async () => {
         setError(null);
+
+        if (fulfillment === "delivery" && !selectedAddress) {
+            setError(checkout?.selectAddressError ?? "Seleccioná una dirección de envío");
+            return;
+        }
+
+        if (noZoneMatch) {
+            setError(checkout?.noZoneError ?? "No hacemos envíos a ese código postal. Probá con otra dirección o elegí Retiro en local.");
+            return;
+        }
+
         setSubmitting(true);
 
         try {
@@ -27,8 +55,17 @@ export default function CheckoutPage() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    fulfillment_type: "pickup",
+                    fulfillment_type: fulfillment,
                     notes: notes.trim() || null,
+                    shipping_address: fulfillment === "delivery" && selectedAddress ? {
+                        id: selectedAddress.id,
+                        label: selectedAddress.label,
+                        street: selectedAddress.street,
+                        city: selectedAddress.city,
+                        state: selectedAddress.state,
+                        zip_code: selectedAddress.zip_code,
+                        notes: selectedAddress.notes,
+                    } : null,
                 }),
             });
 
@@ -40,7 +77,6 @@ export default function CheckoutPage() {
                 return;
             }
 
-            // Redirect to MercadoPago
             if (data.init_point) {
                 window.location.href = data.init_point;
             }
@@ -73,7 +109,7 @@ export default function CheckoutPage() {
                     </p>
                     <Link
                         href="/shop"
-                        className="mt-6 inline-block rounded-full bg-brand-900 px-7 py-3 text-sm font-bold text-white hover:bg-primary-orange transition-colors"
+                        className="mt-6 inline-block rounded-2xl bg-brand-900 px-8 py-3 text-sm font-bold text-white hover:bg-primary-orange transition-colors"
                     >
                         {checkout?.goToShop ?? "Ir a la tienda"}
                     </Link>
@@ -108,7 +144,7 @@ export default function CheckoutPage() {
                 </motion.div>
 
                 <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Left: Order items */}
+                    {/* Left: Order items + Fulfillment */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Items */}
                         <motion.div
@@ -153,7 +189,7 @@ export default function CheckoutPage() {
                             </div>
                         </motion.div>
 
-                        {/* Fulfillment */}
+                        {/* Fulfillment Toggle */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -161,17 +197,111 @@ export default function CheckoutPage() {
                             className="rounded-3xl bg-white border border-brand-100 p-6 shadow-lg shadow-brand-900/5"
                         >
                             <h2 className="text-lg font-extrabold text-brand-900 mb-4">
-                                {checkout?.fulfillment ?? "Retiro en el local"}
+                                {checkout?.fulfillmentTitle ?? "¿Cómo lo querés?"}
                             </h2>
-                            <div className="flex items-start gap-3 p-4 rounded-2xl bg-brand-50">
-                                <MapPin size={20} className="text-primary-orange flex-shrink-0 mt-0.5" />
-                                <div>
-                                    <p className="text-sm font-bold text-brand-900">Peluquería Canina</p>
-                                    <p className="text-xs text-brand-500 mt-1">
-                                        {checkout?.pickupNote ?? "Tu pedido estará listo para retirar una vez confirmado el pago."}
-                                    </p>
-                                </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                <button
+                                    onClick={() => setFulfillment("pickup")}
+                                    className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${fulfillment === "pickup"
+                                        ? "border-primary-orange bg-orange-50/50 shadow-md shadow-orange-100"
+                                        : "border-brand-100 bg-white hover:border-brand-300"
+                                        }`}
+                                >
+                                    <Store size={24} className={fulfillment === "pickup" ? "text-primary-orange" : "text-brand-400"} />
+                                    <span className={`text-sm font-bold ${fulfillment === "pickup" ? "text-brand-900" : "text-brand-600"}`}>
+                                        {checkout?.pickupTab ?? "Retiro en local"}
+                                    </span>
+                                    <span className="text-[11px] text-brand-400 font-semibold">
+                                        {checkout?.free ?? "Gratis"}
+                                    </span>
+                                </button>
+
+                                <button
+                                    onClick={() => setFulfillment("delivery")}
+                                    className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center gap-2 ${fulfillment === "delivery"
+                                        ? "border-primary-orange bg-orange-50/50 shadow-md shadow-orange-100"
+                                        : "border-brand-100 bg-white hover:border-brand-300"
+                                        }`}
+                                >
+                                    <Truck size={24} className={fulfillment === "delivery" ? "text-primary-orange" : "text-brand-400"} />
+                                    <span className={`text-sm font-bold ${fulfillment === "delivery" ? "text-brand-900" : "text-brand-600"}`}>
+                                        {checkout?.deliveryTab ?? "Envío a domicilio"}
+                                    </span>
+                                    <span className="text-[11px] text-brand-400 font-semibold">
+                                        {checkout?.shippingFeeLabel ?? "Según zona"}
+                                    </span>
+                                </button>
                             </div>
+
+                            {/* Pickup info */}
+                            <AnimatePresence mode="wait">
+                                {fulfillment === "pickup" && (
+                                    <motion.div
+                                        key="pickup"
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: "auto" }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        className="overflow-hidden"
+                                    >
+                                        <div className="flex items-start gap-3 p-4 rounded-2xl bg-brand-50 mt-4">
+                                            <MapPin size={20} className="text-primary-orange flex-shrink-0 mt-0.5" />
+                                            <div>
+                                                <p className="text-sm font-bold text-brand-900">Peluquería Canina</p>
+                                                <p className="text-xs text-brand-500 mt-1">
+                                                    {checkout?.pickupNote ?? "Tu pedido estará listo para retirar una vez confirmado el pago."}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+
+                                {fulfillment === "delivery" && (
+                                    <motion.div
+                                        key="delivery"
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: "auto" }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        className="overflow-hidden"
+                                    >
+                                        <div className="mt-4">
+                                            <p className="text-sm font-bold text-brand-700 mb-3">
+                                                {checkout?.selectAddress ?? "Seleccioná una dirección de envío"}
+                                            </p>
+                                            <AddressSelector
+                                                selectedAddressId={selectedAddress?.id ?? null}
+                                                onSelect={setSelectedAddress}
+                                            />
+
+                                            {/* Shipping zone info */}
+                                            {selectedAddress && shippingResult && (
+                                                <div className="mt-3 flex items-center gap-2 p-3 rounded-xl bg-green-50 border border-green-100">
+                                                    <Truck size={14} className="text-green-600" />
+                                                    <span className="text-xs font-bold text-green-700">
+                                                        {shippingResult.fee === 0
+                                                            ? (checkout?.freeShippingApplied ?? "¡Envío gratis!")
+                                                            : `${checkout?.shippingZone ?? "Zona"}: ${shippingResult.zone.name} · $${shippingResult.fee.toLocaleString()}`}
+                                                    </span>
+                                                    {shippingResult.fee > 0 && shippingResult.zone.free_shipping_min && (
+                                                        <span className="text-[10px] text-green-500 ml-auto">
+                                                            {checkout?.freeAbove ?? "Gratis desde"} ${shippingResult.zone.free_shipping_min.toLocaleString()}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            )}
+
+                                            {noZoneMatch && (
+                                                <div className="mt-3 flex items-center gap-2 p-3 rounded-xl bg-amber-50 border border-amber-100">
+                                                    <AlertCircle size={14} className="text-amber-600" />
+                                                    <span className="text-xs font-bold text-amber-700">
+                                                        {checkout?.noZoneWarning ?? "No hacemos envíos a este código postal por ahora."}
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </motion.div>
 
                         {/* Notes */}
@@ -213,11 +343,15 @@ export default function CheckoutPage() {
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <span className="text-brand-500">{checkout?.shipping ?? "Envío"}</span>
-                                    <span className="font-bold text-green-600">{checkout?.free ?? "Gratis"}</span>
+                                    <span className={`font-bold ${shippingFee === 0 ? "text-green-600" : "text-brand-900"}`}>
+                                        {shippingFee === 0
+                                            ? (checkout?.free ?? "Gratis")
+                                            : `$${shippingFee.toLocaleString()}`}
+                                    </span>
                                 </div>
                                 <div className="border-t border-brand-100 pt-3 flex justify-between">
                                     <span className="text-base font-bold text-brand-900">Total</span>
-                                    <span className="text-2xl font-extrabold text-brand-900">${cartTotal.toLocaleString()}</span>
+                                    <span className="text-2xl font-extrabold text-brand-900">${total.toLocaleString()}</span>
                                 </div>
                             </div>
 
@@ -230,7 +364,7 @@ export default function CheckoutPage() {
 
                             <button
                                 onClick={handleCheckout}
-                                disabled={submitting}
+                                disabled={submitting || (fulfillment === "delivery" && (!selectedAddress || !!noZoneMatch))}
                                 className="mt-6 w-full flex items-center justify-center gap-2 rounded-2xl bg-[#009ee3] py-4 text-sm font-bold text-white hover:bg-[#0080c0] transition-all active:scale-[0.98] disabled:opacity-50 shadow-lg shadow-[#009ee3]/20"
                             >
                                 {submitting ? (

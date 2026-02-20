@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAdminOrders } from "@/features/admin/hooks/useAdminOrders";
 import { OrderStatus } from "@/types";
-import { Package, ChevronDown, ChevronUp } from "lucide-react";
+import { Package, ChevronDown, ChevronUp, Store, Truck } from "lucide-react";
 
 const STATUS_CONFIG: Record<OrderStatus, { label: string; color: string }> = {
     pending: { label: "Pendiente", color: "bg-yellow-100 text-yellow-800 border-yellow-200" },
@@ -134,9 +134,16 @@ export default function AdminOrdersPage() {
                                                         <span className="flex-none w-[15%] text-sm font-bold text-admin-primary">
                                                             ${order.total.toLocaleString()}
                                                         </span>
-                                                        <span className="flex-none w-[20%]">
+                                                        <span className="flex-none w-[20%] flex items-center gap-1.5">
                                                             <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${statusCfg.color}`}>
                                                                 {statusCfg.label}
+                                                            </span>
+                                                            <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold border ${order.fulfillment === 'delivery'
+                                                                    ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                                                                    : 'bg-gray-50 text-gray-600 border-gray-200'
+                                                                }`}>
+                                                                {order.fulfillment === 'delivery' ? <Truck size={10} /> : <Store size={10} />}
+                                                                {order.fulfillment === 'delivery' ? 'Envío' : 'Retiro'}
                                                             </span>
                                                         </span>
                                                         <span className="flex-1 text-sm text-gray-500">{date}</span>
@@ -169,6 +176,30 @@ export default function AdminOrdersPage() {
                                                                     {order.notes && (
                                                                         <p className="mt-3 text-xs text-gray-400 italic">
                                                                             Nota: {order.notes}
+                                                                        </p>
+                                                                    )}
+
+                                                                    {/* Delivery address */}
+                                                                    {order.fulfillment === 'delivery' && order.shipping_address && (
+                                                                        <div className="mt-4 p-3 rounded-lg bg-indigo-50 border border-indigo-100">
+                                                                            <h5 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                                                                                <Truck size={12} /> Dirección de envío
+                                                                            </h5>
+                                                                            <p className="text-sm text-gray-700 font-medium">{(order.shipping_address as any)?.street}</p>
+                                                                            <p className="text-xs text-gray-500">
+                                                                                {(order.shipping_address as any)?.city}
+                                                                                {(order.shipping_address as any)?.state ? `, ${(order.shipping_address as any).state}` : ''}
+                                                                                {(order.shipping_address as any)?.zip_code ? ` · CP ${(order.shipping_address as any).zip_code}` : ''}
+                                                                            </p>
+                                                                            {(order.shipping_address as any)?.notes && (
+                                                                                <p className="text-xs text-gray-400 mt-1 italic">📝 {(order.shipping_address as any).notes}</p>
+                                                                            )}
+                                                                        </div>
+                                                                    )}
+
+                                                                    {order.shipping_fee > 0 && (
+                                                                        <p className="mt-2 text-xs text-gray-500">
+                                                                            Envío: <span className="font-bold">${order.shipping_fee.toLocaleString()}</span>
                                                                         </p>
                                                                     )}
                                                                 </div>
