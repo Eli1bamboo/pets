@@ -79,12 +79,12 @@ VALUES
 -- ============================================
 -- 5. Services
 -- ============================================
-INSERT INTO public.services (name, name_en, duration, price, is_active, sort_order)
+INSERT INTO public.services (name, name_en, price, is_active, sort_order)
 VALUES
-('Baño y Cepillado', 'Bath & Brush', 60, 15000, true, 1),
-('Corte de Pelo', 'Haircut', 90, 25000, true, 2),
-('Baño Sanitario', 'Medical Bath', 60, 18000, true, 3),
-('Corte de Uñas', 'Nail Trimming', 15, 5000, true, 4)
+('Baño y Cepillado', 'Bath & Brush', 15000, true, 1),
+('Corte de Pelo', 'Haircut', 25000, true, 2),
+('Baño Sanitario', 'Medical Bath', 18000, true, 3),
+('Corte de Uñas', 'Nail Trimming', 5000, true, 4)
 ON CONFLICT (name) DO NOTHING;
 
 
