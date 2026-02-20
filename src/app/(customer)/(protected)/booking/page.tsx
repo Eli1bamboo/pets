@@ -7,7 +7,7 @@ import { TimeSelector } from "@/components/molecules/TimeSelector";
 import { useAvailability } from "@/features/customer/hooks/useAvailability";
 import { useBooking } from "@/features/customer/hooks/useBooking";
 import { useServices } from "@/features/customer/hooks/useServices";
-import { Loader2, Dog, CheckCircle2, ChevronRight } from "lucide-react";
+import { Loader2, Dog, CheckCircle2, ChevronRight, AlertCircle } from "lucide-react";
 import { Button } from "@/features/customer/components/atoms/Button";
 import { FormField } from "@/features/customer/components/molecules/FormField";
 import { Modal } from "@/features/customer/components/molecules/Modal";
@@ -21,6 +21,7 @@ export default function BookingPage() {
     const { services, loading: servicesLoading } = useServices();
     const [step, setStep] = useState(1);
     const [formError, setFormError] = useState<string | null>(null);
+    const [paymentError, setPaymentError] = useState<string | null>(null);
     const [modal, setModal] = useState({ open: false, title: "", message: "", type: "error" as const });
     const { t, language } = useTranslation();
 
@@ -43,8 +44,10 @@ export default function BookingPage() {
 
     if (authLoading || servicesLoading) return <div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin text-brand-600" /></div>;
 
+
     const handleBooking = async () => {
         if (!user) return;
+        setPaymentError(null);
 
         const selectedService = services.find(s => s.name === formData.service);
 
@@ -57,8 +60,31 @@ export default function BookingPage() {
             price: selectedService ? Number(selectedService.price) : 0,
         });
 
-        if (result && !result.success) {
+        if (!result.success) {
             setModal({ open: true, title: t.booking.errorTitle, message: result.error || t.booking.errorFallback, type: "error" });
+            return;
+        }
+
+        // Appointment created — now redirect to MercadoPago for payment
+        try {
+            const res = await fetch("/api/booking/checkout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ appointment_id: result.appointmentId }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                setPaymentError(data.error || "Error al procesar el pago");
+                return;
+            }
+
+            if (data.init_point) {
+                window.location.href = data.init_point;
+            }
+        } catch {
+            setPaymentError("Error de conexión al procesar el pago. Tu turno fue creado igualmente.");
         }
     };
 
@@ -185,6 +211,13 @@ export default function BookingPage() {
                                                 availableHours={availableHours}
                                                 loading={availabilityLoading}
                                             />
+                                        </div>
+                                    )}
+
+                                    {paymentError && (
+                                        <div className="flex items-start gap-2 p-4 rounded-xl bg-red-50 border border-red-100">
+                                            <AlertCircle size={18} className="text-red-500 flex-shrink-0 mt-0.5" />
+                                            <p className="text-sm font-medium text-red-700">{paymentError}</p>
                                         </div>
                                     )}
 

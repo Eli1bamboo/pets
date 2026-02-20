@@ -85,7 +85,23 @@ export function AppointmentRow({
                 {new Date(appointment.date).toLocaleDateString('es-AR')}
             </td>
             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                <StatusBadge status={appointment.status} />
+                <div className="flex flex-col gap-1">
+                    <StatusBadge status={appointment.status} />
+                    {appointment.payment_status && (
+                        <span className={cn(
+                            "inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full w-fit",
+                            appointment.payment_status === 'paid' && "bg-green-100 text-green-700",
+                            appointment.payment_status === 'pending' && "bg-amber-100 text-amber-700",
+                            appointment.payment_status === 'unpaid' && "bg-gray-100 text-gray-500",
+                            appointment.payment_status === 'refunded' && "bg-purple-100 text-purple-700",
+                        )}>
+                            {appointment.payment_status === 'paid' ? '💳 Pagado'
+                                : appointment.payment_status === 'pending' ? '⏳ Pago pendiente'
+                                    : appointment.payment_status === 'refunded' ? '↩ Reembolsado'
+                                        : '💳 No pagado'}
+                        </span>
+                    )}
+                </div>
             </td>
             <td className="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                 <div className="flex justify-end items-center gap-2">

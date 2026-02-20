@@ -33,6 +33,10 @@ const mockAppointmentData: Appointment = {
     date: '2024-02-15T10:00:00',
     status: 'pending',
     price: 50,
+    mp_payment_id: null,
+    mp_preference_id: null,
+    mp_status: null,
+    payment_status: 'unpaid',
     profiles: {
         full_name: 'Juan Perez',
     },

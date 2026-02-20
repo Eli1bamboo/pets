@@ -1,16 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useBooking } from '@/features/customer/hooks/useBooking';
-import { useRouter } from 'next/navigation';
-import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
-// Mock Router
-vi.mock('next/navigation', () => ({
-    useRouter: vi.fn(),
-}));
-
-// Mock Supabase Chain
-const mockInsert = vi.fn();
+// Mock Supabase Chain — supports .insert().select().single()
+const mockSingle = vi.fn();
+const mockSelect = vi.fn(() => ({ single: mockSingle }));
+const mockInsert = vi.fn(() => ({ select: mockSelect }));
 const mockFrom = vi.fn(() => ({
     insert: mockInsert,
 }));
@@ -24,11 +19,8 @@ vi.mock('@/utils/supabase/client', () => ({
 }));
 
 describe('useBooking', () => {
-    const mockRouter = { push: vi.fn(), back: vi.fn(), forward: vi.fn(), refresh: vi.fn(), replace: vi.fn(), prefetch: vi.fn() } as unknown as AppRouterInstance;
-
     beforeEach(() => {
         vi.clearAllMocks();
-        vi.mocked(useRouter).mockReturnValue(mockRouter);
     });
 
     it('initializes with default state', () => {
@@ -37,8 +29,8 @@ describe('useBooking', () => {
         expect(result.current.error).toBeNull();
     });
 
-    it('creates a booking successfully', async () => {
-        mockInsert.mockResolvedValue({ error: null });
+    it('creates a booking successfully and returns appointmentId', async () => {
+        mockSingle.mockResolvedValue({ data: { id: 42 }, error: null });
 
         const { result } = renderHook(() => useBooking());
 
@@ -53,7 +45,7 @@ describe('useBooking', () => {
 
         await act(async () => {
             const res = await result.current.createBooking(bookingData);
-            expect(res).toEqual({ success: true });
+            expect(res).toEqual({ success: true, appointmentId: 42 });
         });
 
         expect(mockFrom).toHaveBeenCalledWith('appointments');
@@ -61,13 +53,11 @@ describe('useBooking', () => {
             user_id: 'user-123',
             pet_name: 'Rex',
             service: 'Grooming',
-            // Allow loose matching for ISO string to avoid timezone headaches
             date: expect.stringContaining('2024-02-15'),
             status: 'pending',
             price: 50,
         });
-
-        expect(mockRouter.push).toHaveBeenCalledWith('/profile');
+        expect(mockSelect).toHaveBeenCalledWith('id');
 
         await waitFor(() => {
             expect(result.current.submitting).toBe(false);
@@ -76,7 +66,7 @@ describe('useBooking', () => {
     });
 
     it('handles booking creation error', async () => {
-        mockInsert.mockResolvedValue({ error: { message: 'Database error' } });
+        mockSingle.mockResolvedValue({ data: null, error: { message: 'Database error' } });
 
         const { result } = renderHook(() => useBooking());
 
@@ -93,8 +83,6 @@ describe('useBooking', () => {
             const res = await result.current.createBooking(bookingData);
             expect(res).toEqual({ success: false, error: 'Database error' });
         });
-
-        expect(mockRouter.push).not.toHaveBeenCalled();
 
         await waitFor(() => {
             expect(result.current.submitting).toBe(false);

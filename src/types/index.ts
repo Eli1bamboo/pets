@@ -2,6 +2,8 @@ export type UserRole = 'admin' | 'customer';
 
 export type AppointmentStatus = 'pending' | 'washing' | 'drying' | 'ready' | 'completed' | 'cancelled';
 
+export type PaymentStatus = 'unpaid' | 'pending' | 'paid' | 'refunded';
+
 export interface BusinessHours {
     id: number;
     day_of_week: number;
@@ -26,6 +28,11 @@ export interface Appointment {
     date: string;
     status: AppointmentStatus;
     price: number;
+    // Payment fields (Phase 4)
+    mp_payment_id: string | null;
+    mp_preference_id: string | null;
+    mp_status: string | null;
+    payment_status: PaymentStatus;
     profiles?: {
         full_name: string | null;
     };
@@ -178,3 +185,29 @@ export interface OrderItem {
     quantity: number;
     subtotal: number;
 }
+
+// Phase 3 — Delivery & Fulfillment
+
+export interface UserAddress {
+    id: number;
+    user_id: string;
+    label: string;
+    street: string;
+    city: string;
+    state: string | null;
+    zip_code: string | null;
+    notes: string | null;
+    is_default: boolean;
+    created_at: string;
+}
+
+export interface ShippingZone {
+    id: number;
+    name: string;
+    zip_codes: string[];
+    flat_fee: number;
+    free_shipping_min: number | null;
+    is_active: boolean;
+    created_at: string;
+}
+

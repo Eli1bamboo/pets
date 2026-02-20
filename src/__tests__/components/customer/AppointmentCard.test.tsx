@@ -29,7 +29,11 @@ const createMockAppointment = (date: Date): Appointment => ({
     service: 'Bath',
     price: 100,
     user_id: 'user1',
-    created_at: new Date().toISOString()
+    created_at: new Date().toISOString(),
+    mp_payment_id: null,
+    mp_preference_id: null,
+    mp_status: null,
+    payment_status: 'unpaid',
 });
 
 describe('AppointmentCard', () => {

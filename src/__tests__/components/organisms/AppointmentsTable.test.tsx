@@ -40,7 +40,11 @@ const mockAppointments: Appointment[] = [
         status: 'pending',
         price: 50,
         profiles: { full_name: 'John Doe' },
-        created_at: '2023-10-20T10:00:00Z'
+        created_at: '2023-10-20T10:00:00Z',
+        mp_payment_id: null,
+        mp_preference_id: null,
+        mp_status: null,
+        payment_status: 'unpaid',
     },
     {
         id: 2,
@@ -51,7 +55,11 @@ const mockAppointments: Appointment[] = [
         status: 'completed',
         price: 60,
         profiles: { full_name: 'Jane Doe' },
-        created_at: '2023-10-20T11:00:00Z'
+        created_at: '2023-10-20T11:00:00Z',
+        mp_payment_id: null,
+        mp_preference_id: null,
+        mp_status: null,
+        payment_status: 'paid',
     }
 ];
 
