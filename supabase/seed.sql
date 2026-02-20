@@ -27,10 +27,13 @@ ON CONFLICT (day_of_week) DO NOTHING;
 -- Hardcoded UUIDs so we can reliably link data
 
 -- admin@example.com
-INSERT INTO auth.users (id, instance_id, role, aud, email, encrypted_password, email_confirmed_at, created_at, updated_at)
+INSERT INTO auth.users (
+    id, instance_id, role, aud, email, encrypted_password, email_confirmed_at, created_at, updated_at, raw_app_meta_data, raw_user_meta_data, is_super_admin, confirmation_token, recovery_token, email_change_token_new, email_change
+)
 VALUES (
     '11111111-1111-1111-1111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'admin@example.com',
-    extensions.crypt('123456', extensions.gen_salt('bf')), now(), now(), now()
+    extensions.crypt('123456', extensions.gen_salt('bf')), now(), now(), now(),
+    '{"provider": "email", "providers": ["email"]}', '{"full_name": "Admin Usuario"}', false, '', '', '', ''
 ) ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO auth.identities (id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
@@ -40,10 +43,13 @@ VALUES (
 
 
 -- customer@example.com
-INSERT INTO auth.users (id, instance_id, role, aud, email, encrypted_password, email_confirmed_at, created_at, updated_at)
+INSERT INTO auth.users (
+    id, instance_id, role, aud, email, encrypted_password, email_confirmed_at, created_at, updated_at, raw_app_meta_data, raw_user_meta_data, is_super_admin, confirmation_token, recovery_token, email_change_token_new, email_change
+)
 VALUES (
     '22222222-2222-2222-2222-222222222222', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'customer@example.com',
-    extensions.crypt('123456', extensions.gen_salt('bf')), now(), now(), now()
+    extensions.crypt('123456', extensions.gen_salt('bf')), now(), now(), now(),
+    '{"provider": "email", "providers": ["email"]}', '{"full_name": "Cliente Frecuente"}', false, '', '', '', ''
 ) ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO auth.identities (id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
