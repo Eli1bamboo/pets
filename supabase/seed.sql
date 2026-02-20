@@ -141,7 +141,7 @@ VALUES
 INSERT INTO public.orders (id, user_id, status, subtotal, shipping_fee, total, fulfillment, shipping_address, mp_payment_id, mp_status, notes, created_at)
 OVERRIDING SYSTEM VALUE
 VALUES 
-(2, '22222222-2222-2222-2222-222222222222', 'ready', 45000, 0, 45000, 'pickup', null, 'mp_o_222', 'approved', 'Pasará el viernes a la tarde', now() - interval '1 day');
+(2, '22222222-2222-2222-2222-222222222222', 'ready_for_pickup', 45000, 0, 45000, 'pickup', null, 'mp_o_222', 'approved', 'Pasará el viernes a la tarde', now() - interval '1 day');
 
 INSERT INTO public.order_items (order_id, product_id, product_name, product_price, quantity, subtotal)
 VALUES 
