@@ -161,12 +161,13 @@ export async function POST(request: NextRequest) {
             external_reference: externalRef,
         };
 
-        if (!isLocalhost || isLocalhost) { // Force apply back_urls even on localhost for testing
-            preferenceBody.back_urls = {
-                success: `${baseUrl}/booking/success?appointment_id=${appointment.id}`,
-                failure: `${baseUrl}/booking/failure?appointment_id=${appointment.id}`,
-                pending: `${baseUrl}/booking/success?appointment_id=${appointment.id}&pending=true`,
-            };
+        preferenceBody.back_urls = {
+            success: `${baseUrl}/booking/success?appointment_id=${appointment.id}`,
+            failure: `${baseUrl}/booking/failure?appointment_id=${appointment.id}`,
+            pending: `${baseUrl}/booking/success?appointment_id=${appointment.id}&pending=true`,
+        };
+
+        if (!isLocalhost) {
             preferenceBody.auto_return = "approved";
             preferenceBody.notification_url = `${baseUrl}/api/webhooks/mercadopago`;
         }
