@@ -137,3 +137,43 @@ VALUES
     ('Accesorios', 'Accessories', 'accesorios', 'collar', 2),
     ('Snacks & Premios', 'Snacks & Treats', 'snacks-premios', 'cookie', 3)
 ON CONFLICT (name) DO NOTHING;
+
+-- Seed Products (30 items)
+INSERT INTO public.products (category_id, name, name_en, description, description_en, price, compare_at_price, sku, stock_quantity, low_stock_threshold, is_active, is_featured, weight_grams, sort_order)
+VALUES
+    -- 1: Higiene
+    (1, 'Shampoo Hipoalergénico', 'Hypoallergenic Shampoo', 'Shampoo suave para pieles sensibles', 'Mild shampoo for sensitive skin', 12000.00, 15000.00, 'HIG-001', 50, 5, true, true, 500, 1),
+    (1, 'Acondicionador Desenredante', 'Detangling Conditioner', 'Acondicionador para pelaje largo', 'Conditioner for long coats', 11000.00, null, 'HIG-002', 30, 5, true, false, 500, 2),
+    (1, 'Toallitas Húmedas', 'Pet Wipes', 'Toallitas de limpieza rápida', 'Quick cleaning wipes', 5500.00, null, 'HIG-003', 100, 10, true, false, 200, 3),
+    (1, 'Perfume Floral', 'Floral Perfume', 'Perfume desodorizante', 'Deodorizing perfume', 8000.00, 9500.00, 'HIG-004', 25, 5, true, true, 100, 4),
+    (1, 'Cepillo Saca Pelos', 'Deshedding Brush', 'Cepillo para quitar pelo muerto', 'Brush to remove loose hair', 15000.00, null, 'HIG-005', 40, 5, true, true, 150, 5),
+    (1, 'Pasta Dental Canina', 'Dog Toothpaste', 'Sabor a carne', 'Beef flavored toothpaste', 6000.00, null, 'HIG-006', 45, 5, true, false, 100, 6),
+    (1, 'Limpiador de Oídos', 'Ear Cleaner', 'Gotas para la higiene auricular', 'Ear hygiene drops', 7500.00, null, 'HIG-007', 35, 5, true, false, 120, 7),
+    (1, 'Jabón Pulguicida', 'Flea Soap', 'Jabón en barra antipulgas', 'Flea bar soap', 4500.00, null, 'HIG-008', 60, 10, true, false, 100, 8),
+    (1, 'Talco Desodorante', 'Deodorizing Powder', 'Talco en seco', 'Dry powder', 5000.00, null, 'HIG-009', 55, 5, true, false, 150, 9),
+    (1, 'Cortauñas Profesional', 'Pro Nail Clipper', 'Alicate de acero', 'Steel nail clipper', 13500.00, 16000.00, 'HIG-010', 20, 3, true, true, 200, 10),
+
+    -- 2: Accesorios
+    (2, 'Collar Reflectante M', 'Reflective Collar M', 'Collar seguro para la noche', 'Safe collar for the night', 9500.00, null, 'ACC-001', 40, 5, true, true, 100, 11),
+    (2, 'Correa Extensible 5m', 'Retractable Leash 5m', 'Hasta 5 metros de largo', 'Up to 5 meters long', 25000.00, 30000.00, 'ACC-002', 20, 3, true, true, 300, 12),
+    (2, 'Cama Ortopédica G', 'Orthopedic Bed L', 'Cama viscoelástica para perros grandes', 'Memory foam bed for large dogs', 85000.00, 95000.00, 'ACC-003', 10, 2, true, true, 3000, 13),
+    (2, 'Plato Antideslizante Acero', 'Anti-slip Steel Bowl', 'Comedero de acero inoxidable', 'Stainless steel bowl', 12000.00, null, 'ACC-004', 50, 5, true, false, 400, 14),
+    (2, 'Juguete Mordillo Goma', 'Rubber Chew Toy', 'Resistente para mordidas fuertes', 'Durable for heavy chewers', 8500.00, null, 'ACC-005', 60, 10, true, false, 250, 15),
+    (2, 'Arnés Antitirones', 'No-Pull Harness', 'Para paseos sin estrés', 'For stress-free walks', 32000.00, null, 'ACC-006', 15, 3, true, true, 350, 16),
+    (2, 'Pelota de Tenis x3', 'Tennis Balls x3', 'Pack de 3 pelotas', 'Pack of 3 balls', 5000.00, null, 'ACC-007', 100, 10, true, false, 150, 17),
+    (2, 'Pretal de Paseo', 'Walking Harness', 'Diseño ergonómico', 'Ergonomic design', 18000.00, 22000.00, 'ACC-008', 25, 5, true, false, 200, 18),
+    (2, 'Bebedero Portátil', 'Portable Water Bottle', 'Ideal para el parque', 'Ideal for the park', 14000.00, null, 'ACC-009', 30, 5, true, false, 250, 19),
+    (2, 'Chapita Identificatoria', 'ID Tag', 'Para grabar', 'Ready for engraving', 3000.00, null, 'ACC-010', 200, 20, true, false, 50, 20),
+
+    -- 3: Snacks & Premios
+    (3, 'Hueso de Cuero G', 'Rawhide Bone L', 'Ideal para entretener', 'Great for entertaining', 4500.00, null, 'SNK-001', 80, 10, true, false, 150, 21),
+    (3, 'Snacks Dentales Menta', 'Mint Dental Sticks', 'Cuidado oral diario', 'Daily oral care', 7000.00, null, 'SNK-002', 60, 10, true, true, 200, 22),
+    (3, 'Galletas Sabor Carne 500g', 'Beef Cookies 500g', 'Galletitas crujientes', 'Crunchy cookies', 8500.00, 10000.00, 'SNK-003', 40, 5, true, true, 500, 23),
+    (3, 'Bocaditos de Pollo', 'Chicken Bites', 'Premios para entrenamiento', 'Training treats', 6500.00, null, 'SNK-004', 50, 5, true, false, 150, 24),
+    (3, 'Tiras de Carne Seca', 'Jerky Strips', '100% naturales', '100% natural', 11000.00, null, 'SNK-005', 30, 5, true, true, 250, 25),
+    (3, 'Huesitos Sabor Queso', 'Cheese Flavored Bones', 'Para razas pequeñas', 'For small breeds', 5500.00, null, 'SNK-006', 70, 10, true, false, 180, 26),
+    (3, 'Sticks de Salmón', 'Salmon Sticks', 'Altos en Omega 3', 'High in Omega 3', 9000.00, 11500.00, 'SNK-007', 25, 5, true, false, 150, 27),
+    (3, 'Orejas de Cerdo Horneadas x2', 'Baked Pig Ears x2', 'Masticable natural', 'Natural chew', 12000.00, null, 'SNK-008', 40, 5, true, false, 120, 28),
+    (3, 'Alfajor para Perros', 'Dog Alfajor', 'Premio especial', 'Special treat', 2500.00, null, 'SNK-009', 100, 10, true, false, 80, 29),
+    (3, 'Golosinas Light', 'Light Treats', 'Bajas en calorías', 'Low calorie', 6800.00, null, 'SNK-010', 45, 5, true, false, 200, 30)
+ON CONFLICT (sku) DO NOTHING;
