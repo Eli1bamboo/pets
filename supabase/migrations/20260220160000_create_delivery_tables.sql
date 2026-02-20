@@ -50,8 +50,8 @@ CREATE POLICY "Anyone can read active shipping zones"
 
 CREATE POLICY "Admins manage shipping zones"
     ON shipping_zones FOR ALL
-    USING (is_admin(auth.uid()))
-    WITH CHECK (is_admin(auth.uid()));
+    USING (public.is_admin())
+    WITH CHECK (public.is_admin());
 
 -- ─── Seed default shipping zone ─────────────
 
