@@ -62,7 +62,7 @@ SET full_name = 'Admin Usuario', role = 'admin'
 WHERE id = '11111111-1111-1111-1111-111111111111';
 
 UPDATE public.profiles 
-SET full_name = 'Cliente Frecuente', role = 'client'
+SET full_name = 'Cliente Frecuente', role = 'customer'
 WHERE id = '22222222-2222-2222-2222-222222222222';
 
 
