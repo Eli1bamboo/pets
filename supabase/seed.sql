@@ -43,7 +43,7 @@ VALUES (
 INSERT INTO auth.users (id, instance_id, role, aud, email, encrypted_password, email_confirmed_at, created_at, updated_at)
 VALUES (
     '22222222-2222-2222-2222-222222222222', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'customer@example.com',
-    crypt('123456', gen_salt('bf')), now(), now(), now()
+    extensions.crypt('123456', extensions.gen_salt('bf')), now(), now(), now()
 ) ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO auth.identities (id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
@@ -94,28 +94,32 @@ ON CONFLICT (name) DO NOTHING;
 
 -- Past Completed
 INSERT INTO public.appointments (id, user_id, pet_name, service, date, status, price, mp_payment_id, payment_status, created_at)
+OVERRIDING SYSTEM VALUE
 VALUES 
 (1, '22222222-2222-2222-2222-222222222222', 'Rex', 'Baño y Cepillado', (now() - interval '14 days')::date + time '10:00', 'completed', 15000, 'mp_12345', 'paid', now() - interval '16 days'),
 (2, '22222222-2222-2222-2222-222222222222', 'Luna', 'Corte de Pelo', (now() - interval '30 days')::date + time '14:00', 'completed', 25000, 'mp_45678', 'paid', now() - interval '33 days');
 
 -- Past Cancelled
 INSERT INTO public.appointments (id, user_id, pet_name, service, date, status, price, mp_payment_id, payment_status, created_at)
+OVERRIDING SYSTEM VALUE
 VALUES 
 (3, '22222222-2222-2222-2222-222222222222', 'Max', 'Baño Sanitario', (now() - interval '7 days')::date + time '11:00', 'cancelled', 18000, null, 'unpaid', now() - interval '9 days');
 
 -- Upcoming Pending
 INSERT INTO public.appointments (id, user_id, pet_name, service, date, status, price, mp_payment_id, payment_status, created_at)
+OVERRIDING SYSTEM VALUE
 VALUES 
 (4, '22222222-2222-2222-2222-222222222222', 'Rex', 'Baño y Cepillado', (now() + interval '2 days')::date + time '09:00', 'pending', 15000, null, 'pending', now());
 
 -- Upcoming Confirmed/Paid
 INSERT INTO public.appointments (id, user_id, pet_name, service, date, status, price, mp_payment_id, payment_status, created_at)
+OVERRIDING SYSTEM VALUE
 VALUES 
 (5, '22222222-2222-2222-2222-222222222222', 'Luna', 'Corte de Pelo', (now() + interval '5 days')::date + time '16:00', 'confirmed', 25000, 'mp_88888', 'paid', now());
 
 
 -- Restart ID sequence
-SELECT setval('public.appointments_id_seq', 10);
+ALTER SEQUENCE public.appointments_id_seq RESTART WITH 6;
 
 
 -- ============================================
@@ -124,6 +128,7 @@ SELECT setval('public.appointments_id_seq', 10);
 
 -- Order 1: Delivered
 INSERT INTO public.orders (id, user_id, status, subtotal, shipping_fee, total, fulfillment, shipping_address, mp_payment_id, mp_status, notes, created_at)
+OVERRIDING SYSTEM VALUE
 VALUES 
 (1, '22222222-2222-2222-2222-222222222222', 'delivered', 23000, 800, 23800, 'delivery', '{"street": "Av. Rivadavia 1234, Piso 3A", "city": "Ciudad Autónoma de Buenos Aires", "state": "CABA", "zip_code": "1033", "notes": "Tocar timbre 3A"}', 'mp_o_111', 'approved', null, now() - interval '20 days');
 
@@ -134,6 +139,7 @@ VALUES
 
 -- Order 2: Ready for Pickup
 INSERT INTO public.orders (id, user_id, status, subtotal, shipping_fee, total, fulfillment, shipping_address, mp_payment_id, mp_status, notes, created_at)
+OVERRIDING SYSTEM VALUE
 VALUES 
 (2, '22222222-2222-2222-2222-222222222222', 'ready', 45000, 0, 45000, 'pickup', null, 'mp_o_222', 'approved', 'Pasará el viernes a la tarde', now() - interval '1 day');
 
@@ -146,6 +152,7 @@ VALUES
 
 -- Order 3: Combined with Upcoming Appointment #5
 INSERT INTO public.orders (id, user_id, status, subtotal, shipping_fee, total, fulfillment, shipping_address, mp_payment_id, mp_status, notes, created_at)
+OVERRIDING SYSTEM VALUE
 VALUES 
 (3, '22222222-2222-2222-2222-222222222222', 'pending', 7000, 0, 7000, 'pickup', null, 'mp_88888', 'approved', 'Retiro junto con turno #5', now());
 
