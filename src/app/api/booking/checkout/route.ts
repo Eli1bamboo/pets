@@ -161,7 +161,7 @@ export async function POST(request: NextRequest) {
             external_reference: externalRef,
         };
 
-        if (!isLocalhost) {
+        if (!isLocalhost || isLocalhost) { // Force apply back_urls even on localhost for testing
             preferenceBody.back_urls = {
                 success: `${baseUrl}/booking/success?appointment_id=${appointment.id}`,
                 failure: `${baseUrl}/booking/failure?appointment_id=${appointment.id}`,

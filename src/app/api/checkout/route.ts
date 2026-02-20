@@ -156,13 +156,16 @@ export async function POST(request: NextRequest) {
             external_reference: String(order.id),
         };
 
-        if (!isLocalhost) {
+        if (!isLocalhost || isLocalhost) { // Force apply back_urls even on localhost for testing
             preferenceBody.back_urls = {
                 success: `${baseUrl}/checkout/success?order_id=${order.id}`,
                 failure: `${baseUrl}/checkout/failure?order_id=${order.id}`,
                 pending: `${baseUrl}/checkout/success?order_id=${order.id}&pending=true`,
             };
             preferenceBody.auto_return = "approved";
+
+            // Notification URL must be publicly accessible (like ngrok) or MP won't reach localhost
+            // But we keep it here anyway 
             preferenceBody.notification_url = `${baseUrl}/api/webhooks/mercadopago`;
         }
 
