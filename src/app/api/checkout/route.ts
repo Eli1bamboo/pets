@@ -156,14 +156,27 @@ export async function POST(request: NextRequest) {
             external_reference: String(order.id),
         };
 
-        preferenceBody.back_urls = {
-            success: `${baseUrl}/checkout/success?order_id=${order.id}`,
-            failure: `${baseUrl}/checkout/failure?order_id=${order.id}`,
-            pending: `${baseUrl}/checkout/success?order_id=${order.id}&pending=true`,
-        };
+        if (isLocalhost) {
+            const encodedSuccess = encodeURIComponent(`${baseUrl}/checkout/success?order_id=${order.id}`);
+            const encodedFailure = encodeURIComponent(`${baseUrl}/checkout/failure?order_id=${order.id}`);
+            const encodedPending = encodeURIComponent(`${baseUrl}/checkout/success?order_id=${order.id}&pending=true`);
+
+            preferenceBody.back_urls = {
+                success: `https://httpbin.org/redirect-to?url=${encodedSuccess}`,
+                failure: `https://httpbin.org/redirect-to?url=${encodedFailure}`,
+                pending: `https://httpbin.org/redirect-to?url=${encodedPending}`,
+            };
+        } else {
+            preferenceBody.back_urls = {
+                success: `${baseUrl}/checkout/success?order_id=${order.id}`,
+                failure: `${baseUrl}/checkout/failure?order_id=${order.id}`,
+                pending: `${baseUrl}/checkout/success?order_id=${order.id}&pending=true`,
+            };
+        }
+
+        preferenceBody.auto_return = "approved";
 
         if (!isLocalhost) {
-            preferenceBody.auto_return = "approved";
             preferenceBody.notification_url = `${baseUrl}/api/webhooks/mercadopago`;
         }
 

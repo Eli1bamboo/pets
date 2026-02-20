@@ -161,14 +161,27 @@ export async function POST(request: NextRequest) {
             external_reference: externalRef,
         };
 
-        preferenceBody.back_urls = {
-            success: `${baseUrl}/booking/success?appointment_id=${appointment.id}`,
-            failure: `${baseUrl}/booking/failure?appointment_id=${appointment.id}`,
-            pending: `${baseUrl}/booking/success?appointment_id=${appointment.id}&pending=true`,
-        };
+        if (isLocalhost) {
+            const encodedSuccess = encodeURIComponent(`${baseUrl}/booking/success?appointment_id=${appointment.id}`);
+            const encodedFailure = encodeURIComponent(`${baseUrl}/booking/failure?appointment_id=${appointment.id}`);
+            const encodedPending = encodeURIComponent(`${baseUrl}/booking/success?appointment_id=${appointment.id}&pending=true`);
+
+            preferenceBody.back_urls = {
+                success: `https://httpbin.org/redirect-to?url=${encodedSuccess}`,
+                failure: `https://httpbin.org/redirect-to?url=${encodedFailure}`,
+                pending: `https://httpbin.org/redirect-to?url=${encodedPending}`,
+            };
+        } else {
+            preferenceBody.back_urls = {
+                success: `${baseUrl}/booking/success?appointment_id=${appointment.id}`,
+                failure: `${baseUrl}/booking/failure?appointment_id=${appointment.id}`,
+                pending: `${baseUrl}/booking/success?appointment_id=${appointment.id}&pending=true`,
+            };
+        }
+
+        preferenceBody.auto_return = "approved";
 
         if (!isLocalhost) {
-            preferenceBody.auto_return = "approved";
             preferenceBody.notification_url = `${baseUrl}/api/webhooks/mercadopago`;
         }
 
