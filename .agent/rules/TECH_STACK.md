@@ -4,7 +4,7 @@
 - **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript (Strict Mode)
 - **Styling**: Tailwind CSS v4 (with `cn` utility)
-- **Database/Auth**: Supabase
+- **Database/Auth**: Supabase (Web Dashboard + `npx supabase` CLI for migrations. Local Docker engine is *not* required for remote development).
 - **State Management**: React Context (`AdminProvider`, `AdminUIProvider`) + Custom Hooks
 - **Date Handling**: `date-fns` (Locale: `es`)
 - **Internationalization**: Custom lightweight i18n (`src/i18n`).
