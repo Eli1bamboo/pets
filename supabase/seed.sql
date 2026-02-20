@@ -33,9 +33,9 @@ VALUES (
     extensions.crypt('123456', extensions.gen_salt('bf')), now(), now(), now()
 ) ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO auth.identities (id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
+INSERT INTO auth.identities (id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
 VALUES (
-    '11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', '{"sub":"11111111-1111-1111-1111-111111111111","email":"admin@example.com"}', 'email', now(), now(), now()
+    '11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', '{"sub":"11111111-1111-1111-1111-111111111111","email":"admin@example.com"}', 'email', now(), now(), now()
 );
 
 
@@ -46,9 +46,9 @@ VALUES (
     extensions.crypt('123456', extensions.gen_salt('bf')), now(), now(), now()
 ) ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO auth.identities (id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
+INSERT INTO auth.identities (id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
 VALUES (
-    '22222222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222', '{"sub":"22222222-2222-2222-2222-222222222222","email":"customer@example.com"}', 'email', now(), now(), now()
+    '22222222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222', '22222222-2222-2222-2222-222222222222', '{"sub":"22222222-2222-2222-2222-222222222222","email":"customer@example.com"}', 'email', now(), now(), now()
 );
 
 
