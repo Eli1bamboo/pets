@@ -162,14 +162,10 @@ export async function POST(request: NextRequest) {
         };
 
         if (isLocalhost) {
-            const encodedSuccess = encodeURIComponent(`${baseUrl}/booking/success?appointment_id=${appointment.id}`);
-            const encodedFailure = encodeURIComponent(`${baseUrl}/booking/failure?appointment_id=${appointment.id}`);
-            const encodedPending = encodeURIComponent(`${baseUrl}/booking/success?appointment_id=${appointment.id}&pending=true`);
-
             preferenceBody.back_urls = {
-                success: `https://httpbin.org/redirect-to?url=${encodedSuccess}`,
-                failure: `https://httpbin.org/redirect-to?url=${encodedFailure}`,
-                pending: `https://httpbin.org/redirect-to?url=${encodedPending}`,
+                success: `https://redirectmeto.com/${baseUrl}/booking/success?appointment_id=${appointment.id}`,
+                failure: `https://redirectmeto.com/${baseUrl}/booking/failure?appointment_id=${appointment.id}`,
+                pending: `https://redirectmeto.com/${baseUrl}/booking/success?appointment_id=${appointment.id}&pending=true`,
             };
         } else {
             preferenceBody.back_urls = {

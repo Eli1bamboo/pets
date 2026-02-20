@@ -157,14 +157,10 @@ export async function POST(request: NextRequest) {
         };
 
         if (isLocalhost) {
-            const encodedSuccess = encodeURIComponent(`${baseUrl}/checkout/success?order_id=${order.id}`);
-            const encodedFailure = encodeURIComponent(`${baseUrl}/checkout/failure?order_id=${order.id}`);
-            const encodedPending = encodeURIComponent(`${baseUrl}/checkout/success?order_id=${order.id}&pending=true`);
-
             preferenceBody.back_urls = {
-                success: `https://httpbin.org/redirect-to?url=${encodedSuccess}`,
-                failure: `https://httpbin.org/redirect-to?url=${encodedFailure}`,
-                pending: `https://httpbin.org/redirect-to?url=${encodedPending}`,
+                success: `https://redirectmeto.com/${baseUrl}/checkout/success?order_id=${order.id}`,
+                failure: `https://redirectmeto.com/${baseUrl}/checkout/failure?order_id=${order.id}`,
+                pending: `https://redirectmeto.com/${baseUrl}/checkout/success?order_id=${order.id}&pending=true`,
             };
         } else {
             preferenceBody.back_urls = {

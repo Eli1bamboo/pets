@@ -20,6 +20,21 @@ export default function CheckoutSuccessPage() {
         refetch();
     }, [refetch]);
 
+    // Simulate webhook locally since MercadoPago can't reach localhost
+    useEffect(() => {
+        const paymentId = searchParams.get("payment_id");
+        if (paymentId && window.location.hostname === "localhost") {
+            fetch("/api/webhooks/mercadopago", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    type: "payment",
+                    data: { id: paymentId }
+                })
+            }).catch(console.error);
+        }
+    }, [searchParams]);
+
     return (
         <div className="bg-background-cream min-h-screen flex items-center justify-center px-6">
             <motion.div
