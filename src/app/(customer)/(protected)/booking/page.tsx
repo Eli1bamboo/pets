@@ -25,6 +25,7 @@ export default function BookingPage() {
     const [step, setStep] = useState(1);
     const [formError, setFormError] = useState<string | null>(null);
     const [paymentError, setPaymentError] = useState<string | null>(null);
+    const [isProcessing, setIsProcessing] = useState(false);
     const [modal, setModal] = useState({ open: false, title: "", message: "", type: "error" as const });
     const { t, language } = useTranslation();
 
@@ -49,8 +50,9 @@ export default function BookingPage() {
 
 
     const handleBooking = async () => {
-        if (!user) return;
+        if (!user || isProcessing || submitting) return;
         setPaymentError(null);
+        setIsProcessing(true);
 
         const selectedService = services.find(s => s.name === formData.service);
 
@@ -65,6 +67,7 @@ export default function BookingPage() {
 
         if (!result.success) {
             setModal({ open: true, title: t.booking.errorTitle, message: result.error || t.booking.errorFallback, type: "error" });
+            setIsProcessing(false);
             return;
         }
 
@@ -83,14 +86,19 @@ export default function BookingPage() {
 
             if (!res.ok) {
                 setPaymentError(data.error || "Error al procesar el pago");
+                setIsProcessing(false);
                 return;
             }
 
             if (data.init_point) {
+                // Keep isProcessing true so the button keeps spinning
                 window.location.href = data.init_point;
+            } else {
+                window.location.href = `/booking/success?appointment_id=${result.appointmentId}`;
             }
         } catch {
             setPaymentError("Error de conexión al procesar el pago. Tu turno fue creado igualmente.");
+            setIsProcessing(false);
         }
     };
 
@@ -253,8 +261,8 @@ export default function BookingPage() {
                             date={date}
                             time={time}
                             onConfirm={handleBooking}
-                            isSubmitting={submitting}
-                            canConfirm={Boolean(formData.petName && formData.service && date && time)}
+                            isSubmitting={submitting || isProcessing}
+                            canConfirm={Boolean(formData.petName && formData.service && date && time) && !isProcessing}
                             cartItems={cartItems}
                             cartTotal={cartTotal}
                         />
