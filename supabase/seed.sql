@@ -93,25 +93,25 @@ ON CONFLICT (name) DO NOTHING;
 -- ============================================
 
 -- Past Completed
-INSERT INTO public.appointments (id, user_id, pet_name, service, date, status, price, notes, mp_payment_id, payment_status, created_at)
+INSERT INTO public.appointments (id, user_id, pet_name, service, date, status, price, mp_payment_id, payment_status, created_at)
 VALUES 
-(1, '22222222-2222-2222-2222-222222222222', 'Rex', 'Baño y Cepillado', (now() - interval '14 days')::date + time '10:00', 'completed', 15000, 'Perro muy tranquilo', 'mp_12345', 'paid', now() - interval '16 days'),
-(2, '22222222-2222-2222-2222-222222222222', 'Luna', 'Corte de Pelo', (now() - interval '30 days')::date + time '14:00', 'completed', 25000, null, 'mp_45678', 'paid', now() - interval '33 days');
+(1, '22222222-2222-2222-2222-222222222222', 'Rex', 'Baño y Cepillado', (now() - interval '14 days')::date + time '10:00', 'completed', 15000, 'mp_12345', 'paid', now() - interval '16 days'),
+(2, '22222222-2222-2222-2222-222222222222', 'Luna', 'Corte de Pelo', (now() - interval '30 days')::date + time '14:00', 'completed', 25000, 'mp_45678', 'paid', now() - interval '33 days');
 
 -- Past Cancelled
-INSERT INTO public.appointments (id, user_id, pet_name, service, date, status, price, notes, mp_payment_id, payment_status, created_at)
+INSERT INTO public.appointments (id, user_id, pet_name, service, date, status, price, mp_payment_id, payment_status, created_at)
 VALUES 
-(3, '22222222-2222-2222-2222-222222222222', 'Max', 'Baño Sanitario', (now() - interval '7 days')::date + time '11:00', 'cancelled', 18000, 'Tuve que cancelar por viaje', null, 'unpaid', now() - interval '9 days');
+(3, '22222222-2222-2222-2222-222222222222', 'Max', 'Baño Sanitario', (now() - interval '7 days')::date + time '11:00', 'cancelled', 18000, null, 'unpaid', now() - interval '9 days');
 
 -- Upcoming Pending
-INSERT INTO public.appointments (id, user_id, pet_name, service, date, status, price, notes, mp_payment_id, payment_status, created_at)
+INSERT INTO public.appointments (id, user_id, pet_name, service, date, status, price, mp_payment_id, payment_status, created_at)
 VALUES 
-(4, '22222222-2222-2222-2222-222222222222', 'Rex', 'Baño y Cepillado', (now() + interval '2 days')::date + time '09:00', 'pending', 15000, null, null, 'pending', now());
+(4, '22222222-2222-2222-2222-222222222222', 'Rex', 'Baño y Cepillado', (now() + interval '2 days')::date + time '09:00', 'pending', 15000, null, 'pending', now());
 
 -- Upcoming Confirmed/Paid
-INSERT INTO public.appointments (id, user_id, pet_name, service, date, status, price, notes, mp_payment_id, payment_status, created_at)
+INSERT INTO public.appointments (id, user_id, pet_name, service, date, status, price, mp_payment_id, payment_status, created_at)
 VALUES 
-(5, '22222222-2222-2222-2222-222222222222', 'Luna', 'Corte de Pelo', (now() + interval '5 days')::date + time '16:00', 'confirmed', 25000, null, 'mp_88888', 'paid', now());
+(5, '22222222-2222-2222-2222-222222222222', 'Luna', 'Corte de Pelo', (now() + interval '5 days')::date + time '16:00', 'confirmed', 25000, 'mp_88888', 'paid', now());
 
 
 -- Restart ID sequence
