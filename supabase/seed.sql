@@ -123,9 +123,9 @@ SELECT setval('public.appointments_id_seq', 10);
 -- ============================================
 
 -- Order 1: Delivered
-INSERT INTO public.orders (id, user_id, status, subtotal, shipping_fee, total, fulfillment, shipping_address, mp_payment_id, payment_status, notes, created_at)
+INSERT INTO public.orders (id, user_id, status, subtotal, shipping_fee, total, fulfillment, shipping_address, mp_payment_id, mp_status, notes, created_at)
 VALUES 
-(1, '22222222-2222-2222-2222-222222222222', 'delivered', 23000, 800, 23800, 'delivery', '{"street": "Av. Rivadavia 1234, Piso 3A", "city": "Ciudad Autónoma de Buenos Aires", "state": "CABA", "zip_code": "1033", "notes": "Tocar timbre 3A"}', 'mp_o_111', 'paid', null, now() - interval '20 days');
+(1, '22222222-2222-2222-2222-222222222222', 'delivered', 23000, 800, 23800, 'delivery', '{"street": "Av. Rivadavia 1234, Piso 3A", "city": "Ciudad Autónoma de Buenos Aires", "state": "CABA", "zip_code": "1033", "notes": "Tocar timbre 3A"}', 'mp_o_111', 'approved', null, now() - interval '20 days');
 
 INSERT INTO public.order_items (order_id, product_id, product_name, product_price, quantity, subtotal)
 VALUES 
@@ -133,9 +133,9 @@ VALUES
 (1, 2, 'Acondicionador Desenredante', 11000, 1, 11000);
 
 -- Order 2: Ready for Pickup
-INSERT INTO public.orders (id, user_id, status, subtotal, shipping_fee, total, fulfillment, shipping_address, mp_payment_id, payment_status, notes, created_at)
+INSERT INTO public.orders (id, user_id, status, subtotal, shipping_fee, total, fulfillment, shipping_address, mp_payment_id, mp_status, notes, created_at)
 VALUES 
-(2, '22222222-2222-2222-2222-222222222222', 'ready', 45000, 0, 45000, 'pickup', null, 'mp_o_222', 'paid', 'Pasará el viernes a la tarde', now() - interval '1 day');
+(2, '22222222-2222-2222-2222-222222222222', 'ready', 45000, 0, 45000, 'pickup', null, 'mp_o_222', 'approved', 'Pasará el viernes a la tarde', now() - interval '1 day');
 
 INSERT INTO public.order_items (order_id, product_id, product_name, product_price, quantity, subtotal)
 VALUES 
@@ -145,9 +145,9 @@ VALUES
 (2, 30, 'Golosinas Light', 1500, 1, 1500);
 
 -- Order 3: Combined with Upcoming Appointment #5
-INSERT INTO public.orders (id, user_id, status, subtotal, shipping_fee, total, fulfillment, shipping_address, mp_payment_id, payment_status, notes, created_at)
+INSERT INTO public.orders (id, user_id, status, subtotal, shipping_fee, total, fulfillment, shipping_address, mp_payment_id, mp_status, notes, created_at)
 VALUES 
-(3, '22222222-2222-2222-2222-222222222222', 'pending', 7000, 0, 7000, 'pickup', null, 'mp_88888', 'paid', 'Retiro junto con turno #5', now());
+(3, '22222222-2222-2222-2222-222222222222', 'pending', 7000, 0, 7000, 'pickup', null, 'mp_88888', 'approved', 'Retiro junto con turno #5', now());
 
 INSERT INTO public.order_items (order_id, product_id, product_name, product_price, quantity, subtotal)
 VALUES 
