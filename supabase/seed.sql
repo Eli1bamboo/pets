@@ -30,7 +30,7 @@ ON CONFLICT (day_of_week) DO NOTHING;
 INSERT INTO auth.users (id, instance_id, role, aud, email, encrypted_password, email_confirmed_at, created_at, updated_at)
 VALUES (
     '11111111-1111-1111-1111-111111111111', '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'admin@example.com',
-    crypt('123456', gen_salt('bf')), now(), now(), now()
+    extensions.crypt('123456', extensions.gen_salt('bf')), now(), now(), now()
 ) ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO auth.identities (id, user_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
