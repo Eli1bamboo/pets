@@ -351,4 +351,10 @@ export const en: Translations = {
         goHome: 'Go to home',
         retry: 'Try again',
     },
+    bookingProducts: {
+        title: 'Add products to your service',
+        subtitle: 'Pick them up when you get your pet',
+        allCategories: 'All',
+        noProducts: 'No products in this category',
+    },
 };

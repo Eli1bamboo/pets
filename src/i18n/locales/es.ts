@@ -349,6 +349,12 @@ export const es = {
         goHome: 'Volver al inicio',
         retry: 'Intentar de nuevo',
     },
+    bookingProducts: {
+        title: 'Agregá productos a tu servicio',
+        subtitle: 'Retiralos cuando busques a tu mascota',
+        allCategories: 'Todos',
+        noProducts: 'No hay productos en esta categoría',
+    },
 };
 
 export type Translations = typeof es;

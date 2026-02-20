@@ -231,29 +231,46 @@ CREATE TABLE shipping_zones (
 
 ---
 
-## Phase 4 — Service-Product Bundles
-*Connect products to grooming services for upselling.*
+## Phase 4 — MercadoPago for Service Payments
+*Allow customers to pay for grooming services online via MercadoPago. Lays the payment foundation for the booking flow.*
 
 ### Database
 
 ```sql
--- Link products to services as recommendations
-CREATE TABLE service_product_bundles (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    service_id BIGINT REFERENCES services(id) ON DELETE CASCADE,
-    product_id BIGINT REFERENCES products(id) ON DELETE CASCADE,
-    discount_percent INT DEFAULT 0 CHECK (discount_percent BETWEEN 0 AND 100),
-    label TEXT,                         -- "Recommended", "Popular combo"
-    sort_order INT DEFAULT 0,
-    UNIQUE(service_id, product_id)
-);
+-- Add payment fields to appointments
+ALTER TABLE appointments
+    ADD COLUMN mp_payment_id TEXT,
+    ADD COLUMN mp_preference_id TEXT,
+    ADD COLUMN mp_status TEXT,
+    ADD COLUMN payment_status TEXT DEFAULT 'unpaid'
+        CHECK (payment_status IN ('unpaid', 'pending', 'paid', 'refunded'));
 ```
 
+### Key API Routes
+- `POST /api/booking/checkout` — Creates MercadoPago preference for an appointment, returns redirect URL
+- `POST /api/webhooks/mercadopago` — Extended to handle both product orders and service payments (distinguished via `external_reference` prefix)
+
 ### Features
-- **Booking Upsell**: During the booking flow, show "Recommended Products" based on selected service (e.g., "Add Premium Shampoo for 15% off")
-- **Admin Bundle Config**: Admin links products to services with optional discount
-- **Post-Service Suggestions**: After appointment completion, suggest related products via notification or email
-- **Bundle Analytics**: Track which product-service combos sell best
+- **Pay at Booking**: After confirming the appointment, customer is redirected to MercadoPago to pay for the service
+- **Payment Status Tracking**: Appointment status reflects payment (`unpaid` → `pending` → `paid`)
+- **Admin Visibility**: Admin appointment views show payment status and MP payment ID
+- **Booking Success/Failure Pages**: Post-payment landing pages for service bookings
+
+---
+
+## Phase 5 — Booking Product Add-ons
+*Let customers browse & add products during booking, to pick up with their pet. Builds on Phase 4's payment flow.*
+
+### Database
+
+No new tables — reuses the existing **cart** and **products** infrastructure from Phases 1 & 2.
+
+### Features
+- **In-Booking Product Browser**: Collapsible section in the booking flow — "Agregá productos a tu servicio — Retiralos cuando busques a tu mascota"
+- **Category Filter**: Quick-filter pills to browse by category (same as shop page)
+- **Cart Integration**: "Add" button per product uses existing `CartProvider`
+- **BookingSummary Update**: Shows cart item count + total alongside the service price
+- **Combined Checkout**: Single MercadoPago preference includes both the service and any cart products (unified payment built on Phase 4)
 
 ---
 
@@ -261,13 +278,14 @@ CREATE TABLE service_product_bundles (
 
 | Phase | Scope | Effort |
 |---|---|---|
-| **Phase 1** | Product catalog, categories, inventory | ~3-4 sessions |
-| **Phase 2** | Cart, checkout, MercadoPago, orders | ~4-5 sessions |
+| **Phase 1** ✅ | Product catalog, categories, inventory | ~3-4 sessions |
+| **Phase 2** ✅ | Cart, checkout, MercadoPago, orders | ~4-5 sessions |
 | **Phase 3** | Delivery, addresses, shipping zones | ~2-3 sessions |
-| **Phase 4** | Service-product bundles, upselling | ~2-3 sessions |
+| **Phase 4** | MercadoPago for service payments | ~2-3 sessions |
+| **Phase 5** | Booking product add-ons | ~1-2 sessions |
 
 > [!TIP]
-> **Recommended start**: Phase 1 → Phase 2 → Phase 4 → Phase 3. Bundles (Phase 4) deliver more business value than delivery logistics (Phase 3), and pickup-only works fine initially.
+> **Recommended order**: Phase 1 → Phase 2 → Phase 4 → Phase 5 → Phase 3. Service payments (Phase 4) must come before product add-ons (Phase 5) so we have a unified payment flow. Delivery (Phase 3) comes last since pickup-only works fine initially.
 
 ---
 
@@ -280,8 +298,7 @@ src/features/
 │       ├── organisms/
 │       │   ├── ProductManager.tsx      # Phase 1
 │       │   ├── InventoryDashboard.tsx   # Phase 1
-│       │   ├── OrderManager.tsx         # Phase 2
-│       │   └── BundleManager.tsx        # Phase 4
+│       │   └── OrderManager.tsx         # Phase 2
 ├── customer/
 │   └── components/
 │       ├── organisms/
@@ -289,7 +306,7 @@ src/features/
 │       │   ├── CartSidebar.tsx          # Phase 2
 │       │   ├── CheckoutForm.tsx         # Phase 2
 │       │   ├── OrderHistory.tsx         # Phase 2
-│       │   └── BookingUpsell.tsx        # Phase 4
+│       │   └── BookingProductBrowser.tsx # Phase 4
 ├── shop/ (NEW feature module)
 │   ├── hooks/
 │   │   ├── useProducts.ts

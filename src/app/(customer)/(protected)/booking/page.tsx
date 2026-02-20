@@ -13,12 +13,15 @@ import { FormField } from "@/features/customer/components/molecules/FormField";
 import { Modal } from "@/features/customer/components/molecules/Modal";
 import { useTranslation } from "@/i18n/LanguageContext";
 import { BookingSummary } from "@/features/customer/components/organisms/BookingSummary";
+import { BookingProductBrowser } from "@/features/customer/components/organisms/BookingProductBrowser";
+import { useCartContext } from "@/providers/CartProvider";
 import { motion } from "framer-motion";
 
 export default function BookingPage() {
     const { user, loading: authLoading } = useCustomerContext();
     const { createBooking, submitting, error: bookingError } = useBooking();
     const { services, loading: servicesLoading } = useServices();
+    const { items: cartItems, cartTotal, cartCount, clearCart } = useCartContext();
     const [step, setStep] = useState(1);
     const [formError, setFormError] = useState<string | null>(null);
     const [paymentError, setPaymentError] = useState<string | null>(null);
@@ -70,7 +73,10 @@ export default function BookingPage() {
             const res = await fetch("/api/booking/checkout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ appointment_id: result.appointmentId }),
+                body: JSON.stringify({
+                    appointment_id: result.appointmentId,
+                    include_cart: cartCount > 0,
+                }),
             });
 
             const data = await res.json();
@@ -214,6 +220,9 @@ export default function BookingPage() {
                                         </div>
                                     )}
 
+                                    {/* Product Add-ons */}
+                                    <BookingProductBrowser />
+
                                     {paymentError && (
                                         <div className="flex items-start gap-2 p-4 rounded-xl bg-red-50 border border-red-100">
                                             <AlertCircle size={18} className="text-red-500 flex-shrink-0 mt-0.5" />
@@ -246,6 +255,8 @@ export default function BookingPage() {
                             onConfirm={handleBooking}
                             isSubmitting={submitting}
                             canConfirm={Boolean(formData.petName && formData.service && date && time)}
+                            cartItems={cartItems}
+                            cartTotal={cartTotal}
                         />
                     </div>
 

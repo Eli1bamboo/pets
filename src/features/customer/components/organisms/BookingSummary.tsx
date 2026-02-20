@@ -1,9 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Calendar, Clock, Dog, Scissors } from "lucide-react";
+import { Calendar, Clock, Dog, Scissors, ShoppingBag } from "lucide-react";
 import { Button } from "../atoms/Button";
 import { useTranslation } from "@/i18n/LanguageContext";
+import { CartItem } from "@/types";
 
 interface BookingSummaryProps {
     petName: string;
@@ -14,6 +15,8 @@ interface BookingSummaryProps {
     onConfirm: () => void;
     isSubmitting: boolean;
     canConfirm: boolean;
+    cartItems?: CartItem[];
+    cartTotal?: number;
 }
 
 export function BookingSummary({
@@ -24,9 +27,15 @@ export function BookingSummary({
     time,
     onConfirm,
     isSubmitting,
-    canConfirm
+    canConfirm,
+    cartItems = [],
+    cartTotal = 0,
 }: BookingSummaryProps) {
-    const { t } = useTranslation();
+    const { t, language } = useTranslation();
+
+    const serviceAmount = servicePrice ? Number(servicePrice) : 0;
+    const grandTotal = serviceAmount + cartTotal;
+    const hasProducts = cartItems.length > 0 && cartTotal > 0;
 
     return (
         <div className="bg-white rounded-3xl shadow-xl shadow-brand-900/5 ring-1 ring-brand-900/5 p-6 md:p-8 sticky top-24">
@@ -58,7 +67,7 @@ export function BookingSummary({
                                 {serviceName || "Seleccioná un servicio"}
                             </p>
                             {servicePrice && serviceName && (
-                                <span className="text-sm font-bold text-brand-600">${Number(servicePrice).toLocaleString()}</span>
+                                <span className="text-sm font-bold text-brand-600">${serviceAmount.toLocaleString()}</span>
                             )}
                         </div>
                     </div>
@@ -89,16 +98,64 @@ export function BookingSummary({
                         </p>
                     </div>
                 </div>
+
+                {/* Cart items */}
+                {hasProducts && (
+                    <div className="flex items-start gap-4">
+                        <div className="p-2 rounded-xl bg-brand-100 text-primary-orange">
+                            <ShoppingBag size={20} />
+                        </div>
+                        <div className="flex-1">
+                            <p className="text-xs font-bold text-brand-400 uppercase tracking-wider mb-1.5">
+                                Productos ({cartItems.length})
+                            </p>
+                            <div className="space-y-1">
+                                {cartItems.map(item => {
+                                    if (!item.product) return null;
+                                    const itemName = language === "en" && item.product.name_en ? item.product.name_en : item.product.name;
+                                    return (
+                                        <div key={item.id} className="flex justify-between text-sm">
+                                            <span className="text-brand-700 line-clamp-1">
+                                                {itemName} <span className="text-brand-400">x{item.quantity}</span>
+                                            </span>
+                                            <span className="text-brand-600 font-bold flex-shrink-0 ml-2">
+                                                ${(item.product.price * item.quantity).toLocaleString()}
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
 
             <div className="my-8 h-px bg-brand-100" />
 
-            <div className="flex justify-between items-center mb-8">
-                <span className="text-brand-600 font-medium">Total Estimado</span>
-                <span className="text-3xl font-extrabold text-brand-900">
-                    ${servicePrice ? Number(servicePrice).toLocaleString() : '0'}
-                </span>
-            </div>
+            {/* Totals */}
+            {hasProducts ? (
+                <div className="space-y-2 mb-8">
+                    <div className="flex justify-between text-sm">
+                        <span className="text-brand-500">Servicio</span>
+                        <span className="font-bold text-brand-700">${serviceAmount.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                        <span className="text-brand-500">Productos</span>
+                        <span className="font-bold text-brand-700">${cartTotal.toLocaleString()}</span>
+                    </div>
+                    <div className="pt-2 border-t border-brand-100 flex justify-between items-center">
+                        <span className="text-brand-600 font-medium">Total</span>
+                        <span className="text-3xl font-extrabold text-brand-900">${grandTotal.toLocaleString()}</span>
+                    </div>
+                </div>
+            ) : (
+                <div className="flex justify-between items-center mb-8">
+                    <span className="text-brand-600 font-medium">Total Estimado</span>
+                    <span className="text-3xl font-extrabold text-brand-900">
+                        ${serviceAmount.toLocaleString()}
+                    </span>
+                </div>
+            )}
 
             <Button
                 onClick={onConfirm}

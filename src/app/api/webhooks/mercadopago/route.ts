@@ -40,8 +40,18 @@ export async function POST(request: NextRequest) {
         const externalRef = payment.external_reference;
         const supabase = createServiceClient();
 
-        // Route to the correct handler based on external_reference prefix
-        if (externalRef.startsWith("appointment_")) {
+        // Route to the correct handler based on external_reference format
+        // Format: "appointment_<id>_order_<id>" (combined booking + products)
+        // Format: "appointment_<id>" (service only)
+        // Format: "<orderId>" (product order only)
+        const combinedMatch = externalRef.match(/^appointment_(\d+)_order_(\d+)$/);
+
+        if (combinedMatch) {
+            // Combined booking + product order
+            const appointmentResult = await handleAppointmentPayment(supabase, payment, `appointment_${combinedMatch[1]}`, paymentId);
+            await handleOrderPayment(supabase, payment, combinedMatch[2], paymentId);
+            return NextResponse.json({ processed: true, type: "combined" });
+        } else if (externalRef.startsWith("appointment_")) {
             return handleAppointmentPayment(supabase, payment, externalRef, paymentId);
         } else {
             return handleOrderPayment(supabase, payment, externalRef, paymentId);

@@ -87,6 +87,29 @@ vi.mock('@/components/molecules/TimeSelector', () => ({
     ),
 }));
 
+vi.mock('@/providers/CartProvider', () => ({
+    useCartContext: () => ({
+        items: [],
+        cartTotal: 0,
+        cartCount: 0,
+        cartId: null,
+        loading: false,
+        addToCart: vi.fn(),
+        updateQuantity: vi.fn(),
+        removeItem: vi.fn(),
+        clearCart: vi.fn(),
+        refetch: vi.fn(),
+        isCartOpen: false,
+        openCart: vi.fn(),
+        closeCart: vi.fn(),
+        toggleCart: vi.fn(),
+    }),
+}));
+
+vi.mock('@/features/customer/components/organisms/BookingProductBrowser', () => ({
+    BookingProductBrowser: () => <div data-testid="booking-product-browser" />,
+}));
+
 describe('BookingPage', () => {
     beforeEach(() => {
         vi.clearAllMocks();
