@@ -15,6 +15,13 @@ export const es = {
         subtitle: 'Tu mascota merece lo mejor. Ofrecemos servicios de spa, baño y corte con productos premium y un trato lleno de amor.',
         ctaBooking: 'Reservar Turno',
         ctaTracking: 'Rastrear Pedido',
+        nextAppointment: {
+            title: 'Próximo turno',
+            availableToday: 'Disponible Hoy',
+            availableTomorrow: 'Disponible Mañana',
+            availableOn: 'Disponible el',
+            unavailable: 'Sin turnos',
+        },
     },
     services: {
         sectionTag: 'Nuestros Servicios',

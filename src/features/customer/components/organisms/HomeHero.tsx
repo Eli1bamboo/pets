@@ -4,9 +4,32 @@ import { CalendarCheck, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslation } from "@/i18n/LanguageContext";
 import { Button } from "../atoms/Button";
+import { useNextAppointmentSlot } from "@/features/customer/hooks/useNextAppointmentSlot";
 
 export function HomeHero() {
-    const { t } = useTranslation();
+    const { t, language } = useTranslation();
+    const { nextSlot, loading } = useNextAppointmentSlot();
+
+    const getNextSlotText = () => {
+        if (!nextSlot) return t.hero.nextAppointment.unavailable;
+
+        const slotDate = new Date(nextSlot.date + 'T12:00:00');
+        const now = new Date();
+        const todayStr = now.toISOString().split('T')[0];
+
+        const tomorrow = new Date(now);
+        tomorrow.setDate(now.getDate() + 1);
+        const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
+        if (nextSlot.date === todayStr) {
+            return `${t.hero.nextAppointment.availableToday} ${nextSlot.time}hs`;
+        } else if (nextSlot.date === tomorrowStr) {
+            return `${t.hero.nextAppointment.availableTomorrow} ${nextSlot.time}hs`;
+        } else {
+            const formatter = new Intl.DateTimeFormat(language === 'es' ? 'es-AR' : 'en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+            return `${t.hero.nextAppointment.availableOn} ${formatter.format(slotDate)} ${nextSlot.time}hs`;
+        }
+    };
 
     return (
         <section className="relative overflow-hidden bg-background-cream pt-20 pb-16 md:pt-32 md:pb-24 lg:pt-40 lg:pb-32">
@@ -115,8 +138,14 @@ export function HomeHero() {
                                     <CalendarCheck size={20} />
                                 </div>
                                 <div>
-                                    <p className="text-xs font-bold text-brand-500 uppercase tracking-wider">Próximo turno</p>
-                                    <p className="text-brand-900 font-bold">Disponible Hoy 14:00hs</p>
+                                    <p className="text-xs font-bold text-brand-500 uppercase tracking-wider">{t.hero.nextAppointment.title}</p>
+                                    <div className="text-brand-900 font-bold min-h-[24px] flex items-center">
+                                        {loading ? (
+                                            <span className="inline-block h-5 w-32 animate-pulse bg-brand-100 rounded"></span>
+                                        ) : (
+                                            getNextSlotText()
+                                        )}
+                                    </div>
                                 </div>
                             </motion.div>
                         </div>

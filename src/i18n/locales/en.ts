@@ -17,6 +17,13 @@ export const en: Translations = {
         subtitle: 'Your pet deserves the best. We offer spa, bath and grooming services with premium products and plenty of love.',
         ctaBooking: 'Book Appointment',
         ctaTracking: 'Track Order',
+        nextAppointment: {
+            title: 'Next appointment',
+            availableToday: 'Available Today',
+            availableTomorrow: 'Available Tomorrow',
+            availableOn: 'Available on',
+            unavailable: 'Fully Booked',
+        },
     },
     services: {
         sectionTag: 'Our Services',
