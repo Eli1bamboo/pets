@@ -223,7 +223,7 @@ export default function AdminOrdersPage() {
                                                                     </h4>
                                                                     {order.payment_status !== 'paid' && (
                                                                         <div className="mb-3 text-xs text-amber-600 bg-amber-50 p-2 rounded border border-amber-200">
-                                                                            ⚠️ <strong>Atención:</strong> El pedido no permite avanzar a despacho hasta que el pago esté confirmado.
+                                                                            ⚠️ <strong>Atención:</strong> Podés preparar el pedido y marcarlo como listo para retirar, pero no se puede despachar (enviar o entregar) hasta confirmar el pago.
                                                                         </div>
                                                                     )}
                                                                     <div className="flex flex-wrap gap-2">
@@ -233,8 +233,8 @@ export default function AdminOrdersPage() {
                                                                             const cfg = STATUS_CONFIG[s];
                                                                             const isCurrent = order.status === s;
 
-                                                                            // Block completing fulfillment if unpaid
-                                                                            const isBlocked = (s === 'ready_for_pickup' || s === 'shipped' || s === 'delivered') && order.payment_status !== 'paid';
+                                                                            // Block completing fulfillment if unpaid (allow ready_for_pickup for in-store payments)
+                                                                            const isBlocked = (s === 'shipped' || s === 'delivered') && order.payment_status !== 'paid';
 
                                                                             return (
                                                                                 <button
