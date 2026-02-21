@@ -16,7 +16,6 @@ const STATUS_CONFIG: Record<OrderStatus, { label: string; color: string }> = {
     shipped: { label: "Enviado", color: "bg-indigo-100 text-indigo-800" },
     delivered: { label: "Entregado", color: "bg-green-100 text-green-800" },
     cancelled: { label: "Cancelado", color: "bg-red-100 text-red-800" },
-    refunded: { label: "Reembolsado", color: "bg-gray-100 text-gray-800" },
 };
 
 export default function CustomerOrdersPage() {
@@ -104,16 +103,32 @@ export default function CustomerOrdersPage() {
                                                 </div>
                                             </div>
                                             <div className="flex items-center gap-3">
-                                                <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${statusCfg.color}`}>
-                                                    {statusCfg.label}
-                                                </span>
-                                                <span className="text-sm font-extrabold text-brand-900">
+                                                <div className="flex flex-col items-end gap-1">
+                                                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${statusCfg.color}`}>
+                                                        📦 {statusCfg.label}
+                                                    </span>
+                                                    <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${order.payment_status === 'paid' ? 'bg-green-100 text-green-800' :
+                                                            order.payment_status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                                                order.payment_status === 'refunded' ? 'bg-gray-100 text-gray-800' :
+                                                                    order.payment_status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                                                                        'bg-red-50 text-red-700'
+                                                        }`}>
+                                                        💳 {
+                                                            order.payment_status === 'paid' ? 'Pagado' :
+                                                                order.payment_status === 'pending' ? 'Pago Pendiente' :
+                                                                    order.payment_status === 'refunded' ? 'Reembolsado' :
+                                                                        order.payment_status === 'cancelled' ? 'Cancelado' :
+                                                                            'No Pagado'
+                                                        }
+                                                    </span>
+                                                </div>
+                                                <span className="text-sm font-extrabold text-brand-900 ml-2">
                                                     ${order.total.toLocaleString()}
                                                 </span>
                                                 {isExpanded ? (
-                                                    <ChevronUp size={16} className="text-brand-400" />
+                                                    <ChevronUp size={16} className="text-brand-400 ml-1" />
                                                 ) : (
-                                                    <ChevronDown size={16} className="text-brand-400" />
+                                                    <ChevronDown size={16} className="text-brand-400 ml-1" />
                                                 )}
                                             </div>
                                         </button>

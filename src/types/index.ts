@@ -2,7 +2,7 @@ export type UserRole = 'admin' | 'customer';
 
 export type AppointmentStatus = 'pending' | 'washing' | 'drying' | 'ready' | 'completed' | 'cancelled';
 
-export type PaymentStatus = 'unpaid' | 'pending' | 'paid' | 'refunded';
+export type PaymentStatus = 'unpaid' | 'pending' | 'paid' | 'refunded' | 'cancelled';
 
 export interface BusinessHours {
     id: number;
@@ -134,7 +134,7 @@ export interface InventoryLog {
 
 export type OrderStatus =
     | 'pending' | 'paid' | 'preparing' | 'ready_for_pickup'
-    | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
+    | 'shipped' | 'delivered' | 'cancelled';
 
 export type FulfillmentType = 'pickup' | 'delivery';
 
@@ -165,6 +165,7 @@ export interface Order {
     total: number;
     fulfillment: FulfillmentType;
     shipping_address: Record<string, string> | null;
+    payment_status: PaymentStatus;
     mp_payment_id: string | null;
     mp_preference_id: string | null;
     mp_status: string | null;

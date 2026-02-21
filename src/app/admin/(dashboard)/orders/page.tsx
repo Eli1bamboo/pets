@@ -13,7 +13,6 @@ const STATUS_CONFIG: Record<OrderStatus, { label: string; color: string }> = {
     shipped: { label: "Enviado", color: "bg-indigo-100 text-indigo-800 border-indigo-200" },
     delivered: { label: "Entregado", color: "bg-green-100 text-green-800 border-green-200" },
     cancelled: { label: "Cancelado", color: "bg-red-100 text-red-800 border-red-200" },
-    refunded: { label: "Reembolsado", color: "bg-gray-100 text-gray-800 border-gray-200" },
 };
 
 const STATUS_FLOW: OrderStatus[] = ["pending", "paid", "preparing", "ready_for_pickup", "delivered"];
@@ -134,13 +133,27 @@ export default function AdminOrdersPage() {
                                                         <span className="flex-none w-[15%] text-sm font-bold text-admin-primary">
                                                             ${order.total.toLocaleString()}
                                                         </span>
-                                                        <span className="flex-none w-[20%] flex items-center gap-1.5">
-                                                            <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${statusCfg.color}`}>
-                                                                {statusCfg.label}
+                                                        <span className="flex-none w-[20%] flex flex-col gap-1 items-start">
+                                                            <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border ${statusCfg.color}`}>
+                                                                📦 {statusCfg.label}
                                                             </span>
-                                                            <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-bold border ${order.fulfillment === 'delivery'
-                                                                    ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
-                                                                    : 'bg-gray-50 text-gray-600 border-gray-200'
+                                                            <span className={`inline-flex px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border ${order.payment_status === 'paid' ? 'bg-green-100 text-green-800 border-green-200' :
+                                                                order.payment_status === 'pending' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' :
+                                                                    order.payment_status === 'refunded' ? 'bg-gray-100 text-gray-800 border-gray-200' :
+                                                                        order.payment_status === 'cancelled' ? 'bg-red-100 text-red-800 border-red-200' :
+                                                                            'bg-red-50 text-red-700 border-red-200'
+                                                                }`}>
+                                                                💳 {
+                                                                    order.payment_status === 'paid' ? 'Pagado' :
+                                                                        order.payment_status === 'pending' ? 'Pago Pendiente' :
+                                                                            order.payment_status === 'refunded' ? 'Reembolsado' :
+                                                                                order.payment_status === 'cancelled' ? 'Cancelado' :
+                                                                                    'No Pagado'
+                                                                }
+                                                            </span>
+                                                            <span className={`mt-0.5 inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold border ${order.fulfillment === 'delivery'
+                                                                ? 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                                                                : 'bg-gray-50 text-gray-600 border-gray-200'
                                                                 }`}>
                                                                 {order.fulfillment === 'delivery' ? <Truck size={10} /> : <Store size={10} />}
                                                                 {order.fulfillment === 'delivery' ? 'Envío' : 'Retiro'}
@@ -204,22 +217,37 @@ export default function AdminOrdersPage() {
                                                                     )}
                                                                 </div>
 
-                                                                {/* Status Update */}
                                                                 <div>
-                                                                    <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Actualizar Estado</h4>
+                                                                    <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                                                                        Progreso del Pedido
+                                                                    </h4>
+                                                                    {order.payment_status !== 'paid' && (
+                                                                        <div className="mb-3 text-xs text-amber-600 bg-amber-50 p-2 rounded border border-amber-200">
+                                                                            ⚠️ <strong>Atención:</strong> El pedido no permite avanzar a despacho hasta que el pago esté confirmado.
+                                                                        </div>
+                                                                    )}
                                                                     <div className="flex flex-wrap gap-2">
                                                                         {STATUS_FLOW.map((s) => {
+                                                                            if (s === 'paid') return null; // 'paid' is no longer a valid manual fulfillment transition
+
                                                                             const cfg = STATUS_CONFIG[s];
                                                                             const isCurrent = order.status === s;
+
+                                                                            // Block completing fulfillment if unpaid
+                                                                            const isBlocked = (s === 'ready_for_pickup' || s === 'shipped' || s === 'delivered') && order.payment_status !== 'paid';
+
                                                                             return (
                                                                                 <button
                                                                                     key={s}
-                                                                                    onClick={() => !isCurrent && updateStatus(order.id, s)}
-                                                                                    disabled={isCurrent}
+                                                                                    onClick={() => !isCurrent && !isBlocked && updateStatus(order.id, s)}
+                                                                                    disabled={isCurrent || isBlocked}
                                                                                     className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${isCurrent
-                                                                                        ? `${cfg.color} cursor-default ring-2 ring-offset-1 ring-admin-primary`
-                                                                                        : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50"
+                                                                                        ? `${cfg.color} cursor-default ring-2 ring-offset-1 ring-admin-primary opacity-100`
+                                                                                        : isBlocked
+                                                                                            ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed opacity-60"
+                                                                                            : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50"
                                                                                         }`}
+                                                                                    title={isBlocked ? "El pedido debe estar pagado para avanzar a este estado" : ""}
                                                                                 >
                                                                                     {cfg.label}
                                                                                 </button>

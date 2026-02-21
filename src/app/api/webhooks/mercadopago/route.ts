@@ -146,11 +146,11 @@ async function handleOrderPayment(
     }
 
     if (payment.status === "approved") {
-        // Update order status to paid
+        // Update order payment status to paid, leave fulfillment status alone
         await supabase
             .from("orders")
             .update({
-                status: "paid",
+                payment_status: "paid",
                 mp_payment_id: String(paymentId),
                 mp_status: payment.status,
             })
@@ -211,7 +211,7 @@ async function handleOrderPayment(
         await supabase
             .from("orders")
             .update({
-                status: "cancelled",
+                payment_status: "cancelled",
                 mp_payment_id: String(paymentId),
                 mp_status: payment.status,
             })
@@ -221,6 +221,7 @@ async function handleOrderPayment(
         await supabase
             .from("orders")
             .update({
+                payment_status: "pending",
                 mp_payment_id: String(paymentId),
                 mp_status: payment.status,
             })
